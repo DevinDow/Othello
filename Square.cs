@@ -79,11 +79,12 @@ namespace Othello
 
 		private void OnFlipTimer(Object myObject, EventArgs myEventArgs) 
 		{
-			GraphicsState graphicsState = g.Save();
-			g.TranslateTransform(column * board.squareDimension, row * board.squareDimension, MatrixOrder.Append);
+			Bitmap bitmap = new Bitmap(board.squareDimension, board.squareDimension);
+			Graphics bitmapGraphics = Graphics.FromImage(bitmap);
+			bitmapGraphics.TranslateTransform(board.squareDimension/2, board.squareDimension/2);
 			int pieceRadius = (int)Math.Round(0.4 * board.squareDimension);
 			Brush brush = new SolidBrush(Color.Green);
-			g.FillEllipse(brush, -pieceRadius, -pieceRadius, 2*pieceRadius, 2*pieceRadius); 
+			bitmapGraphics.FillEllipse(brush, -pieceRadius, -pieceRadius, 2 * pieceRadius, 2 * pieceRadius);
 
 			if (state == StateEnum.Black ^ flipAngle < 90)
 				brush = new SolidBrush(Color.Black);
@@ -91,7 +92,7 @@ namespace Othello
 				brush = new SolidBrush(Color.White);
 
 			int pieceWidth = (int)Math.Round(0.4 * board.squareDimension * Math.Cos(Math.PI * flipAngle / 180));
-			g.FillEllipse(brush, -pieceWidth, -pieceRadius, 2*pieceWidth, 2*pieceRadius); 
+			bitmapGraphics.FillEllipse(brush, -pieceWidth, -pieceRadius, 2 * pieceWidth, 2 * pieceRadius);
 
 			if (flipAngle >= 180)
 			{
@@ -101,7 +102,7 @@ namespace Othello
 
 			flipAngle += 10;
 
-			g.Restore(graphicsState);
+			g.DrawImage(bitmap, column * board.squareDimension - board.squareDimension / 2, row * board.squareDimension - board.squareDimension / 2); // draw bitmap from upper-left of square
 		}
 	}
 }
