@@ -50,6 +50,7 @@ namespace Othello
 		{
 			this.mainForm = mainForm;
 			ClearBoard();
+			UpdateStatus();
 		}
 
 		public void ClearBoard()
@@ -84,6 +85,7 @@ namespace Othello
 		public void NewGame()
 		{
 			ClearBoard();
+			UpdateStatus();
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !WhitesTurn))
 			{
