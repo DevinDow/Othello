@@ -17,6 +17,7 @@ namespace Othello
 		public MainForm mainForm;
 		private Timer computersTurnTimer = null;
 		public int flipDelay = 100;
+		public bool cancelFlipping = false;
 		
 		public ComputerPlayer ComputerPlayer = null;
 
@@ -74,6 +75,7 @@ namespace Othello
 		{                     
 			if (computersTurnTimer != null)
 				computersTurnTimer.Stop();
+			cancelFlipping = true;
 
 			WhitesTurn = previousWhitesTurn;
 			for (int i=0; i<8; i++)
@@ -186,6 +188,7 @@ namespace Othello
 			g.TranslateTransform(column * squareDimension, row * squareDimension, MatrixOrder.Append);
 			squares[row,column].Draw(g);
 
+			cancelFlipping = false;
 			FlipPieces(row, column);
 
 			ChangeTurns();

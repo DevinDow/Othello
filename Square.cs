@@ -79,6 +79,13 @@ namespace Othello
 
 		private void OnFlipTimer(Object myObject, EventArgs myEventArgs) 
 		{
+			if (board.cancelFlipping)
+			{
+				flipTimer.Stop();
+				flipTimer = null;
+				return;
+			}
+
 			Bitmap bitmap = new Bitmap(board.squareDimension, board.squareDimension);
 			Graphics bitmapGraphics = Graphics.FromImage(bitmap);
 			bitmapGraphics.TranslateTransform(board.squareDimension/2, board.squareDimension/2);

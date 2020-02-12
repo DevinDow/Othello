@@ -10,12 +10,13 @@ namespace Othello
 	public class MainForm : System.Windows.Forms.Form
 	{
 		public Board board;
-		private System.Windows.Forms.StatusBar statusBar;
-		private System.Windows.Forms.MainMenu mainMenu1;
-		private System.Windows.Forms.MenuItem leaglMovesItem;
 		public System.Windows.Forms.StatusBarPanel statusBarTurn;
 		public System.Windows.Forms.StatusBarPanel statusBarBlackScore;
 		public System.Windows.Forms.StatusBarPanel statusBarWhiteScore;
+
+		private System.Windows.Forms.StatusBar statusBar;
+		private System.Windows.Forms.MainMenu mainMenu1;
+		private System.Windows.Forms.MenuItem leaglMovesItem;
 		private System.Windows.Forms.MenuItem newGameItem;
 		private System.Windows.Forms.MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem humanPlayerItem;
