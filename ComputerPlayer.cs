@@ -13,19 +13,26 @@ namespace Othello
 
 		public ComputerPlayer() {}
 
+		/// <summary>
+		/// loops through all Legal Moves
+		/// returns ComputerPlayer's choice for next move
+		/// </summary>
+		/// <param name="row">returns row of chosen Move</param>
+		/// <param name="column">returns column of chosen Move</param>
 		public void Choose(out int row, out int column)
 		{
 			int maxScore = -100;
 			row = column = -1;
-			
-			for (int i=0; i<8; i++)
+
+			for (int i = 0; i < 8; i++)
 			{
-				for (int j=0; j<8; j++)
+				for (int j = 0; j < 8; j++)
 				{
-					int squareScore = Score(i, j); 
-					if (Board.IsLegalMove(i, j) && (squareScore > maxScore || (squareScore == maxScore && random.NextDouble() > 0.5)))
+					if (Board.IsLegalMove(i, j))
 					{
-						row = i;
+						int squareScore = Score(i, j);
+						if (squareScore > maxScore || (squareScore == maxScore && random.NextDouble() > 0.5))
+							row = i;
 						column = j;
 						maxScore = squareScore;
 					}
@@ -33,10 +40,18 @@ namespace Othello
 			}
 		}
 
+		/// <summary>
+		/// returns an integer Score for a Legal Move that sums the Scores for the chosen Square and all flipped Squares
+		/// </summary>
+		/// <param name="row"></param>
+		/// <param name="column"></param>
+		/// <returns>score for specified Move</returns>
 		private int Score(int row, int column)
 		{
+			// Score this Square
 			int score = ScoreSquare(row, column);
 
+			// Score all Squares flipped in every direction
 			score += ScoreInDirection(row, column, 0, -1);
 			score += ScoreInDirection(row, column, -1, -1);
 			score += ScoreInDirection(row, column, -1, 0);
@@ -49,6 +64,14 @@ namespace Othello
 			return score;
 		}
 
+		/// <summary>
+		/// returns an integer Score for all Squares flipped in a direction specified by deltaRow & deltaColumn
+		/// </summary>
+		/// <param name="originalRow"></param>
+		/// <param name="originalColumn"></param>
+		/// <param name="deltaRow"></param>
+		/// <param name="deltaColumn"></param>
+		/// <returns></returns>
 		private int ScoreInDirection(int originalRow, int originalColumn, int deltaRow, int deltaColumn)
 		{
 			int score = 0;
@@ -86,6 +109,14 @@ namespace Othello
 			return score;
 		}
 
+		/// <summary>
+		/// returns a number value for a Square
+		/// Beginner scores each square as 1
+		/// Intermediate values Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
+		/// </summary>
+		/// <param name="row"></param>
+		/// <param name="column"></param>
+		/// <returns></returns>
 		private int ScoreSquare(int row, int column)
 		{
 			switch (Level)
