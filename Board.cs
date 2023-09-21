@@ -8,7 +8,7 @@ namespace Othello
 	public class BoardState : ICloneable
 	{
 		// Fields
-		public Square[,] squares;
+		public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
 		public bool WhitesTurn;
 
         // Constructor
@@ -17,10 +17,10 @@ namespace Othello
             squares = new Square[8, 8];
             WhitesTurn = false;
 
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
+            for (int x = 0; x < 8; x++)
+                for (int y = 0; y < 8; y++)
                 {
-                    squares[i, j] = new Square(i, j);
+                    squares[x, y] = new Square(x, y);
                 }
 
             squares[3, 3].State = StateEnum.Black;
@@ -30,77 +30,90 @@ namespace Othello
         }
 
         // Methods
+        public Square GetSquare(Coord coord)
+        {
+            return squares[coord.x - 1, coord.y - 1];
+        }
+
+		public void SetSquare(Coord coord, Square square)
+		{
+			squares[coord.x - 1, coord.y - 1] = square;
+        }
+
         public bool IsLegalMoveAvailable()
 		{
-			for (int i = 0; i < 8; i++)
-				for (int j = 0; j < 8; j++)
-					if (IsLegalMove(i, j))
+			for (int x = 1; x <= 8; x++)
+				for (int y = 1; y <= 8; y++)
+					if (IsLegalMove(new Coord(x, y)))
 						return true;
 
 			return false;
 		}
 
-		public bool IsLegalMove(int row, int column)
+		public bool IsLegalMove(Coord coord)
 		{
-			if (squares[row, column].State == StateEnum.Black || squares[row, column].State == StateEnum.White)
+			Square square = GetSquare(coord);
+
+            if (square.State == StateEnum.Black || square.State == StateEnum.White)
 				return false;
 
-			if (IsSuccessfulDirection(row, column, -1, 0))
+			if (IsSuccessfulDirection(coord, -1, 0))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, -1, 1))
+			if (IsSuccessfulDirection(coord, -1, 1))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, 0, 1))
+			if (IsSuccessfulDirection(coord, 0, 1))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, 1, 1))
+			if (IsSuccessfulDirection(coord, 1, 1))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, 1, 0))
+			if (IsSuccessfulDirection(coord, 1, 0))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, 1, -1))
+			if (IsSuccessfulDirection(coord, 1, -1))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, 0, -1))
+			if (IsSuccessfulDirection(coord, 0, -1))
 				return true;
 
-			if (IsSuccessfulDirection(row, column, -1, -1))
+			if (IsSuccessfulDirection(coord, -1, -1))
 				return true;
 
 			return false;
 		}
 
-		private bool IsSuccessfulDirection(int row, int column, int dx, int dy)
+		private bool IsSuccessfulDirection(Coord coord, int dx, int dy)
 		{
 			bool foundOpposite = false;
 
-			row += dx;
-			column += dy;
+			int x = coord.x + dx;
+            int y = coord.y + dy;
 
-			while (row >= 0 && row < 8 && column >= 0 && column < 8)
+			while (x > 0 && x <= 8 && y > 0 && y <= 8)
 			{
-				if (squares[row, column].State != StateEnum.Black && squares[row, column].State != StateEnum.White)
+				Square square = GetSquare(new Coord(x, y));
+				if (square.State != StateEnum.Black && square.State != StateEnum.White)
 					return false;
 
 				if (foundOpposite)
 				{
-					if (squares[row, column].State == StateEnum.White && WhitesTurn ||
-						squares[row, column].State == StateEnum.Black && !WhitesTurn)
+					if (square.State == StateEnum.White && WhitesTurn ||
+						square.State == StateEnum.Black && !WhitesTurn)
 						return true;
 				}
 				else
 				{
-					if (squares[row, column].State == StateEnum.White && !WhitesTurn ||
-						squares[row, column].State == StateEnum.Black && WhitesTurn)
+					if (square.State == StateEnum.White && !WhitesTurn ||
+						square.State == StateEnum.Black && WhitesTurn)
 						foundOpposite = true;
 					else
 						return false;
 				}
 
-				row += dx;
-				column += dy;
+				x += dx;
+                y += dy;
 			}
 
 			return false;
@@ -110,12 +123,13 @@ namespace Othello
 		public override string ToString()
 		{
 			string s = string.Empty;
-			for (int i = 0; i < 8; i++)
-				for (int j = 0; j < 8; j++)
+			for (int x = 1; x <= 8; x++)
+				for (int y = 1; y <= 8; y++)
 				{
-					if (squares[i, j].State != StateEnum.Empty)
+					Square square = GetSquare(new Coord(x, y));
+					if (square.State != StateEnum.Empty)
 					{
-						s += string.Format("{0},{1}={2}, ", i, j, squares[i, j].State == StateEnum.Black ? "B" : "W");
+						s += string.Format("({0},{1})={2}, ", x, y, square.State == StateEnum.Black ? "B" : "W");
 					}
 				}
 			return s;
@@ -132,40 +146,46 @@ namespace Othello
             newBoardState.squares = new Square[8, 8];
             newBoardState.WhitesTurn = WhitesTurn;
 
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
+            for (int x = 1; x <= 8; x++)
+                for (int y = 1; y <= 8; y++)
                 {
-                    newBoardState.squares[i, j] = new Square(i, j, squares[i, j].State);
+					Coord coord = new Coord(x, y);
+					Square square = GetSquare(coord);
+					newBoardState.SetSquare(coord, new Square(x, y, square.State));
                 }
 
             return newBoardState;
         }
     }
 
-    public class Choice
+	/// <summary>
+	/// Coord of Squares ( 1..8 , 1..8 )
+	/// </summary>
+    public class Coord
     {
-        public int row, column;
+        public int x, y;
 
-        public Choice()
+        public Coord()
         {
-            row = -1;
-            column = -1;
+            x = -1;
+            y = -1;
         }
 
-        public Choice(int row, int column)
+        public Coord(int x, int y)
         {
-            this.row = row;
-            this.column = column;
+            this.x = x;
+            this.y = y;
         }
 
         public override string ToString()
         {
-            return string.Format("({0},{1})", column + 1, row+1);
+            return string.Format("({0},{1})", x, y);
         }
     }
 
     public class Board
 	{
+		// Fields
 		public BoardState boardState;
 		private BoardState previousState;
 		private int leftMarginDimension, topMarginDimension, sideDimension;
@@ -178,6 +198,8 @@ namespace Othello
 		
 		public ComputerPlayer ComputerPlayer = null;
 
+
+		// Properties
 		public int WhiteCount 
 		{
 			get
@@ -204,6 +226,8 @@ namespace Othello
 			}
 		}
 
+
+		// Constructor
 		public Board(MainForm mainForm)
 		{
 			this.mainForm = mainForm;
@@ -211,6 +235,8 @@ namespace Othello
 			UpdateStatus();
 		}
 
+
+		// Methods
 		public void ClearBoard()
 		{
 			boardState = new BoardState();
@@ -276,19 +302,20 @@ namespace Othello
 			}
 
 			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
-			for (int row=0; row<8; row++)
+			for (int x=1; x<=8; x++)
 			{
 				GraphicsState graphicsState = g.Save();
 
-				for (int column=0; column<8; column++)
+				for (int y=1; y<=8; y++)
 				{
-                    boardState.squares[row,column].Draw(g);
-					g.TranslateTransform(squareDimension, 0, MatrixOrder.Append);
+					Square square = boardState.GetSquare(new Coord(x, y));
+					square.Draw(g);
+					g.TranslateTransform(0, squareDimension, MatrixOrder.Append);
 				}
 
 				g.Restore(graphicsState);
 
-				g.TranslateTransform(0, squareDimension, MatrixOrder.Append);
+				g.TranslateTransform(squareDimension, 0, MatrixOrder.Append);
 			}
 		}
 
@@ -302,12 +329,12 @@ namespace Othello
 			if (pointOnBoard.X < 0 || pointOnBoard.Y < 0)
 				return;
 
-			Choice choice = new Choice(pointOnBoard.Y / squareDimension, pointOnBoard.X / squareDimension);
+			Coord choice = new Coord(pointOnBoard.X / squareDimension + 1, pointOnBoard.Y / squareDimension + 1);
 
-			if (choice.row > 7 || choice.column > 7)
+			if (choice.x > 8 || choice.y > 8)
 				return;
 
-			if (!boardState.IsLegalMove(choice.row, choice.column))
+			if (!boardState.IsLegalMove(choice))
 			{
 				System.Windows.Forms.MessageBox.Show("Illegal Move");
 				return;
@@ -319,20 +346,21 @@ namespace Othello
 			MakeMove(choice);
 		}
 
-		public void MakeMove(Choice choice)
+		public void MakeMove(Coord coord)
 		{
+			Square square = boardState.GetSquare(coord);
 			if (boardState.WhitesTurn)
-                boardState.squares[choice.row, choice.column].State = StateEnum.White;
+                square.State = StateEnum.White;
 			else
-                boardState.squares[choice.row, choice.column].State = StateEnum.Black;
+                square.State = StateEnum.Black;
 
 			Graphics g = mainForm.CreateGraphics();
 			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
-			g.TranslateTransform(choice.column * squareDimension, choice.row * squareDimension, MatrixOrder.Append);
-            boardState.squares[choice.row, choice.column].Draw(g);
+			g.TranslateTransform((coord.x-1) * squareDimension, (coord.y-1) * squareDimension, MatrixOrder.Append);
+            square.Draw(g);
 
 			cancelFlipping = false;
-			FlipPieces(choice.row, choice.column);
+			FlipPieces(coord);
 
 			ChangeTurns();
 		}
@@ -394,57 +422,58 @@ namespace Othello
 			mainForm.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
 		}
 
-		private void FlipPieces(int row, int column)
+		private void FlipPieces(Coord coord)
 		{
-			FlipInDirection(row, column, 0, -1);
-			FlipInDirection(row, column, -1, -1);
-			FlipInDirection(row, column, -1, 0);
-			FlipInDirection(row, column, -1, 1);
-			FlipInDirection(row, column, 0, 1);
-			FlipInDirection(row, column, 1, 1);
-			FlipInDirection(row, column, 1, 0);
-			FlipInDirection(row, column, 1, -1);
+			FlipInDirection(coord, 0, -1);
+			FlipInDirection(coord, -1, -1);
+			FlipInDirection(coord, -1, 0);
+			FlipInDirection(coord, -1, 1);
+			FlipInDirection(coord, 0, 1);
+			FlipInDirection(coord, 1, 1);
+			FlipInDirection(coord, 1, 0);
+			FlipInDirection(coord, 1, -1);
 		}
 
-		private void FlipInDirection(int originalRow, int originalColumn, int deltaRow, int deltaColumn)
+		private void FlipInDirection(Coord choice, int dx, int dy)
 		{
-			int row = originalRow + deltaRow;
-			int column = originalColumn + deltaColumn;
+            int x = choice.x + dx;
+            int y = choice.y + dy;
 
-			// find partner piece
-			while (row >= 0 && row < 8 && column >=0 && column < 8)
+			// find partner square
+			while (x >= 1 && x <= 8 && y >= 1 && y <= 8)
 			{
-				if (boardState.squares[row,column].State != StateEnum.Black && boardState.squares[row,column].State != StateEnum.White)
+				Square partnerSquare = boardState.GetSquare(new Coord(x, y));
+				if (partnerSquare.State != StateEnum.Black && partnerSquare.State != StateEnum.White)
 					return;
 
-				if (boardState.WhitesTurn && boardState.squares[row,column].State == StateEnum.Black || 
-					!boardState.WhitesTurn && boardState.squares[row,column].State == StateEnum.White) // not a partner piece
+				if (boardState.WhitesTurn && partnerSquare.State == StateEnum.Black || 
+					!boardState.WhitesTurn && partnerSquare.State == StateEnum.White) // not a partner piece
 				{
-					row += deltaRow;
-					column += deltaColumn;
+					x += dx;
+					y += dy;
 					continue;
 				}
 
-				// partner piece found
-				
-				row -= deltaRow;
-				column -= deltaColumn;
+				// partner square found
+				x -= dx;
+				y -= dy;
 				
 				Graphics g = mainForm.CreateGraphics();
 				g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
 
 				// work back to placed piece flipping
-				while (!(row == originalRow && column == originalColumn))
+				while (!(x == choice.x && y == choice.y))
 				{
-					if (boardState.WhitesTurn)
-                        boardState.squares[row,column].State = StateEnum.White;
+                    Square flippedSquare = boardState.GetSquare(new Coord(x, y));
+                    if (boardState.WhitesTurn)
+                        flippedSquare.State = StateEnum.White;
 					else
-                        boardState.squares[row,column].State = StateEnum.Black;
+                        flippedSquare.State = StateEnum.Black;
 
-                    boardState.squares[row,column].Flip(g);
+                    flippedSquare.Flip(g);
 
-					row -= deltaRow;
-					column -= deltaColumn;
+					x -= dx;
+					y -= dy;
 				}
 
 				return;
@@ -453,10 +482,13 @@ namespace Othello
 			
 		public void ShowLegalMoves()
 		{
-			for (int row=0; row<8; row++)
-				for (int column=0; column<8; column++)
-					if (boardState.IsLegalMove(row, column))
-                        boardState.squares[row,column].State = StateEnum.LegalMove;
+			for (int x = 1; x <= 8; x++)
+				for (int y = 1; y <= 8; y++)
+				{
+					Coord choice = new Coord(x, y);
+					if (boardState.IsLegalMove(choice))
+						boardState.GetSquare(choice).State = StateEnum.LegalMove;
+				}
 		}
 
 		private void ClearLegalMoves()
@@ -464,16 +496,17 @@ namespace Othello
 			Graphics g = mainForm.CreateGraphics();
 			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
 
-			for (int row=0; row<8; row++)
-				for (int column=0; column<8; column++)
-					if (boardState.squares[row,column].State == StateEnum.LegalMove)
+			for (int x=0; x<8; x++)
+				for (int y=0; y<8; y++)
+					if (boardState.squares[x,y].State == StateEnum.LegalMove)
 					{
 						GraphicsState graphicsState = g.Save();
 
-						g.TranslateTransform(column * squareDimension, row * squareDimension, MatrixOrder.Append);
+						g.TranslateTransform(x * squareDimension, y * squareDimension, MatrixOrder.Append);
 
-                        boardState.squares[row,column].State = StateEnum.Empty;
-                        boardState.squares[row,column].Draw(g);
+						Square square = boardState.GetSquare(new Coord(x, y));
+                        square.State = StateEnum.Empty;
+                        square.Draw(g);
 
 						g.Restore(graphicsState);
 					}

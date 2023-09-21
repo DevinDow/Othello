@@ -1,6 +1,9 @@
 ﻿TODO
 ----
-- BoardState should implement MakMove()
+- Square not need x, y (Flip w/o needing x,y)
+- should ClearLegalMoves() really draw themselves?
+- implement IEnumerable for Board's Squares
+- BoardState should implement MakeMove()
 	- need to implement which pieces to Flip between boardState & previousState
 - Advanced = MiniMax()
 	- BoardState.score - currently scores how many are flipped...  Should score a state

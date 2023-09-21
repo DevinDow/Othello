@@ -13,24 +13,24 @@ namespace Othello
 	public class Square
 	{
 		private StateEnum state;
-		private int row, column;
+		private int x, y;
 		private Graphics gForFlipping;
 		private Timer flipTimer = null;
 		private int flipAngle = 0;
 
 		public StateEnum State { get{return state;} set{state = value;} }
 
-        public Square(int row, int column)
+        public Square(int x, int y)
         {
-            this.row = row;
-            this.column = column;
+            this.x = x;
+            this.y = y;
             state = StateEnum.Empty;
         }
 
-        public Square(int row, int column, StateEnum state)
+        public Square(int x, int y, StateEnum state)
         {
-            this.row = row;
-            this.column = column;
+            this.x = x;
+            this.y = y;
             this.state = state;
         }
 
@@ -117,7 +117,7 @@ namespace Othello
 
 			flipAngle += 10;
 
-			gForFlipping.DrawImage(bitmap, column * Board.squareDimension - Board.squareDimension / 2, row * Board.squareDimension - Board.squareDimension / 2); // draw bitmap from upper-left of square
+			gForFlipping.DrawImage(bitmap, (x-1) * Board.squareDimension - Board.squareDimension / 2, (y-1) * Board.squareDimension - Board.squareDimension / 2); // draw bitmap from upper-left of square
 		}
 	}
 }
