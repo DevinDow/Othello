@@ -1,0 +1,6 @@
+﻿TODO
+----
+- previousState can be a stack
+- Advanced = MiniMax()
+	- 
+- change Opponent does not need to reset Board

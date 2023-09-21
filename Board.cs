@@ -5,19 +5,149 @@ using System.Windows.Forms;
 
 namespace Othello
 {
-	public class Board
-	{		
+	public class BoardState
+	{
+		// Fields
 		public Square[,] squares;
-		private Square[,] previousState;
+		public bool WhitesTurn;
+
+        // Constructor
+        public BoardState()
+        {
+            squares = new Square[8, 8];
+            WhitesTurn = false;
+
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    squares[i, j] = new Square(i, j);
+                }
+
+            squares[3, 3].State = StateEnum.Black;
+            squares[4, 4].State = StateEnum.Black;
+            squares[3, 4].State = StateEnum.White;
+            squares[4, 3].State = StateEnum.White;
+        }
+
+        // Methods
+		public BoardState copy()
+		{
+			BoardState newBoardState = new BoardState();
+            newBoardState.squares = new Square[8, 8];
+            newBoardState.WhitesTurn = WhitesTurn;
+
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    newBoardState.squares[i, j] = new Square(i, j, squares[i, j].State);
+                }
+
+			return newBoardState;
+        }
+
+        public bool IsLegalMoveAvailable()
+		{
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (IsLegalMove(i, j))
+						return true;
+
+			return false;
+		}
+
+		public bool IsLegalMove(int row, int column)
+		{
+			if (squares[row, column].State == StateEnum.Black || squares[row, column].State == StateEnum.White)
+				return false;
+
+			if (IsSuccessfulDirection(row, column, -1, 0))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, -1, 1))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, 0, 1))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, 1, 1))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, 1, 0))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, 1, -1))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, 0, -1))
+				return true;
+
+			if (IsSuccessfulDirection(row, column, -1, -1))
+				return true;
+
+			return false;
+		}
+
+		private bool IsSuccessfulDirection(int row, int column, int dx, int dy)
+		{
+			bool foundOpposite = false;
+
+			row += dx;
+			column += dy;
+
+			while (row >= 0 && row < 8 && column >= 0 && column < 8)
+			{
+				if (squares[row, column].State != StateEnum.Black && squares[row, column].State != StateEnum.White)
+					return false;
+
+				if (foundOpposite)
+				{
+					if (squares[row, column].State == StateEnum.White && WhitesTurn ||
+						squares[row, column].State == StateEnum.Black && !WhitesTurn)
+						return true;
+				}
+				else
+				{
+					if (squares[row, column].State == StateEnum.White && !WhitesTurn ||
+						squares[row, column].State == StateEnum.Black && WhitesTurn)
+						foundOpposite = true;
+					else
+						return false;
+				}
+
+				row += dx;
+				column += dy;
+			}
+
+			return false;
+		}
+
+		// Overrides
+		public override string ToString()
+		{
+			string s = string.Empty;
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+				{
+					if (squares[i, j].State != StateEnum.Empty)
+					{
+						s += string.Format("{0},{1}={2}, ", i, j, squares[i, j].State == StateEnum.Black ? "B" : "W");
+					}
+				}
+			return s;
+		}
+	}
+
+    public class Board
+	{
+		public BoardState boardState;
+		private BoardState previousState;
 		private int leftMarginDimension, topMarginDimension, sideDimension;
-		public int squareDimension;
-		public bool WhitesTurn = false;
-		private bool previousWhitesTurn = false;
+		public static int squareDimension;
 
 		public MainForm mainForm;
 		private Timer computersTurnTimer = null;
-		public int flipDelay = 100;
-		public bool cancelFlipping = false;
+		public const int flipDelay = 100;
+		public static bool cancelFlipping = false;
 		
 		public ComputerPlayer ComputerPlayer = null;
 
@@ -28,7 +158,7 @@ namespace Othello
 				int count = 0;
 				for (int row=0; row<8; row++)
 					for (int column=0; column<8; column++)
-						if (squares[row,column].State == StateEnum.White)
+						if (boardState.squares[row,column].State == StateEnum.White)
 							count++;
 				return count;
 			}
@@ -41,7 +171,7 @@ namespace Othello
 				int count = 0;
 				for (int row=0; row<8; row++)
 					for (int column=0; column<8; column++)
-						if (squares[row,column].State == StateEnum.Black)
+						if (boardState.squares[row,column].State == StateEnum.Black)
 							count++;
 				return count;
 			}
@@ -56,31 +186,22 @@ namespace Othello
 
 		public void ClearBoard()
 		{
-			squares = new Square[8,8];
-			previousState = new Square[8,8];
-			for (int i=0; i<8; i++)
-				for (int j=0; j<8; j++)
-				{
-					squares[i, j] = new Square(this, i, j);
-					previousState[i, j] = new Square(this, i, j);
-				}
-
-			squares[3,3].State = previousState[3,3].State = StateEnum.Black;
-			squares[4,4].State = previousState[4,4].State = StateEnum.Black;
-			squares[3,4].State = previousState[3,4].State = StateEnum.White;
-			squares[4,3].State = previousState[4,3].State = StateEnum.White;
+			boardState = new BoardState();
+			previousState = null;
 		}
 
 		public void Undo()
-		{                     
+		{
+			if (previousState == null)
+				return;
+
 			if (computersTurnTimer != null)
 				computersTurnTimer.Stop();
 			cancelFlipping = true;
 
-			WhitesTurn = previousWhitesTurn;
-			for (int i=0; i<8; i++)
-				for (int j=0; j<8; j++)
-					squares[i, j].State = previousState[i, j].State;
+			boardState = previousState;
+			previousState = null;
+
 			UpdateStatus();
 		}
 
@@ -89,7 +210,7 @@ namespace Othello
 			ClearBoard();
 			UpdateStatus();
 
-			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !WhitesTurn))
+			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
 				int row, column;
 				ComputerPlayer.Choose(out row, out column);
@@ -136,7 +257,7 @@ namespace Othello
 
 				for (int column=0; column<8; column++)
 				{
-					squares[row,column].Draw(g);
+                    boardState.squares[row,column].Draw(g);
 					g.TranslateTransform(squareDimension, 0, MatrixOrder.Append);
 				}
 
@@ -148,7 +269,7 @@ namespace Othello
 
 		public void Click(System.Windows.Forms.MouseEventArgs e)
 		{
-			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !WhitesTurn))
+			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 				return;
 
 			Point pointOnBoard = new Point(e.X - leftMarginDimension, e.Y - topMarginDimension);
@@ -162,31 +283,29 @@ namespace Othello
 			if (row > 7 || column > 7)
 				return;
 
-			if (!IsLegalMove(row, column))
+			if (!boardState.IsLegalMove(row, column))
 			{
 				System.Windows.Forms.MessageBox.Show("Illegal Move");
 				return;
 			}
 
-			previousWhitesTurn = WhitesTurn;
-			for (int i=0; i<8; i++)
-				for (int j=0; j<8; j++)
-					previousState[i, j].State = squares[i, j].State;
+			previousState = boardState;
+			boardState = boardState.copy();
 
 			MakeMove(row, column);
 		}
 
 		public void MakeMove(int row, int column)
 		{
-			if (WhitesTurn)
-				squares[row,column].State = StateEnum.White;
+			if (boardState.WhitesTurn)
+                boardState.squares[row,column].State = StateEnum.White;
 			else
-				squares[row,column].State = StateEnum.Black;
+                boardState.squares[row,column].State = StateEnum.Black;
 
 			Graphics g = mainForm.CreateGraphics();
 			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
 			g.TranslateTransform(column * squareDimension, row * squareDimension, MatrixOrder.Append);
-			squares[row,column].Draw(g);
+            boardState.squares[row,column].Draw(g);
 
 			cancelFlipping = false;
 			FlipPieces(row, column);
@@ -198,13 +317,13 @@ namespace Othello
 		{
 			ClearLegalMoves();
 
-			WhitesTurn = !WhitesTurn;
+            boardState.WhitesTurn = !boardState.WhitesTurn;
 
-			if (!IsLegalMoveAvailable())
+			if (!boardState.IsLegalMoveAvailable())
 			{
-				WhitesTurn = !WhitesTurn;
+                boardState.WhitesTurn = !boardState.WhitesTurn;
 
-				if (IsLegalMoveAvailable())
+				if (boardState.IsLegalMoveAvailable())
 				{
 					System.Windows.Forms.MessageBox.Show("No legal moves available...  Skipping turn");
 				}
@@ -223,7 +342,7 @@ namespace Othello
 
 			UpdateStatus();
 
-			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !WhitesTurn))
+			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
 				computersTurnTimer = new Timer();
 				computersTurnTimer.Interval = flipDelay * 20;
@@ -244,89 +363,13 @@ namespace Othello
 
 		private void UpdateStatus()
 		{
-			if (WhitesTurn)
+			if (boardState.WhitesTurn)
 				mainForm.statusBarTurn.Text = "White's Turn";
 			else
 				mainForm.statusBarTurn.Text = "Black's Turn";
 
 			mainForm.statusBarBlackScore.Text = string.Format("Black={0}", BlackCount); 
 			mainForm.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
-		}
-
-		public bool IsLegalMoveAvailable()
-		{
-			for (int i=0; i<8; i++)
-				for (int j=0; j<8; j++)
-					if (IsLegalMove(i, j))
-						return true;
-
-			return false;
-		}
-		
-		public bool IsLegalMove(int row, int column)
-		{
-			if (squares[row,column].State == StateEnum.Black || squares[row,column].State == StateEnum.White)
-				return false;
-
-			if (IsSuccessfulDirection(row, column, -1, 0))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, -1, 1))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, 0, 1))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, 1, 1))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, 1, 0))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, 1, -1))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, 0, -1))
-				return true;
-
-			if (IsSuccessfulDirection(row, column, -1, -1))
-				return true;
-
-			return false;
-		}
-
-		private bool IsSuccessfulDirection(int row, int column, int dx, int dy)
-		{
-			bool foundOpposite = false;
-
-			row += dx;
-			column += dy;
-
-			while (row >= 0 && row < 8 && column >=0 && column < 8)
-			{
-				if (squares[row,column].State != StateEnum.Black && squares[row,column].State != StateEnum.White)
-					return false;
-
-				if (foundOpposite)
-				{
-					if (squares[row,column].State == StateEnum.White && WhitesTurn || 
-						squares[row,column].State == StateEnum.Black && !WhitesTurn)
-						return true;
-				}
-				else
-				{
-					if (squares[row,column].State == StateEnum.White && !WhitesTurn || 
-						squares[row,column].State == StateEnum.Black && WhitesTurn)
-						foundOpposite = true;
-					else
-						return false;
-				}
-
-				row += dx;
-				column += dy;
-			}
-
-			return false;
 		}
 
 		private void FlipPieces(int row, int column)
@@ -349,11 +392,11 @@ namespace Othello
 			// find partner piece
 			while (row >= 0 && row < 8 && column >=0 && column < 8)
 			{
-				if (squares[row,column].State != StateEnum.Black && squares[row,column].State != StateEnum.White)
+				if (boardState.squares[row,column].State != StateEnum.Black && boardState.squares[row,column].State != StateEnum.White)
 					return;
 
-				if (WhitesTurn && squares[row,column].State == StateEnum.Black || 
-					!WhitesTurn && squares[row,column].State == StateEnum.White) // not a partner piece
+				if (boardState.WhitesTurn && boardState.squares[row,column].State == StateEnum.Black || 
+					!boardState.WhitesTurn && boardState.squares[row,column].State == StateEnum.White) // not a partner piece
 				{
 					row += deltaRow;
 					column += deltaColumn;
@@ -371,12 +414,12 @@ namespace Othello
 				// work back to placed piece flipping
 				while (!(row == originalRow && column == originalColumn))
 				{
-					if (WhitesTurn)
-						squares[row,column].State = StateEnum.White;
+					if (boardState.WhitesTurn)
+                        boardState.squares[row,column].State = StateEnum.White;
 					else
-						squares[row,column].State = StateEnum.Black;
+                        boardState.squares[row,column].State = StateEnum.Black;
 
-					squares[row,column].Flip(g);
+                    boardState.squares[row,column].Flip(g);
 
 					row -= deltaRow;
 					column -= deltaColumn;
@@ -390,8 +433,8 @@ namespace Othello
 		{
 			for (int row=0; row<8; row++)
 				for (int column=0; column<8; column++)
-					if (IsLegalMove(row, column))
-						squares[row,column].State = StateEnum.LegalMove;
+					if (boardState.IsLegalMove(row, column))
+                        boardState.squares[row,column].State = StateEnum.LegalMove;
 		}
 
 		private void ClearLegalMoves()
@@ -401,14 +444,14 @@ namespace Othello
 
 			for (int row=0; row<8; row++)
 				for (int column=0; column<8; column++)
-					if (squares[row,column].State == StateEnum.LegalMove)
+					if (boardState.squares[row,column].State == StateEnum.LegalMove)
 					{
 						GraphicsState graphicsState = g.Save();
 
 						g.TranslateTransform(column * squareDimension, row * squareDimension, MatrixOrder.Append);
 
-						squares[row,column].State = StateEnum.Empty;
-						squares[row,column].Draw(g);
+                        boardState.squares[row,column].State = StateEnum.Empty;
+                        boardState.squares[row,column].Draw(g);
 
 						g.Restore(graphicsState);
 					}

@@ -7,28 +7,36 @@ namespace Othello
 {
 	public enum StateEnum {Empty, Black, White, LegalMove};
 
+	/// <summary>
+	/// represents a Square that has a State and can Draw itself & animate Flipping itself
+	/// </summary>
 	public class Square
 	{
 		private StateEnum state;
-		private Board board;
 		private int row, column;
-		private Graphics g;
+		private Graphics gForFlipping;
 		private Timer flipTimer = null;
 		private int flipAngle = 0;
 
 		public StateEnum State { get{return state;} set{state = value;} }
 
-		public Square(Board board, int row, int column)
-		{
-			this.board = board;
-			this.row = row;
-			this.column = column;
-			state = StateEnum.Empty;
-		}
+        public Square(int row, int column)
+        {
+            this.row = row;
+            this.column = column;
+            state = StateEnum.Empty;
+        }
 
-		public void Draw(Graphics g)
+        public Square(int row, int column, StateEnum state)
+        {
+            this.row = row;
+            this.column = column;
+            this.state = state;
+        }
+
+        public void Draw(Graphics g)
 		{
-			int pieceRadius = (int)Math.Round(0.4 * board.squareDimension);
+			int pieceRadius = (int)Math.Round(0.4 * Board.squareDimension);
 
 			switch (state)
 			{
@@ -53,7 +61,7 @@ namespace Othello
 				case StateEnum.LegalMove:
 				{
 					Brush brush = new SolidBrush(Color.Red);
-					int legalMoveRadius = (int)Math.Round(0.2 * board.squareDimension);
+					int legalMoveRadius = (int)Math.Round(0.2 * Board.squareDimension);
 					g.FillEllipse(brush, -legalMoveRadius, -legalMoveRadius, 2*legalMoveRadius, 2*legalMoveRadius); 
 					break;
 				}
@@ -62,7 +70,7 @@ namespace Othello
 
 		public void Flip(Graphics g)
 		{
-			this.g = g;
+			this.gForFlipping = g;
 			flipAngle = 0;
 
 			if (flipTimer != null)
@@ -72,24 +80,24 @@ namespace Othello
 			}
 
 			flipTimer = new Timer();
-			flipTimer.Interval = board.flipDelay;
+			flipTimer.Interval = Board.flipDelay;
 			flipTimer.Tick += new EventHandler(OnFlipTimer);
 			flipTimer.Start();
 		}
 
 		private void OnFlipTimer(Object myObject, EventArgs myEventArgs) 
 		{
-			if (board.cancelFlipping)
+			if (Board.cancelFlipping)
 			{
 				flipTimer.Stop();
 				flipTimer = null;
 				return;
 			}
 
-			Bitmap bitmap = new Bitmap(board.squareDimension, board.squareDimension);
+			Bitmap bitmap = new Bitmap(Board.squareDimension, Board.squareDimension);
 			Graphics bitmapGraphics = Graphics.FromImage(bitmap);
-			bitmapGraphics.TranslateTransform(board.squareDimension/2, board.squareDimension/2);
-			int pieceRadius = (int)Math.Round(0.4 * board.squareDimension);
+			bitmapGraphics.TranslateTransform(Board.squareDimension/2, Board.squareDimension/2);
+			int pieceRadius = (int)Math.Round(0.4 * Board.squareDimension);
 			Brush brush = new SolidBrush(Color.Green);
 			bitmapGraphics.FillEllipse(brush, -pieceRadius, -pieceRadius, 2 * pieceRadius, 2 * pieceRadius);
 
@@ -98,7 +106,7 @@ namespace Othello
 			else
 				brush = new SolidBrush(Color.White);
 
-			int pieceWidth = (int)Math.Round(0.4 * board.squareDimension * Math.Cos(Math.PI * flipAngle / 180));
+			int pieceWidth = (int)Math.Round(0.4 * Board.squareDimension * Math.Cos(Math.PI * flipAngle / 180));
 			bitmapGraphics.FillEllipse(brush, -pieceWidth, -pieceRadius, 2 * pieceWidth, 2 * pieceRadius);
 
 			if (flipAngle >= 180)
@@ -109,7 +117,7 @@ namespace Othello
 
 			flipAngle += 10;
 
-			g.DrawImage(bitmap, column * board.squareDimension - board.squareDimension / 2, row * board.squareDimension - board.squareDimension / 2); // draw bitmap from upper-left of square
+			gForFlipping.DrawImage(bitmap, column * Board.squareDimension - Board.squareDimension / 2, row * Board.squareDimension - Board.squareDimension / 2); // draw bitmap from upper-left of square
 		}
 	}
 }

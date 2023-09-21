@@ -28,7 +28,7 @@ namespace Othello
 			{
 				for (int j = 0; j < 8; j++)
 				{
-					if (Board.IsLegalMove(i, j))
+					if (Board.boardState.IsLegalMove(i, j))
 					{
 						int squareScore = Score(i, j);
 						if (squareScore > maxScore || (squareScore == maxScore && random.NextDouble() > 0.5))
@@ -81,11 +81,11 @@ namespace Othello
 
 			while (row >= 0 && row < 8 && column >=0 && column < 8)
 			{
-				if (Board.squares[row,column].State == StateEnum.Empty)
+				if (Board.boardState.squares[row,column].State == StateEnum.Empty)
 					return score;
 
-				if (AmIWhite && Board.squares[row,column].State == StateEnum.Black || 
-					!AmIWhite && Board.squares[row,column].State == StateEnum.White)
+				if (AmIWhite && Board.boardState.squares[row,column].State == StateEnum.Black || 
+					!AmIWhite && Board.boardState.squares[row,column].State == StateEnum.White)
 				{
 					row += deltaRow;
 					column += deltaColumn;
@@ -125,6 +125,7 @@ namespace Othello
 				default:
 					return 1;
 				case LevelEnum.Intermediate:
+				case LevelEnum.Advanced:
 				{
 					switch (row)
 					{
