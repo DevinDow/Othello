@@ -91,6 +91,7 @@ namespace Othello
 			switch (Level)
 			{
 				case LevelEnum.Beginner:
+				default:
 					return 1;
 				case LevelEnum.Intermediate:
 				{
@@ -162,8 +163,6 @@ namespace Othello
 					}
 				}
 			}
-
-			return 1;
 		}	
 	}
 }
