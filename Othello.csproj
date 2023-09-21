@@ -82,9 +82,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Board.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Board.cs" />
     <Compile Include="ComputerPlayer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -95,6 +93,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="App.ico" />
+    <Content Include="TODO.txt" />
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>

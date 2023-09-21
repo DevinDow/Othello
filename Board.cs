@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Othello
 {
-	public class BoardState
+	public class BoardState : ICloneable
 	{
 		// Fields
 		public Square[,] squares;
@@ -30,21 +30,6 @@ namespace Othello
         }
 
         // Methods
-		public BoardState copy()
-		{
-			BoardState newBoardState = new BoardState();
-            newBoardState.squares = new Square[8, 8];
-            newBoardState.WhitesTurn = WhitesTurn;
-
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                {
-                    newBoardState.squares[i, j] = new Square(i, j, squares[i, j].State);
-                }
-
-			return newBoardState;
-        }
-
         public bool IsLegalMoveAvailable()
 		{
 			for (int i = 0; i < 8; i++)
@@ -135,7 +120,49 @@ namespace Othello
 				}
 			return s;
 		}
-	}
+
+        // ICloneable
+		/// <summary>
+		/// returns a Deep Copy
+		/// </summary>
+		/// <returns>a Deep Copy of this</returns>
+        public object Clone()
+        {
+            BoardState newBoardState = new BoardState();
+            newBoardState.squares = new Square[8, 8];
+            newBoardState.WhitesTurn = WhitesTurn;
+
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    newBoardState.squares[i, j] = new Square(i, j, squares[i, j].State);
+                }
+
+            return newBoardState;
+        }
+    }
+
+    public class Choice
+    {
+        public int row, column;
+
+        public Choice()
+        {
+            row = -1;
+            column = -1;
+        }
+
+        public Choice(int row, int column)
+        {
+            this.row = row;
+            this.column = column;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0},{1})", column + 1, row+1);
+        }
+    }
 
     public class Board
 	{
@@ -212,9 +239,7 @@ namespace Othello
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				int row, column;
-				ComputerPlayer.Choose(out row, out column);
-				MakeMove(row, column);
+				MakeMove(ComputerPlayer.Choose());
 			}
 		}
 
@@ -277,38 +302,37 @@ namespace Othello
 			if (pointOnBoard.X < 0 || pointOnBoard.Y < 0)
 				return;
 
-			int column = pointOnBoard.X / squareDimension;
-			int row = pointOnBoard.Y / squareDimension;
+			Choice choice = new Choice(pointOnBoard.Y / squareDimension, pointOnBoard.X / squareDimension);
 
-			if (row > 7 || column > 7)
+			if (choice.row > 7 || choice.column > 7)
 				return;
 
-			if (!boardState.IsLegalMove(row, column))
+			if (!boardState.IsLegalMove(choice.row, choice.column))
 			{
 				System.Windows.Forms.MessageBox.Show("Illegal Move");
 				return;
 			}
 
 			previousState = boardState;
-			boardState = boardState.copy();
+			boardState = (BoardState)boardState.Clone();
 
-			MakeMove(row, column);
+			MakeMove(choice);
 		}
 
-		public void MakeMove(int row, int column)
+		public void MakeMove(Choice choice)
 		{
 			if (boardState.WhitesTurn)
-                boardState.squares[row,column].State = StateEnum.White;
+                boardState.squares[choice.row, choice.column].State = StateEnum.White;
 			else
-                boardState.squares[row,column].State = StateEnum.Black;
+                boardState.squares[choice.row, choice.column].State = StateEnum.Black;
 
 			Graphics g = mainForm.CreateGraphics();
 			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
-			g.TranslateTransform(column * squareDimension, row * squareDimension, MatrixOrder.Append);
-            boardState.squares[row,column].Draw(g);
+			g.TranslateTransform(choice.column * squareDimension, choice.row * squareDimension, MatrixOrder.Append);
+            boardState.squares[choice.row, choice.column].Draw(g);
 
 			cancelFlipping = false;
-			FlipPieces(row, column);
+			FlipPieces(choice.row, choice.column);
 
 			ChangeTurns();
 		}
@@ -356,9 +380,7 @@ namespace Othello
 			computersTurnTimer.Stop();
 			computersTurnTimer = null;
 
-			int row, column;
-			ComputerPlayer.Choose(out row, out column);
-			MakeMove(row, column);
+			MakeMove(ComputerPlayer.Choose());
 		}
 
 		private void UpdateStatus()

@@ -1,6 +1,8 @@
 ﻿TODO
 ----
-- previousState can be a stack
+- BoardState should implement MakMove()
+	- need to implement which pieces to Flip between boardState & previousState
 - Advanced = MiniMax()
-	- 
+	- BoardState.score - currently scores how many are flipped...  Should score a state
 - change Opponent does not need to reset Board
+- previousState can be a stack

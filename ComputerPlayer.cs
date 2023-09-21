@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Othello
 {
@@ -11,42 +12,89 @@ namespace Othello
 		public LevelEnum Level;
 		private Random random = new Random();
 
-		public ComputerPlayer() {}
+		public ComputerPlayer() { }
 
 		/// <summary>
-		/// loops through all Legal Moves
 		/// returns ComputerPlayer's choice for next move
 		/// </summary>
-		/// <param name="row">returns row of chosen Move</param>
-		/// <param name="column">returns column of chosen Move</param>
-		public void Choose(out int row, out int column)
+		public Choice Choose()
 		{
-			int maxScore = -100;
-			row = column = -1;
+			Choice choice;
+			int depth = 0;
+			if (Level == LevelEnum.Advanced)
+				depth = 2;
+			scoreAllSquares(Board.boardState, true, depth, out choice);
+			return choice;
+        }
 
-			for (int i = 0; i < 8; i++)
+        /// <summary>
+        /// loops through all Legal Moves
+		/// https://en.wikipedia.org/wiki/Minimax#Pseudocode
+        /// </summary>
+        /// <param name="boardState">recursive Board State</param>
+        /// <param name="maximizing">whether to Maximize or Minimize Score</param>
+        /// <param name="depth">how many times to recurse through minimax</param>
+        /// <param name="minimaxChoice">Choice that minimizes/maximizes score</param>
+        /// <returns>minimaxScore</returns>
+        private int scoreAllSquares(BoardState boardState, bool maximizing, int depth, out Choice minimaxChoice)
+        {
+			minimaxChoice = new Choice();
+            int minimaxScore = maximizing ? -int.MaxValue : int.MaxValue;
+
+			// loop through all Legal Moves
+            for (int i = 0; i < 8; i++)
 			{
 				for (int j = 0; j < 8; j++)
 				{
-					if (Board.boardState.IsLegalMove(i, j))
+					Choice choice = new Choice(i, j);
+					if (Board.boardState.IsLegalMove(choice.row, choice.column))
 					{
-						int squareScore = Score(i, j);
-						if (squareScore > maxScore || (squareScore == maxScore && random.NextDouble() > 0.5))
-							row = i;
-						column = j;
-						maxScore = squareScore;
-					}
-				}
-			}
-		}
+						int squareScore;
+						if (depth == 0)
+						{
+							squareScore = Score(choice.row, choice.column);
+						}
+						else
+						{
+							Choice miniMaxChoice;
+							squareScore = scoreAllSquares((BoardState)boardState.Clone(), !maximizing, depth - 1, out miniMaxChoice);
+						}
 
-		/// <summary>
-		/// returns an integer Score for a Legal Move that sums the Scores for the chosen Square and all flipped Squares
-		/// </summary>
-		/// <param name="row"></param>
-		/// <param name="column"></param>
-		/// <returns>score for specified Move</returns>
-		private int Score(int row, int column)
+                        Debug.Print("legal: {0} score={1}", choice, squareScore);
+
+                        if (maximizing) // maximizing ComputerPlayer's Score
+                        {
+							if (squareScore > minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
+							{
+								minimaxChoice.row = i;
+								minimaxChoice.column = j;
+								minimaxScore = squareScore;
+                            }
+                        }
+                        else // minimizing Human's Score
+                        {
+							if (squareScore < minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
+							{
+                                minimaxChoice.row = i;
+                                minimaxChoice.column = j;
+                                minimaxScore = squareScore;
+                            }
+                        }
+                    }
+                }
+			}
+
+            Debug.Print("choosing {0} score={1}", minimaxChoice, minimaxScore);
+            return minimaxScore;
+        }
+
+        /// <summary>
+        /// returns an integer Score for a Legal Move that sums the Scores for the chosen Square and all flipped Squares
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <returns>score for specified Move</returns>
+        private int Score(int row, int column)
 		{
 			// Score this Square
 			int score = ScoreSquare(row, column);
