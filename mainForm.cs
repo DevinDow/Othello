@@ -215,7 +215,6 @@ namespace Othello
 		private void leaglMovesItem_Click(object sender, System.EventArgs e)
 		{
 			board.ShowLegalMoves();
-			Invalidate();
 		}
 
 		private void newGameItem_Click(object sender, System.EventArgs e)

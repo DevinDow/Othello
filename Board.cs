@@ -255,13 +255,26 @@ namespace Othello
 		
 		public void ShowLegalMoves()
 		{
+            Graphics g = MainForm.instance.CreateGraphics();
+            SetupGraphics(g);
+
 			for (int x = 1; x <= 8; x++)
+			{
 				for (int y = 1; y <= 8; y++)
 				{
-					Coord choice = new Coord(x, y);
-					if (boardState.IsLegalMove(choice))
-						boardState.GetSquare(choice).State = StateEnum.LegalMove;
-				}
+					Coord coord = new Coord(x, y);
+                    if (boardState.IsLegalMove(coord))
+					{
+                        Square square = boardState.GetSquare(coord);
+                        square.State = StateEnum.LegalMove;
+
+                        GraphicsState graphicsState = g.Save();
+                        g.TranslateTransform((x - 1) * squareDimension, (y - 1) * squareDimension, MatrixOrder.Append);
+                        square.Draw(g);
+                        g.Restore(graphicsState);
+                    }
+                }
+			}
 		}
 
 		private void ClearLegalMoves()
@@ -279,7 +292,7 @@ namespace Othello
 						square.State = StateEnum.Empty;
 
 						GraphicsState graphicsState = g.Save();
-						g.TranslateTransform((x-1) * squareDimension, (y-1) * squareDimension, MatrixOrder.Append);
+						g.TranslateTransform((x - 1) * squareDimension, (y - 1) * squareDimension, MatrixOrder.Append);
 						square.Draw(g);
 						g.Restore(graphicsState);
 					}
