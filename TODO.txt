@@ -1,7 +1,5 @@
 ﻿TODO
 ----
-- BoardState should implement MakeMove()
-	- need to implement which pieces to Flip between boardState & previousState
 - Advanced = MiniMax()
 	- BoardState.score - currently scores how many are flipped...  Should score a state
 

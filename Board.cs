@@ -119,6 +119,61 @@ namespace Othello
 			return false;
 		}
 
+        public void FlipPieces(Coord coord)
+        {
+            FlipInDirection(coord, 0, -1);
+            FlipInDirection(coord, -1, -1);
+            FlipInDirection(coord, -1, 0);
+            FlipInDirection(coord, -1, 1);
+            FlipInDirection(coord, 0, 1);
+            FlipInDirection(coord, 1, 1);
+            FlipInDirection(coord, 1, 0);
+            FlipInDirection(coord, 1, -1);
+        }
+
+        private void FlipInDirection(Coord choice, int dx, int dy)
+        {
+            int x = choice.x + dx;
+            int y = choice.y + dy;
+
+            // find partner square
+            while (x >= 1 && x <= 8 && y >= 1 && y <= 8)
+            {
+                Square partnerSquare = GetSquare(new Coord(x, y));
+                if (partnerSquare.State != StateEnum.Black && partnerSquare.State != StateEnum.White)
+                    return;
+
+                if (WhitesTurn && partnerSquare.State == StateEnum.Black ||
+                    !WhitesTurn && partnerSquare.State == StateEnum.White) // not a partner piece
+                {
+                    x += dx;
+                    y += dy;
+                    continue;
+                }
+
+                // partner square found
+                x -= dx;
+                y -= dy;
+
+                // work back to placed piece flipping
+                while (!(x == choice.x && y == choice.y))
+                {
+                    Square flippedSquare = GetSquare(new Coord(x, y));
+                    if (WhitesTurn)
+                        flippedSquare.State = StateEnum.White;
+                    else
+                        flippedSquare.State = StateEnum.Black;
+
+                    flippedSquare.Flip();
+
+                    x -= dx;
+                    y -= dy;
+                }
+
+                return;
+            }
+        }
+
         /// <summary>
         /// returns a Deep Copy
         /// </summary>
@@ -362,7 +417,7 @@ namespace Othello
             square.Draw(g);
 
 			cancelFlipping = false;
-			FlipPieces(coord);
+            boardState.FlipPieces(coord);
 
 			ChangeTurns();
 		}
@@ -423,62 +478,7 @@ namespace Othello
             MainForm.instance.statusBarBlackScore.Text = string.Format("Black={0}", BlackCount);
             MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
 		}
-
-		private void FlipPieces(Coord coord)
-		{
-			FlipInDirection(coord, 0, -1);
-			FlipInDirection(coord, -1, -1);
-			FlipInDirection(coord, -1, 0);
-			FlipInDirection(coord, -1, 1);
-			FlipInDirection(coord, 0, 1);
-			FlipInDirection(coord, 1, 1);
-			FlipInDirection(coord, 1, 0);
-			FlipInDirection(coord, 1, -1);
-		}
-
-		private void FlipInDirection(Coord choice, int dx, int dy)
-		{
-            int x = choice.x + dx;
-            int y = choice.y + dy;
-
-			// find partner square
-			while (x >= 1 && x <= 8 && y >= 1 && y <= 8)
-			{
-				Square partnerSquare = boardState.GetSquare(new Coord(x, y));
-				if (partnerSquare.State != StateEnum.Black && partnerSquare.State != StateEnum.White)
-					return;
-
-				if (boardState.WhitesTurn && partnerSquare.State == StateEnum.Black || 
-					!boardState.WhitesTurn && partnerSquare.State == StateEnum.White) // not a partner piece
-				{
-					x += dx;
-					y += dy;
-					continue;
-				}
-
-				// partner square found
-				x -= dx;
-				y -= dy;
-				
-				// work back to placed piece flipping
-				while (!(x == choice.x && y == choice.y))
-				{
-                    Square flippedSquare = boardState.GetSquare(new Coord(x, y));
-                    if (boardState.WhitesTurn)
-                        flippedSquare.State = StateEnum.White;
-					else
-                        flippedSquare.State = StateEnum.Black;
-
-                    flippedSquare.Flip();
-
-					x -= dx;
-					y -= dy;
-				}
-
-				return;
-			}
-		}
-			
+		
 		public void ShowLegalMoves()
 		{
 			for (int x = 1; x <= 8; x++)
