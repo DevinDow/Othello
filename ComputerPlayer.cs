@@ -20,10 +20,7 @@ namespace Othello
 		public Coord Choose()
 		{
 			Coord choice;
-			int depth = 0;
-			if (Level == LevelEnum.Advanced)
-				depth = 2;
-			scoreAllSquares(Board.boardState, true, depth, out choice);
+			scoreAllSquares(Board.boardState, true, Level == LevelEnum.Advanced ? 2 : 0, out choice);
 			return choice;
         }
 

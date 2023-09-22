@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Othello
 {
-	public class BoardState : ICloneable
+	public class BoardState
 	{
 		// Fields
 		public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
@@ -119,8 +119,29 @@ namespace Othello
 			return false;
 		}
 
-		// Overrides
-		public override string ToString()
+        /// <summary>
+        /// returns a Deep Copy
+        /// </summary>
+        /// <returns>a Deep Copy of this</returns>
+        public BoardState Clone()
+        {
+            BoardState newBoardState = new BoardState();
+            newBoardState.squares = new Square[8, 8];
+            newBoardState.WhitesTurn = WhitesTurn;
+
+            for (int x = 1; x <= 8; x++)
+                for (int y = 1; y <= 8; y++)
+                {
+                    Coord coord = new Coord(x, y);
+                    Square square = GetSquare(coord);
+                    newBoardState.SetSquare(coord, new Square(x, y, square.State));
+                }
+
+            return newBoardState;
+        }
+
+        // Overrides
+        public override string ToString()
 		{
 			string s = string.Empty;
 			for (int x = 1; x <= 8; x++)
@@ -134,28 +155,6 @@ namespace Othello
 				}
 			return s;
 		}
-
-        // ICloneable
-		/// <summary>
-		/// returns a Deep Copy
-		/// </summary>
-		/// <returns>a Deep Copy of this</returns>
-        public object Clone()
-        {
-            BoardState newBoardState = new BoardState();
-            newBoardState.squares = new Square[8, 8];
-            newBoardState.WhitesTurn = WhitesTurn;
-
-            for (int x = 1; x <= 8; x++)
-                for (int y = 1; y <= 8; y++)
-                {
-					Coord coord = new Coord(x, y);
-					Square square = GetSquare(coord);
-					newBoardState.SetSquare(coord, new Square(x, y, square.State));
-                }
-
-            return newBoardState;
-        }
     }
 
 	/// <summary>
@@ -341,7 +340,7 @@ namespace Othello
 			}
 
 			previousState = boardState;
-			boardState = (BoardState)boardState.Clone();
+			boardState = boardState.Clone();
 
 			MakeMove(choice);
 		}
