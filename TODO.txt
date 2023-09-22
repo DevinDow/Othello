@@ -3,7 +3,6 @@
 - Advanced = MiniMax()
 	- BoardState.score - currently scores how many are flipped...  Should score a state
 
-- should ClearLegalMoves() really draw themselves?
 - implement IEnumerable for Board's Squares
 - change Opponent does not need to reset Board
 - previousState can be a stack
