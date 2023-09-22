@@ -269,22 +269,22 @@ namespace Othello
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
 
-			for (int x = 0; x < 8; x++)
-				for (int y = 0; y < 8; y++)
-                    if (boardState.squares[x, y].State == StateEnum.LegalMove) 
-						boardState.squares[x, y].State = StateEnum.Empty;
-/*					if (boardState.squares[x,y].State == StateEnum.LegalMove)
+			for (int x = 1; x <= 8; x++)
+			{
+				for (int y = 1; y <= 8; y++)
+				{
+					Square square = boardState.GetSquare(new Coord(x, y));
+					if (square.State == StateEnum.LegalMove)
 					{
+						square.State = StateEnum.Empty;
+
 						GraphicsState graphicsState = g.Save();
-
-						g.TranslateTransform(x * squareDimension, y * squareDimension, MatrixOrder.Append);
-
-						Square square = boardState.GetSquare(new Coord(x, y));
-                        square.State = StateEnum.Empty;
-                        square.Draw(g);
-
+						g.TranslateTransform((x-1) * squareDimension, (y-1) * squareDimension, MatrixOrder.Append);
+						square.Draw(g);
 						g.Restore(graphicsState);
-					}*/
+					}
+				}
+			}
         }
 	}
 }
