@@ -10,14 +10,17 @@ namespace Othello
 		public static List<Coord> coordsToFlip;
 		public static StateEnum newState;
 
-		private static Graphics gForFlipping;
+		private static Graphics boardGraphics;
         private static Timer flipTimer = null;
         private static int flipAngle = 0;
 
+        /// <summary>
+        /// setup the boardGraphics and start the Timer 
+        /// </summary>
         public static void Animate()
         {
-            gForFlipping = MainForm.instance.CreateGraphics();
-			Board.SetupGraphics(gForFlipping);
+            boardGraphics = MainForm.instance.CreateGraphics();
+			Board.SetupGraphics(boardGraphics);
 
 			flipAngle = 0;
 
@@ -33,7 +36,12 @@ namespace Othello
 			flipTimer.Start();
 		}
 
-		private static void OnFlipTimer(Object myObject, EventArgs myEventArgs)
+        /// <summary>
+        /// draw flippingPieceBitmap at each coordToFlip
+        /// </summary>
+        /// <param name="myObject"></param>
+        /// <param name="myEventArgs"></param>
+        private static void OnFlipTimer(Object myObject, EventArgs myEventArgs)
 		{
 			if (Board.cancelFlipping)
 			{
@@ -42,15 +50,19 @@ namespace Othello
 				return;
 			}
 
-			Bitmap flippingPeieceBitmap = DrawFlippingPieceToBitmap();
+			Bitmap flippingPieceBitmap = DrawFlippingPieceToBitmap();
 
-            // draw flippingPeieceBitmap at each coordToFlip
+            // draw flippingPieceBitmap at each coordToFlip
             foreach (Coord coordToFlip in coordsToFlip)
 			{
-				gForFlipping.DrawImage(flippingPeieceBitmap, (coordToFlip.x - 1) * Board.squareDimension - Board.squareDimension / 2, (coordToFlip.y - 1) * Board.squareDimension - Board.squareDimension / 2); // draw bitmap from upper-left of square
+				boardGraphics.DrawImage(flippingPieceBitmap, (coordToFlip.x - 1) * Board.squareDimension - Board.squareDimension / 2, (coordToFlip.y - 1) * Board.squareDimension - Board.squareDimension / 2); // draw bitmap at upper-left of square
 			}
         }
 
+		/// <summary>
+		/// draw a flipping Piece to a Bitmap
+		/// </summary>
+		/// <returns>Bitmap of current rotation of a Piece</returns>
         private static Bitmap DrawFlippingPieceToBitmap()
 		{ 
 			// draw to a bitmap
