@@ -70,10 +70,9 @@ namespace Othello
 
 		public void Flip()
 		{
-            Graphics g = MainForm.instance.CreateGraphics();
-			Board.SetupGraphics(g);
+            gForFlipping = MainForm.instance.CreateGraphics();
+			Board.SetupGraphics(gForFlipping);
 
-            this.gForFlipping = g;
 			flipAngle = 0;
 
 			if (flipTimer != null)
