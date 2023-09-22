@@ -39,9 +39,9 @@ namespace Othello
             int minimaxScore = maximizing ? -int.MaxValue : int.MaxValue;
 
 			// loop through all Legal Moves
-            for (int x = 0; x < 8; x++)
+            for (int x = 1; x <= 8; x++)
 			{
-				for (int y = 0; y < 8; y++)
+				for (int y = 1; y <= 8; y++)
 				{
 					Coord choice = new Coord(x, y);
 					if (Board.boardState.IsLegalMove(choice))
