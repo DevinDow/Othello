@@ -175,10 +175,7 @@ namespace Othello
 		public void MakeMove(Coord coord)
 		{
 			Square square = boardState.GetSquare(coord);
-			if (boardState.WhitesTurn)
-                square.State = StateEnum.White;
-			else
-                square.State = StateEnum.Black;
+            boardState.FlipPieces(coord);
 
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
@@ -186,7 +183,6 @@ namespace Othello
             square.Draw(g);
 
 			cancelFlipping = false;
-            boardState.FlipPieces(coord);
 
 			// animate flipped pieces
 			Animation.coordsToFlip = boardState.coordsToFlip;
@@ -239,7 +235,8 @@ namespace Othello
 			computersTurnTimer.Stop();
 			computersTurnTimer = null;
 
-			MakeMove(ComputerPlayer.Choose());
+			Coord choice = ComputerPlayer.Choose();
+            MakeMove(choice);
 		}
 
 		private void UpdateStatus()

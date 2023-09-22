@@ -119,6 +119,12 @@ namespace Othello
 
         public void FlipPieces(Coord coord)
         {
+            Square square = GetSquare(coord);
+            if (WhitesTurn)
+                square.State = StateEnum.White;
+            else
+                square.State = StateEnum.Black;
+
             coordsToFlip = new List<Coord>();
             FlipInDirection(coord, 0, -1);
             FlipInDirection(coord, -1, -1);
