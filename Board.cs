@@ -103,6 +103,7 @@ namespace Othello
 
 		public static void SetupGraphics(Graphics g)
 		{
+			// Translate to middle of Square (1,1)
             g.TranslateTransform(leftMarginDimension + squareDimension / 2, topMarginDimension + squareDimension / 2);
         }
 
@@ -127,20 +128,20 @@ namespace Othello
 			}
 
 			SetupGraphics(g);
-			for (int x=1; x<=8; x++)
+			for (int y=1; y<=8; y++) // start at top row
 			{
 				GraphicsState graphicsState = g.Save();
 
-				for (int y=1; y<=8; y++)
+				for (int x=1; x<=8; x++) // start at left column
 				{
 					Square square = boardState.GetSquare(new Coord(x, y));
 					square.Draw(g);
-					g.TranslateTransform(0, squareDimension, MatrixOrder.Append);
+					g.TranslateTransform(squareDimension, 0, MatrixOrder.Append); // next column
 				}
 
 				g.Restore(graphicsState);
 
-				g.TranslateTransform(squareDimension, 0, MatrixOrder.Append);
+				g.TranslateTransform(0, squareDimension, MatrixOrder.Append); // next row
 			}
 		}
 
@@ -187,7 +188,10 @@ namespace Othello
 			cancelFlipping = false;
             boardState.FlipPieces(coord);
 
-			// compare boardState to previousState to animate flipping Squares
+			// animate flipped pieces
+			Animation.coordsToFlip = boardState.coordsToFlip;
+			Animation.newState = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+            Animation.Animate();
 
 			ChangeTurns();
 		}
@@ -265,9 +269,11 @@ namespace Othello
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
 
-			for (int x=0; x<8; x++)
-				for (int y=0; y<8; y++)
-					if (boardState.squares[x,y].State == StateEnum.LegalMove)
+			for (int x = 0; x < 8; x++)
+				for (int y = 0; y < 8; y++)
+                    if (boardState.squares[x, y].State == StateEnum.LegalMove) 
+						boardState.squares[x, y].State = StateEnum.Empty;
+/*					if (boardState.squares[x,y].State == StateEnum.LegalMove)
 					{
 						GraphicsState graphicsState = g.Save();
 
@@ -278,7 +284,7 @@ namespace Othello
                         square.Draw(g);
 
 						g.Restore(graphicsState);
-					}
-		}
+					}*/
+        }
 	}
 }

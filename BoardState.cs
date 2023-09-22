@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Othello
 {
@@ -9,6 +7,7 @@ namespace Othello
         // Fields
         public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
         public bool WhitesTurn;
+        public List<Coord> coordsToFlip;
 
         // Constructor
         public BoardState()
@@ -19,7 +18,7 @@ namespace Othello
             for (int x = 0; x < 8; x++)
                 for (int y = 0; y < 8; y++)
                 {
-                    squares[x, y] = new Square(x, y);
+                    squares[x, y] = new Square(StateEnum.Empty);
                 }
 
             squares[3, 3].State = StateEnum.Black;
@@ -120,6 +119,7 @@ namespace Othello
 
         public void FlipPieces(Coord coord)
         {
+            coordsToFlip = new List<Coord>();
             FlipInDirection(coord, 0, -1);
             FlipInDirection(coord, -1, -1);
             FlipInDirection(coord, -1, 0);
@@ -147,23 +147,23 @@ namespace Othello
                 {
                     x += dx;
                     y += dy;
-                    continue;
+                    continue; // keep looking for partner piece
                 }
 
-                // partner square found
+                // partner piece found
                 x -= dx;
                 y -= dy;
 
                 // work back to placed piece flipping
                 while (!(x == choice.x && y == choice.y))
                 {
-                    Square flippedSquare = GetSquare(new Coord(x, y));
+                    Coord coordToFlip = new Coord(x, y);
+                    coordsToFlip.Add(coordToFlip);
+                    Square flippedSquare = GetSquare(coordToFlip);
                     if (WhitesTurn)
                         flippedSquare.State = StateEnum.White;
                     else
                         flippedSquare.State = StateEnum.Black;
-
-                    flippedSquare.Flip();
 
                     x -= dx;
                     y -= dy;
@@ -188,7 +188,7 @@ namespace Othello
                 {
                     Coord coord = new Coord(x, y);
                     Square square = GetSquare(coord);
-                    newBoardState.SetSquare(coord, new Square(x, y, square.State));
+                    newBoardState.SetSquare(coord, new Square(square.State));
                 }
 
             return newBoardState;
