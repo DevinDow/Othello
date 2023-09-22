@@ -182,44 +182,43 @@ namespace Othello
         }
     }
 
-    public class Board
+	public class Board
 	{
 		// Fields
 		public BoardState boardState;
 		private BoardState previousState;
-		private int leftMarginDimension, topMarginDimension, sideDimension;
+		private static int leftMarginDimension, topMarginDimension, sideDimension;
 		public static int squareDimension;
 
-		public MainForm mainForm;
 		private Timer computersTurnTimer = null;
 		public const int flipDelay = 100;
 		public static bool cancelFlipping = false;
-		
+
 		public ComputerPlayer ComputerPlayer = null;
 
 
 		// Properties
-		public int WhiteCount 
+		public int WhiteCount
 		{
 			get
 			{
 				int count = 0;
-				for (int row=0; row<8; row++)
-					for (int column=0; column<8; column++)
-						if (boardState.squares[row,column].State == StateEnum.White)
+				for (int row = 0; row < 8; row++)
+					for (int column = 0; column < 8; column++)
+						if (boardState.squares[row, column].State == StateEnum.White)
 							count++;
 				return count;
 			}
 		}
 
-		public int BlackCount 
+		public int BlackCount
 		{
 			get
 			{
 				int count = 0;
-				for (int row=0; row<8; row++)
-					for (int column=0; column<8; column++)
-						if (boardState.squares[row,column].State == StateEnum.Black)
+				for (int row = 0; row < 8; row++)
+					for (int column = 0; column < 8; column++)
+						if (boardState.squares[row, column].State == StateEnum.Black)
 							count++;
 				return count;
 			}
@@ -227,9 +226,8 @@ namespace Othello
 
 
 		// Constructor
-		public Board(MainForm mainForm)
+		public Board()
 		{
-			this.mainForm = mainForm;
 			ClearBoard();
 			UpdateStatus();
 		}
@@ -272,15 +270,20 @@ namespace Othello
 		{
 			const int minMargin = 10;
 			if (clientWidth < clientHeight)
-				sideDimension = (clientWidth - 2*minMargin) / 8 * 8;
+				sideDimension = (clientWidth - 2 * minMargin) / 8 * 8;
 			else
-				sideDimension = (clientHeight - 2*minMargin) / 8 * 8;
+				sideDimension = (clientHeight - 2 * minMargin) / 8 * 8;
 
 			leftMarginDimension = (clientWidth - sideDimension) / 2;
 			topMarginDimension = (clientHeight - sideDimension) / 2;
 		}
 
-		public void Draw(Graphics g)
+		public static void SetupGraphics(Graphics g)
+		{
+            g.TranslateTransform(leftMarginDimension + squareDimension / 2, topMarginDimension + squareDimension / 2);
+        }
+
+        public void Draw(Graphics g)
 		{
 			Brush boardBrush = new SolidBrush(Color.Green);
 			g.FillRectangle(boardBrush, leftMarginDimension, topMarginDimension, sideDimension, sideDimension);
@@ -300,7 +303,7 @@ namespace Othello
 				g.DrawLine(pen, leftMarginDimension, y, leftMarginDimension + sideDimension, y); 
 			}
 
-			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
+			SetupGraphics(g);
 			for (int x=1; x<=8; x++)
 			{
 				GraphicsState graphicsState = g.Save();
@@ -353,8 +356,8 @@ namespace Othello
 			else
                 square.State = StateEnum.Black;
 
-			Graphics g = mainForm.CreateGraphics();
-			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
+			Graphics g = MainForm.instance.CreateGraphics();
+			SetupGraphics(g);
 			g.TranslateTransform((coord.x-1) * squareDimension, (coord.y-1) * squareDimension, MatrixOrder.Append);
             square.Draw(g);
 
@@ -413,12 +416,12 @@ namespace Othello
 		private void UpdateStatus()
 		{
 			if (boardState.WhitesTurn)
-				mainForm.statusBarTurn.Text = "White's Turn";
+                MainForm.instance.statusBarTurn.Text = "White's Turn";
 			else
-				mainForm.statusBarTurn.Text = "Black's Turn";
+                MainForm.instance.statusBarTurn.Text = "Black's Turn";
 
-			mainForm.statusBarBlackScore.Text = string.Format("Black={0}", BlackCount); 
-			mainForm.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
+            MainForm.instance.statusBarBlackScore.Text = string.Format("Black={0}", BlackCount);
+            MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
 		}
 
 		private void FlipPieces(Coord coord)
@@ -457,9 +460,6 @@ namespace Othello
 				x -= dx;
 				y -= dy;
 				
-				Graphics g = mainForm.CreateGraphics();
-				g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
-
 				// work back to placed piece flipping
 				while (!(x == choice.x && y == choice.y))
 				{
@@ -469,7 +469,7 @@ namespace Othello
 					else
                         flippedSquare.State = StateEnum.Black;
 
-                    flippedSquare.Flip(g);
+                    flippedSquare.Flip();
 
 					x -= dx;
 					y -= dy;
@@ -492,8 +492,8 @@ namespace Othello
 
 		private void ClearLegalMoves()
 		{
-			Graphics g = mainForm.CreateGraphics();
-			g.TranslateTransform(leftMarginDimension + squareDimension/2, topMarginDimension + squareDimension/2);
+			Graphics g = MainForm.instance.CreateGraphics();
+			SetupGraphics(g);
 
 			for (int x=0; x<8; x++)
 				for (int y=0; y<8; y++)

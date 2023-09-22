@@ -9,6 +9,7 @@ namespace Othello
 {
 	public class MainForm : System.Windows.Forms.Form
 	{
+        public static MainForm instance;
 		public Board board;
 		public System.Windows.Forms.StatusBarPanel statusBarTurn;
 		public System.Windows.Forms.StatusBarPanel statusBarBlackScore;
@@ -30,7 +31,8 @@ namespace Othello
 		{
 			InitializeComponent();
 
-			board = new Board(this);
+            instance = this;
+            board = new Board();
 			board.UpdateBoardSize(ClientSize.Width, ClientSize.Height - statusBar.Height);
 		}
 
