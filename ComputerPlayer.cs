@@ -49,7 +49,7 @@ namespace Othello
 						int squareScore;
 						if (depth == 0)
 						{
-							squareScore = Score(choice.x, choice.y);
+							squareScore = Score(choice);
 						}
 						else
 						{
@@ -88,43 +88,41 @@ namespace Othello
         /// <summary>
         /// returns an integer Score for a Legal Move that sums the Scores for the chosen Square and all flipped Squares
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="choice"></param>
         /// <returns>score for specified Move</returns>
-        private int Score(int x, int y)
+        private int Score(Coord choice)
 		{
 			// Score this Square
-			int score = ScoreSquare(x, y);
+			int score = ScoreSquare(choice);
 
 			// Score all Squares flipped in every direction
-			score += ScoreInDirection(x, y, 0, -1);
-			score += ScoreInDirection(x, y, -1, -1);
-			score += ScoreInDirection(x, y, -1, 0);
-			score += ScoreInDirection(x, y, -1, 1);
-			score += ScoreInDirection(x, y, 0, 1);
-			score += ScoreInDirection(x, y, 1, 1);
-			score += ScoreInDirection(x, y, 1, 0);
-			score += ScoreInDirection(x, y, 1, -1);
+			score += ScoreInDirection(choice, 0, -1);
+			score += ScoreInDirection(choice, -1, -1);
+			score += ScoreInDirection(choice, -1, 1);
+			score += ScoreInDirection(choice, 0, 1);
+			score += ScoreInDirection(choice, -1, 0);
+			score += ScoreInDirection(choice, 1, 1);
+			score += ScoreInDirection(choice, 1, 0);
+			score += ScoreInDirection(choice, 1, -1);
 
 			return score;
 		}
 
-		/// <summary>
-		/// returns an integer Score for all Squares flipped in a direction specified by deltaRow & deltaColumn
-		/// </summary>
-		/// <param name="originalX"></param>
-		/// <param name="originalY"></param>
-		/// <param name="dx"></param>
-		/// <param name="dy"></param>
-		/// <returns></returns>
-		private int ScoreInDirection(int originalX, int originalY, int dx, int dy)
+        /// <summary>
+        /// returns an integer Score for all Squares flipped in a direction specified by deltaRow & deltaColumn
+        /// </summary>
+        /// <param name="choice"></param>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        /// <returns></returns>
+        private int ScoreInDirection(Coord choice, int dx, int dy)
 		{
 			int score = 0;
 
-			int x = originalX + dx;
-			int y = originalY + dy;
+			int x = choice.x + dx;
+			int y = choice.y + dy;
 
-			while (x >= 0 && x < 8 && y >=0 && y < 8)
+			while (x >= 1 && x <= 8 && y >=1 && y <= 8)
 			{
 				Square square = Board.boardState.GetSquare(new Coord(x, y));
 
@@ -142,9 +140,9 @@ namespace Othello
 				x -= dx;
 				y -= dy;
 				
-				while (!(x == originalX && y == originalY))
+				while (!(x == choice.x && y == choice.y))
 				{
-					score += ScoreSquare(x, y);
+					score += ScoreSquare(new Coord(x, y));
 
 					x -= dx;
 					y -= dy;
@@ -156,90 +154,86 @@ namespace Othello
 			return score;
 		}
 
-		/// <summary>
-		/// returns a number value for a Square
-		/// Beginner scores each square as 1
-		/// Intermediate values Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <returns></returns>
-		private int ScoreSquare(int x, int y)
+        /// <summary>
+        /// returns a number value for a Square
+        /// </summary>
+        /// <param name="coord"></param>
+        /// <returns></returns>
+        private int ScoreSquare(Coord coord)
 		{
 			switch (Level)
 			{
-				case LevelEnum.Beginner:
-				default:
+                // Beginner Level scores each square as 1
+                case LevelEnum.Beginner:
 					return 1;
-				case LevelEnum.Intermediate:
-				case LevelEnum.Advanced:
-				{
-					switch (x)
+
+                // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
+                default:
+                    switch (coord.x)
 					{
-						case 0:
-						case 7:
-						switch (y)
+						case 1:
+						case 8:
+						switch (coord.y)
 						{
-							case 0:
-							case 7:
-								return 50;
 							case 1:
-							case 6:
-								return -5;
+							case 8:
+								return 50;
 							case 2:
-							case 4:
+							case 7:
+								return -5;
+							case 3:
+							case 5:
 								return 5;
 							default:
 								return 10;
 						}
-						case 1:
-						case 6:
-						switch (y)
+						case 2:
+						case 7:
+						switch (coord.y)
 						{
-							case 0:
-							case 7:
-								return 10;
 							case 1:
-							case 6:
-								return -10;
+							case 8:
+								return 10;
 							case 2:
-							case 4:
+							case 7:
+								return -10;
+							case 3:
+							case 5:
 								return 2;
 							default:
 								return -5;
 						}
-						case 2:
-						case 4:
-						switch (y)
+						case 3:
+						case 5:
+						switch (coord.y)
 						{
-							case 0:
-							case 7:
-								return 10;
 							case 1:
-							case 6:
-								return -5;
+							case 8:
+								return 10;
 							case 2:
-							case 4:
+							case 7:
+								return -5;
+							case 3:
+							case 5:
 								return 4;
 							default:
 								return 2;
 						}
 						default:
-						switch (y)
+						switch (coord.y)
 						{
-							case 0:
-							case 7:
-								return 10;
 							case 1:
-							case 6:
-								return -5;
+							case 8:
+								return 10;
 							case 2:
-							case 4:
+							case 7:
+								return -5;
+							case 3:
+							case 5:
 								return 2;
 							default:
 								return 1;
 						}
-					}
 				}
 			}
 		}	
