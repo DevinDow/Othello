@@ -46,7 +46,19 @@ namespace Othello
 					Coord choice = new Coord(x, y);
 					if (Board.boardState.IsLegalMove(choice))
 					{
-						int squareScore;
+						BoardState newBoardState = boardState.Clone();
+						newBoardState.FlipPieces(choice);
+						int score = ScoreBoard(newBoardState);
+                        Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
+
+                        if (score > minimaxScore || (score == minimaxScore && random.NextDouble() > 0.5))
+                        {
+                            minimaxChoice.x = x;
+                            minimaxChoice.y = y;
+                            minimaxScore = score;
+                        }
+
+                        /*int squareScore;
 						if (depth == 0)
 						{
 							squareScore = Score(choice);
@@ -54,10 +66,10 @@ namespace Othello
 						else
 						{
 							Coord miniMaxChoice;
-							squareScore = scoreAllSquares((BoardState)boardState.Clone(), !maximizing, depth - 1, out miniMaxChoice);
+							squareScore = scoreAllSquares(, !maximizing, depth - 1, out miniMaxChoice);
 						}
 
-                        Debug.Print("legal: {0} score={1}", choice, squareScore);
+                        //Debug.Print("legal: {0} score={1}", choice, squareScore);
 
                         if (maximizing) // maximizing ComputerPlayer's Score
                         {
@@ -76,7 +88,7 @@ namespace Othello
                                 minimaxChoice.y = y;
                                 minimaxScore = squareScore;
                             }
-                        }
+                        }*/
                     }
                 }
 			}
@@ -85,72 +97,43 @@ namespace Othello
             return minimaxScore;
         }
 
-        /// <summary>
-        /// returns an integer Score for a Legal Move that sums the Scores for the chosen Square and all flipped Squares
-        /// </summary>
-        /// <param name="choice"></param>
-        /// <returns>score for specified Move</returns>
-        private int Score(Coord choice)
-		{
-			// Score this Square
-			int score = ScoreSquare(choice);
-
-			// Score all Squares flipped in every direction
-			score += ScoreInDirection(choice, 0, -1);
-			score += ScoreInDirection(choice, -1, -1);
-			score += ScoreInDirection(choice, -1, 1);
-			score += ScoreInDirection(choice, 0, 1);
-			score += ScoreInDirection(choice, -1, 0);
-			score += ScoreInDirection(choice, 1, 1);
-			score += ScoreInDirection(choice, 1, 0);
-			score += ScoreInDirection(choice, 1, -1);
-
-			return score;
-		}
-
-        /// <summary>
-        /// returns an integer Score for all Squares flipped in a direction specified by deltaRow & deltaColumn
-        /// </summary>
-        /// <param name="choice"></param>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
-        /// <returns></returns>
-        private int ScoreInDirection(Coord choice, int dx, int dy)
+		private int ScoreBoard(BoardState board)
 		{
 			int score = 0;
-
-			int x = choice.x + dx;
-			int y = choice.y + dy;
-
-			while (x >= 1 && x <= 8 && y >=1 && y <= 8)
+			for (int x = 1; x <= 8; x++)
 			{
-				Square square = Board.boardState.GetSquare(new Coord(x, y));
-
-                if (square.State == StateEnum.Empty)
-					return score;
-
-				if (AmIWhite && square.State == StateEnum.Black || 
-					!AmIWhite && square.State == StateEnum.White)
+				for (int y = 1; y <= 8; y++)
 				{
-					x += dx;
-					y += dy;
-					continue;
-				}
-				
-				x -= dx;
-				y -= dy;
-				
-				while (!(x == choice.x && y == choice.y))
-				{
-					score += ScoreSquare(new Coord(x, y));
+					Coord coord = new Coord(x, y);
+					Square square = board.GetSquare(coord);
+					int squareScore = ScoreCoord(coord);
 
-					x -= dx;
-					y -= dy;
-				}
-
-				return score;
+					if (board.WhitesTurn)
+					{
+						switch (square.State)
+						{
+							case StateEnum.White:
+								score += squareScore;
+								break;
+							case StateEnum.Black:
+								score -= squareScore;
+								break;
+						}
+					}
+					else
+					{
+                        switch (square.State)
+                        {
+                            case StateEnum.Black:
+                                score += squareScore;
+                                break;
+                            case StateEnum.White:
+                                score -= squareScore;
+                                break;
+                        }
+                    }
+                }
 			}
-
 			return score;
 		}
 
@@ -159,7 +142,7 @@ namespace Othello
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        private int ScoreSquare(Coord coord)
+        private int ScoreCoord(Coord coord)
 		{
 			switch (Level)
 			{
