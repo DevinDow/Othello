@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Othello
 {
@@ -44,11 +45,23 @@ namespace Othello
 					break;*/
             }
 
+			if (choices.Count == 1)
+			{
+				Coord choice = choices[0];
+                Debug.Print("chose {0}", choice);
+                return choice;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.Append("Equal Choices: ");
+			foreach (Coord choice in choices)
+				sb.Append(choice + " ");
+            Debug.Print(sb.ToString());
+
             // randomly pick one of the choices
             int randomIndex = random.Next(choices.Count);
-			Coord choice = choices[randomIndex];
-            Debug.Print("chose {0}", choice);
-            return choice;
+			Coord randomChoice = choices[randomIndex];
+            Debug.Print("chose {0}", randomChoice);
+            return randomChoice;
         }
 
         /// <summary>

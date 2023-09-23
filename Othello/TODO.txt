@@ -1,7 +1,9 @@
 ﻿TODO
 ----
-- Advanced = MiniMax()
-	- BoardState.score - currently scores how many are flipped...  Should score a state
+- Advanced
+	- figure out how to fix/improve what it's doing using Tests
+- Expert
+	- convert code to using recursion, consider merging code with other shallower algorithms
 
 - implement IEnumerable for Board's Squares
 - change Opponent does not need to reset Board
