@@ -25,27 +25,29 @@ namespace Othello
 		/// </summary>
 		public Coord ChooseNextMove()
 		{
-            Coord choice;
+            List<Coord> choices = new List<Coord>();
 
             switch (Level)
 			{
 				case LevelEnum.Beginner:
 				case LevelEnum.Intermediate:
 				default:
-					choice = chooseHighestScoringMove();
+                    choices = chooseHighestScoringMove();
 					break;
 
                 case LevelEnum.Advanced:
-					choice = chooseLowestScoringOpponentMove();
+                    choices = chooseLowestScoringOpponentMove();
 					break;
 
-                case LevelEnum.Expert:
+                /*case LevelEnum.Expert:
                     scoreAllSquares(BoardState, Level == LevelEnum.Advanced ? 2 : 0, true, out choice);
-					break;
+					break;*/
             }
 
+            // randomly pick one of the choices
+            int randomIndex = random.Next(choices.Count);
+			Coord choice = choices[randomIndex];
             Debug.Print("chose {0}", choice);
-
             return choice;
         }
 
@@ -53,7 +55,7 @@ namespace Othello
         /// finds Moves that maximize weighted Score and picks one at random
         /// </summary>
         /// <returns>a Choice that maximizes weighted Score</returns>
-        private Coord chooseHighestScoringMove()
+        private List<Coord> chooseHighestScoringMove()
         {
             int maxScore = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
@@ -79,16 +81,14 @@ namespace Othello
 				}
 			}
 
-            // randomly pick one of the bestComputerChoices
-            int randomIndex = random.Next(bestComputerChoices.Count);
-            return bestComputerChoices[randomIndex];
+            return bestComputerChoices;
         }
 
         /// <summary>
         /// finds Moves that minimize best weighted Score that Human can attain and picks one that has highest weighted Score
         /// </summary>
         /// <returns>a Choice that minimizes weighted Score that Human can attain</returns>
-        private Coord chooseLowestScoringOpponentMove()
+        private List<Coord> chooseLowestScoringOpponentMove()
         {
             int maxScoreAfterHumanTurn = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
@@ -150,12 +150,11 @@ namespace Othello
 				}
             }
 
-            // randomly pick one of the finalComputerChoices
-            int randomIndex = random.Next(finalComputerChoices.Count);
-            return finalComputerChoices[randomIndex];
+			return finalComputerChoices;
         }
 
-        /// <summary>
+/*
+		/// <summary>
         /// loops through all Legal Moves
 		/// https://en.wikipedia.org/wiki/Minimax#Pseudocode
         /// </summary>
@@ -219,7 +218,7 @@ namespace Othello
                                 minimaxChoice.y = y;
                                 minimaxScore = squareScore;
                             }
-                        }*/
+                        }
                     }
                 }
 			}
@@ -227,6 +226,7 @@ namespace Othello
             Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
             return minimaxScore;
         }
+*/
 
 		/// <summary>
 		/// calculates a Score for a BoardState

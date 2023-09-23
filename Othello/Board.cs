@@ -246,8 +246,7 @@ namespace Othello
 			computerTurnDelayTimer.Stop();
 			computerTurnDelayTimer = null;
 
-			Coord choice = ComputerPlayer.ChooseNextMove();
-            MakeMove(choice);
+            MakeMove(ComputerPlayer.ChooseNextMove());
 		}
 
 		/// <summary>
