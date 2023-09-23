@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Othello;
 using System;
+using System.Collections.Generic;
 
 namespace UnitTests
 {
@@ -8,14 +9,21 @@ namespace UnitTests
     public class ComputerPlayerTests
     {
         [TestMethod]
-        public void TestFirstMove()
+        public void TestBeginnerFirstMove()
         {
             BoardState boardState = new BoardState();
             ComputerPlayer computerPlayer = new ComputerPlayer();
             computerPlayer.Level = LevelEnum.Beginner;
             computerPlayer.BoardState = boardState;
             Coord choice = computerPlayer.ChooseNextMove();
-            //Assert.AreEqual(new Coord(6, 3), choice);
+            List<Coord> acceptableChoices = new List<Coord>
+            {
+                new Coord(3,5),
+                new Coord(4,6),
+                new Coord(5,3),
+                new Coord(6,4),
+            };
+            Assert.IsTrue(acceptableChoices.Contains(choice));
         }
     }
 }
