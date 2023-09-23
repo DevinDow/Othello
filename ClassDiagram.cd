@@ -3,7 +3,7 @@
   <Class Name="Othello.Board">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEABgCBkAAAIABAAAABABIAoZAIAEAACBABgg=</HashCode>
+      <HashCode>AAAAAAAEABAABkBAAIABAAAABABIAoRAIAEAACBABgg=</HashCode>
       <FileName>Board.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -15,38 +15,38 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer">
-    <Position X="7" Y="0.5" Width="1.5" />
+    <Position X="7" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAAAAgAAwAAAAAAAABAAAABAAQAACAAAAI=</HashCode>
+      <HashCode>AAAABAAAAAAAAAAAAQCAABAAAACAAAABAAQAICAAAAA=</HashCode>
       <FileName>ComputerPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.BoardState">
     <Position X="2.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAIAACIAAAAAEAAABAAAQEgAFAAgAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAACIAAAAAEAQABAAAAEgAFAAgAAAAAIAAAABA=</HashCode>
       <FileName>BoardState.cs</FileName>
       <NewMemberFileName>Board.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.Animation">
-    <Position X="9" Y="0.5" Width="2.25" />
+    <Position X="10" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAABAAAAAAAAAQQAAAAAAAAAAAAAQAAgIA=</HashCode>
+      <HashCode>AAQAAAAACAhCBAAAAAAAAAQQAAAAAAAAAAAAAQAAAIA=</HashCode>
       <FileName>Animation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="Othello.StateEnum">
-    <Position X="4.5" Y="2.75" Width="1.5" />
+    <Position X="4.5" Y="2.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAAAAAAKAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Square.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Othello.LevelEnum">
-    <Position X="7" Y="3.75" Width="1.5" />
+    <Position X="7" Y="3.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQ=</HashCode>
+      <HashCode>AACAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAACAAQ=</HashCode>
       <FileName>ComputerPlayer.cs</FileName>
     </TypeIdentifier>
   </Enum>

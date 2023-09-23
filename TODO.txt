@@ -5,4 +5,5 @@
 
 - implement IEnumerable for Board's Squares
 - change Opponent does not need to reset Board
+- can I choose Black or White when playing against Computer?
 - previousState can be a stack

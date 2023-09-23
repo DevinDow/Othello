@@ -82,7 +82,7 @@ namespace Othello
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				MakeMove(ComputerPlayer.Choose());
+				MakeMove(ComputerPlayer.ChooseNextMove());
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace Othello
 			computerTurnDelayTimer.Stop();
 			computerTurnDelayTimer = null;
 
-			Coord choice = ComputerPlayer.Choose();
+			Coord choice = ComputerPlayer.ChooseNextMove();
             MakeMove(choice);
 		}
 

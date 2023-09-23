@@ -1,9 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Othello
 {
-	public enum LevelEnum {Beginner, Intermediate, Advanced}
+	public enum LevelEnum {
+		Beginner,		// maximizes relative Score using number of Square
+		Intermediate,	// maximizes relative Score using weighting for more valuable/dangerous Squares
+        Advanced,		// minimizes Opponents best response
+		Expert			// Minimax algorithm to a Depth
+	}
 
 	public class ComputerPlayer
 	{
@@ -17,23 +23,79 @@ namespace Othello
 		/// <summary>
 		/// returns ComputerPlayer's choice for next move
 		/// </summary>
-		public Coord Choose()
+		public Coord ChooseNextMove()
 		{
-			Coord choice;
-			scoreAllSquares(Board.boardState, true, Level == LevelEnum.Advanced ? 2 : 0, out choice);
-			return choice;
+            Coord choice;
+
+            switch (Level)
+			{
+				case LevelEnum.Beginner:
+				case LevelEnum.Intermediate:
+				default:
+					choice = chooseHighestScoringMove();
+					break;
+
+				case LevelEnum.Advanced:
+                    scoreAllSquares(Board.boardState, Level == LevelEnum.Advanced ? 2 : 0, true, out choice);
+					break;
+            }
+
+            Debug.Print("chose {0}", choice);
+
+            return choice;
         }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		private Coord chooseHighestScoringMove()
+		{
+			int maxScore = -int.MaxValue;
+			List<Coord> maxScoringChoices = new List<Coord>();
+
+			// loop through all Legal Moves
+			for (int x = 1; x <= 8; x++)
+			{
+				for (int y = 1; y <= 8; y++)
+				{
+					Coord choice = new Coord(x, y);
+					if (Board.boardState.IsLegalMove(choice))
+					{
+						BoardState newBoardState = Board.boardState.Clone();
+						newBoardState.PlacePieceAndFlipPieces(choice);
+						int score = ScoreBoard(newBoardState);
+						Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
+
+                        if (score > maxScore) // remember maxScore and start a new List of Moves that attain it
+                        {
+                            maxScore = score;
+                            maxScoringChoices = new List<Coord>();
+                        }
+						
+						if (score >= maxScore) // add choice to maxScoringChoices
+                        {
+                            maxScoringChoices.Add(choice);
+                        }
+                    }
+                }
+			}
+
+			// randomly pick one of the maxScoringChoices
+            int randomIndexToTakeFromMaxScoringChoices = random.Next(maxScoringChoices.Count);
+            return maxScoringChoices[randomIndexToTakeFromMaxScoringChoices];
+		}
 
         /// <summary>
         /// loops through all Legal Moves
 		/// https://en.wikipedia.org/wiki/Minimax#Pseudocode
         /// </summary>
         /// <param name="boardState">recursive Board State</param>
-        /// <param name="maximizing">whether to Maximize or Minimize Score</param>
         /// <param name="depth">how many times to recurse through minimax</param>
+        /// <param name="maximizing">whether to Maximize or Minimize Score</param>
         /// <param name="minimaxChoice">Choice that minimizes/maximizes score</param>
         /// <returns>minimaxScore</returns>
-        private int scoreAllSquares(BoardState boardState, bool maximizing, int depth, out Coord minimaxChoice)
+        private int scoreAllSquares(BoardState boardState, int depth, bool maximizing, out Coord minimaxChoice)
         {
 			minimaxChoice = new Coord();
             int minimaxScore = maximizing ? -int.MaxValue : int.MaxValue;
@@ -97,7 +159,14 @@ namespace Othello
             return minimaxScore;
         }
 
-		private int ScoreBoard(BoardState board)
+		/// <summary>
+		/// calculates a Score for a BoardState
+		/// uses WeightedCoordValue()
+		/// uses difference between Computer's Score & Human's Score
+		/// </summary>
+		/// <param name="boardState">BoardState to caluclate Score for</param>
+		/// <returns>weighted Score of boardState</returns>
+		private int ScoreBoard(BoardState boardState)
 		{
 			int score = 0;
 			for (int x = 1; x <= 8; x++)
@@ -105,30 +174,30 @@ namespace Othello
 				for (int y = 1; y <= 8; y++)
 				{
 					Coord coord = new Coord(x, y);
-					Square square = board.GetSquare(coord);
-					int squareScore = ScoreCoord(coord);
+					Square square = boardState.GetSquare(coord);
+					int weightedCoordValue = WeightedCoordValue(coord);
 
-					if (board.WhitesTurn)
+					if (boardState.WhitesTurn)
 					{
 						switch (square.State)
 						{
 							case StateEnum.White:
-								score += squareScore;
+								score += weightedCoordValue;
 								break;
 							case StateEnum.Black:
-								score -= squareScore;
+								score -= weightedCoordValue;
 								break;
 						}
 					}
-					else
+					else // Black's Turn
 					{
                         switch (square.State)
                         {
                             case StateEnum.Black:
-                                score += squareScore;
+                                score += weightedCoordValue;
                                 break;
                             case StateEnum.White:
-                                score -= squareScore;
+                                score -= weightedCoordValue;
                                 break;
                         }
                     }
@@ -138,11 +207,13 @@ namespace Othello
 		}
 
         /// <summary>
-        /// returns a number value for a Square
+        /// returns a weighted value for a Coord
+		/// Beginner values all Coords equally
+		/// higher Levels weight Coord values by location as more valuable or dangerous
         /// </summary>
-        /// <param name="coord"></param>
-        /// <returns></returns>
-        private int ScoreCoord(Coord coord)
+        /// <param name="coord">Coord to get weighted Score of</param>
+        /// <returns>weighted Score of coord</returns>
+        private int WeightedCoordValue(Coord coord)
 		{
 			switch (Level)
 			{
@@ -152,72 +223,72 @@ namespace Othello
 
                 // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
                 default:
-                    switch (coord.x)
+					switch (coord.x)
 					{
 						case 1:
 						case 8:
-						switch (coord.y)
-						{
-							case 1:
-							case 8:
-								return 50;
-							case 2:
-							case 7:
-								return -5;
-							case 3:
-							case 5:
-								return 5;
-							default:
-								return 10;
-						}
+							switch (coord.y)
+							{
+								case 1:
+								case 8:
+									return 50;
+								case 2:
+								case 7:
+									return -5;
+								case 3:
+								case 6:
+									return 5;
+								default:
+									return 10;
+							}
 						case 2:
 						case 7:
-						switch (coord.y)
-						{
-							case 1:
-							case 8:
-								return 10;
-							case 2:
-							case 7:
-								return -10;
-							case 3:
-							case 5:
-								return 2;
-							default:
-								return -5;
-						}
+							switch (coord.y)
+							{
+								case 1:
+								case 8:
+									return 10;
+								case 2:
+								case 7:
+									return -10;
+								case 3:
+								case 6:
+									return 2;
+								default:
+									return -5;
+							}
 						case 3:
 						case 5:
-						switch (coord.y)
-						{
-							case 1:
-							case 8:
-								return 10;
-							case 2:
-							case 7:
-								return -5;
-							case 3:
-							case 5:
-								return 4;
-							default:
-								return 2;
-						}
+							switch (coord.y)
+							{
+								case 1:
+								case 8:
+									return 10;
+								case 2:
+								case 7:
+									return -5;
+								case 3:
+								case 6:
+									return 4;
+								default:
+									return 2;
+							}
 						default:
-						switch (coord.y)
-						{
-							case 1:
-							case 8:
-								return 10;
-							case 2:
-							case 7:
-								return -5;
-							case 3:
-							case 5:
-								return 2;
-							default:
-								return 1;
-						}
-				}
+							switch (coord.y)
+							{
+								case 1:
+								case 8:
+									return 10;
+								case 2:
+								case 7:
+									return -5;
+								case 3:
+								case 6:
+									return 2;
+								default:
+									return 1;
+							}
+					}
 			}
 		}	
 	}
