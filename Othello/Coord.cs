@@ -7,7 +7,7 @@ namespace Othello
     /// <summary>
     /// Coord of Squares ( 1..8 , 1..8 )
     /// </summary>
-    public struct Coord
+    public struct Coord : IEquatable<Coord>
     {
         public int x, y;
 
@@ -15,6 +15,11 @@ namespace Othello
         {
             this.x = x;
             this.y = y;
+        }
+
+        public bool Equals(Coord other)
+        {
+            return other.x == x && other.y == y;
         }
 
         public override string ToString()
