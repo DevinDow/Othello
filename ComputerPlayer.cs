@@ -56,95 +56,103 @@ namespace Othello
         private Coord chooseHighestScoringMove()
         {
             int maxScore = -int.MaxValue;
-            List<Coord> maxScoringChoices = new List<Coord>();
+            List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            for (int x = 1; x <= 8; x++)
-            {
-                for (int y = 1; y <= 8; y++)
-                {
-                    Coord computersChoice = new Coord(x, y);
-                    if (Board.boardState.IsLegalMove(computersChoice))
-                    {
-                        BoardState newBoardState = Board.boardState.Clone();
-                        newBoardState.PlacePieceAndFlipPieces(computersChoice);
-                        int score = ScoreBoard(newBoardState);
-                        Debug.Print("choice: {0} score={1} newBoardState={2}", computersChoice, score, newBoardState);
+            List<Coord> legalMoves = Board.boardState.LegalMoves();
+			foreach (Coord computerChoice in legalMoves)
+			{
+				BoardState computerBoardState = Board.boardState.Clone();
+				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
+				int computerChoiceScore = ScoreBoard(computerBoardState);
+				Debug.Print("Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
 
-                        if (score > maxScore) // remember maxScore and start a new List of Moves that attain it
-                        {
-                            maxScore = score;
-                            maxScoringChoices = new List<Coord>();
-                        }
+				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
+				{
+					maxScore = computerChoiceScore;
+					bestComputerChoices = new List<Coord>();
+				}
 
-                        if (score >= maxScore) // add choice to maxScoringChoices
-                        {
-                            maxScoringChoices.Add(computersChoice);
-                        }
-                    }
-                }
-            }
+				if (computerChoiceScore >= maxScore) // add choice to maxScoringChoices
+				{
+					bestComputerChoices.Add(computerChoice);
+				}
+			}
 
-            // randomly pick one of the maxScoringChoices
-            int randomIndexToTakeFromMaxScoringChoices = random.Next(maxScoringChoices.Count);
-            return maxScoringChoices[randomIndexToTakeFromMaxScoringChoices];
+            // randomly pick one of the bestComputerChoices
+            int randomIndex = random.Next(bestComputerChoices.Count);
+            return bestComputerChoices[randomIndex];
         }
 
         /// <summary>
-        /// finds Moves that minimize weighted Score that Human can attain and picks one at random
+        /// finds Moves that minimize best weighted Score that Human can attain and picks one that has highest weighted Score
         /// </summary>
         /// <returns>a Choice that minimizes weighted Score that Human can attain</returns>
         private Coord chooseLowestScoringOpponentMove()
         {
-            int maxScore = -int.MaxValue;
-            List<Coord> maxScoringChoices = new List<Coord>();
+            int maxScoreAfterHumanTurn = -int.MaxValue;
+            List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            for (int xComputer = 1; xComputer <= 8; xComputer++)
-            {
-                for (int yComputer = 1; yComputer <= 8; yComputer++)
-                {
-                    Coord computersChoice = new Coord(xComputer, yComputer);
-                    if (Board.boardState.IsLegalMove(computersChoice))
-                    {
-                        BoardState computerBoardState = Board.boardState.Clone();
-                        computerBoardState.PlacePieceAndFlipPieces(computersChoice);
-                        int computerChoiceScore = ScoreBoard(computerBoardState);
-                        Debug.Print("Computer choice: {0} computerScore={1} computerBoardState={2}", computersChoice, computerChoiceScore, computerBoardState);
+            List<Coord> legalComputerMoves = Board.boardState.LegalMoves();
+			foreach (Coord computerChoice in legalComputerMoves)
+			{
+				BoardState computerBoardState = Board.boardState.Clone();
+				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
+				int computerChoiceScore = ScoreBoard(computerBoardState);
+				Debug.Print(" - Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
 
-						// loop through all of Human's Legal Moves
-						for (int xHuman = 1; xHuman <= 8; xHuman++)
+                List<Coord> legalHumanMoves = Board.boardState.LegalMoves();
+				foreach (Coord humanChoice in legalHumanMoves)
+				{
+					if (computerBoardState.IsLegalMove(humanChoice))
+					{
+						BoardState humanBoardState = Board.boardState.Clone();
+						humanBoardState.PlacePieceAndFlipPieces(humanChoice);
+						int humanChoiceScore = ScoreBoard(humanBoardState);
+						Debug.Print("    - Human choice: {0} humanChoiceScore={1} humanBoardState={2}", humanChoice, humanChoiceScore, humanBoardState);
+
+						if (humanChoiceScore > maxScoreAfterHumanTurn) // remember maxScore and start a new List of Moves that attain it
 						{
-							for (int yHuman = 1; yHuman <= 8; yHuman++)
-							{
-								Coord humansChoice = new Coord(xHuman, yHuman);
-								if (computerBoardState.IsLegalMove(humansChoice))
-								{
-									BoardState humanBoardState = Board.boardState.Clone();
-									humanBoardState.PlacePieceAndFlipPieces(humansChoice);
-									int humanChoiceScore = ScoreBoard(humanBoardState);
-									Debug.Print(" - Human choice: {0} humanScore={1} humanBoardState={2}", humansChoice, humanChoiceScore, humanBoardState);
-
-									if (humanChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
-									{
-										maxScore = humanChoiceScore;
-										maxScoringChoices = new List<Coord>();
-									}
-
-									if (humanChoiceScore >= maxScore) // add choice to maxScoringChoices
-									{
-										maxScoringChoices.Add(humansChoice);
-									}
-								}
-							}
+							maxScoreAfterHumanTurn = humanChoiceScore;
+							bestComputerChoices = new List<Coord>();
 						}
-                    }
-                }
+
+						if (humanChoiceScore >= maxScoreAfterHumanTurn) // add choice to maxScoringChoices
+						{
+							bestComputerChoices.Add(computerChoice);
+						}
+					}
+				}
+
+                Debug.Print("    - maxScoreAfterHumanTurn={0}", maxScoreAfterHumanTurn);
             }
 
-            // randomly pick one of the maxScoringChoices
-            int randomIndexToTakeFromMaxScoringChoices = random.Next(maxScoringChoices.Count);
-            return maxScoringChoices[randomIndexToTakeFromMaxScoringChoices];
+            Debug.Print("maxScoreAfterHumanTurn={0}", maxScoreAfterHumanTurn);
+
+            // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
+            int maxComputerScore = -int.MaxValue;
+            List<Coord> finalComputerChoices = new List<Coord>();
+            foreach (Coord computerChoice in bestComputerChoices)
+			{
+                BoardState computerBoardState = Board.boardState.Clone();
+                computerBoardState.PlacePieceAndFlipPieces(computerChoice);
+                int computerChoiceScore = ScoreBoard(computerBoardState);
+                Debug.Print("Top Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+                if (computerChoiceScore > maxComputerScore)
+				{
+					maxComputerScore = computerChoiceScore;
+					finalComputerChoices = new List<Coord>();
+				}
+                if (computerChoiceScore >= maxComputerScore)
+				{
+					finalComputerChoices.Add(computerChoice);
+				}
+            }
+
+            // randomly pick one of the finalComputerChoices
+            int randomIndex = random.Next(finalComputerChoices.Count);
+            return finalComputerChoices[randomIndex];
         }
 
         /// <summary>
