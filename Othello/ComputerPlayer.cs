@@ -14,7 +14,7 @@ namespace Othello
 	public class ComputerPlayer
 	{
 		public bool AmIWhite;
-		public Board Board;
+		public BoardState BoardState;
 		public LevelEnum Level;
 		private Random random = new Random();
 
@@ -40,7 +40,7 @@ namespace Othello
 					break;
 
                 case LevelEnum.Expert:
-                    scoreAllSquares(Board.boardState, Level == LevelEnum.Advanced ? 2 : 0, true, out choice);
+                    scoreAllSquares(BoardState, Level == LevelEnum.Advanced ? 2 : 0, true, out choice);
 					break;
             }
 
@@ -59,10 +59,10 @@ namespace Othello
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            List<Coord> legalMoves = Board.boardState.LegalMoves();
+            List<Coord> legalMoves = BoardState.LegalMoves();
 			foreach (Coord computerChoice in legalMoves)
 			{
-				BoardState computerBoardState = Board.boardState.Clone();
+				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
 				int computerChoiceScore = ScoreBoard(computerBoardState);
 				Debug.Print("Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
@@ -94,20 +94,20 @@ namespace Othello
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            List<Coord> legalComputerMoves = Board.boardState.LegalMoves();
+            List<Coord> legalComputerMoves = BoardState.LegalMoves();
 			foreach (Coord computerChoice in legalComputerMoves)
 			{
-				BoardState computerBoardState = Board.boardState.Clone();
+				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
 				int computerChoiceScore = ScoreBoard(computerBoardState);
 				Debug.Print(" - Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
 
-                List<Coord> legalHumanMoves = Board.boardState.LegalMoves();
+                List<Coord> legalHumanMoves = BoardState.LegalMoves();
 				foreach (Coord humanChoice in legalHumanMoves)
 				{
 					if (computerBoardState.IsLegalMove(humanChoice))
 					{
-						BoardState humanBoardState = Board.boardState.Clone();
+						BoardState humanBoardState = BoardState.Clone();
 						humanBoardState.PlacePieceAndFlipPieces(humanChoice);
 						int humanChoiceScore = ScoreBoard(humanBoardState);
 						Debug.Print("    - Human choice: {0} humanChoiceScore={1} humanBoardState={2}", humanChoice, humanChoiceScore, humanBoardState);
@@ -135,7 +135,7 @@ namespace Othello
             List<Coord> finalComputerChoices = new List<Coord>();
             foreach (Coord computerChoice in bestComputerChoices)
 			{
-                BoardState computerBoardState = Board.boardState.Clone();
+                BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPieces(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 Debug.Print("Top Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
@@ -175,7 +175,7 @@ namespace Othello
 				for (int y = 1; y <= 8; y++)
 				{
 					Coord choice = new Coord(x, y);
-					if (Board.boardState.IsLegalMove(choice))
+					if (BoardState.IsLegalMove(choice))
 					{
 						BoardState newBoardState = boardState.Clone();
 						newBoardState.PlacePieceAndFlipPieces(choice);

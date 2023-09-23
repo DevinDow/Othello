@@ -228,7 +228,7 @@ namespace Othello
 			board.ComputerPlayer = new ComputerPlayer();
 			board.ComputerPlayer.Level = LevelEnum.Beginner;
 			board.ComputerPlayer.AmIWhite = true;
-			board.ComputerPlayer.Board = board;
+			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;
 			beginnerItem.Checked = true;
@@ -244,7 +244,7 @@ namespace Othello
 			board.ComputerPlayer = new ComputerPlayer();
 			board.ComputerPlayer.Level = LevelEnum.Intermediate;
 			board.ComputerPlayer.AmIWhite = true;
-			board.ComputerPlayer.Board = board;
+			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;
 			beginnerItem.Checked = false;
@@ -260,7 +260,7 @@ namespace Othello
             board.ComputerPlayer = new ComputerPlayer();
             board.ComputerPlayer.Level = LevelEnum.Advanced;
             board.ComputerPlayer.AmIWhite = true;
-            board.ComputerPlayer.Board = board;
+            board.ComputerPlayer.BoardState = board.boardState;
 
             humanPlayerItem.Checked = false;
             beginnerItem.Checked = false;
