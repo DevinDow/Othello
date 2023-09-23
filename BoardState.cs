@@ -7,7 +7,7 @@ namespace Othello
         // Fields
         public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
         public bool WhitesTurn;
-        public List<Coord> coordsToFlip;
+        public List<Coord> coordsFlipped;
 
         // Constructor
         public BoardState()
@@ -117,15 +117,17 @@ namespace Othello
             return false;
         }
 
-        public void FlipPieces(Coord coord)
+        public void PlacePieceAndFlipPieces(Coord coord)
         {
+            // place Piece at coord
             Square square = GetSquare(coord);
             if (WhitesTurn)
                 square.State = StateEnum.White;
             else
                 square.State = StateEnum.Black;
 
-            coordsToFlip = new List<Coord>();
+            // flip all affected Pieces
+            coordsFlipped = new List<Coord>();
             FlipInDirection(coord, 0, -1);
             FlipInDirection(coord, -1, -1);
             FlipInDirection(coord, -1, 0);
@@ -164,7 +166,7 @@ namespace Othello
                 while (!(x == choice.x && y == choice.y))
                 {
                     Coord coordToFlip = new Coord(x, y);
-                    coordsToFlip.Add(coordToFlip);
+                    coordsFlipped.Add(coordToFlip);
                     Square flippedSquare = GetSquare(coordToFlip);
                     if (WhitesTurn)
                         flippedSquare.State = StateEnum.White;

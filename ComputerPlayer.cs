@@ -47,7 +47,7 @@ namespace Othello
 					if (Board.boardState.IsLegalMove(choice))
 					{
 						BoardState newBoardState = boardState.Clone();
-						newBoardState.FlipPieces(choice);
+						newBoardState.PlacePieceAndFlipPieces(choice);
 						int score = ScoreBoard(newBoardState);
                         Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
 

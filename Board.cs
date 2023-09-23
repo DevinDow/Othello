@@ -13,15 +13,12 @@ namespace Othello
 		private static int leftMarginDimension, topMarginDimension, sideDimension;
 		public static int squareDimension;
 
-		private Timer computersTurnTimer = null;
-		public const int flipDelay = 100;
-		public static bool cancelFlipping = false;
-
 		public ComputerPlayer ComputerPlayer = null;
+        private Timer computerTurnDelayTimer = null;
 
 
-		// Properties
-		public int WhiteCount
+        // Properties
+        public int WhiteCount
 		{
 			get
 			{
@@ -68,9 +65,9 @@ namespace Othello
 			if (previousState == null)
 				return;
 
-			if (computersTurnTimer != null)
-				computersTurnTimer.Stop();
-			cancelFlipping = true;
+			if (computerTurnDelayTimer != null)
+				computerTurnDelayTimer.Stop();
+			Animation.cancelFlipping = true;
 
 			boardState = previousState;
 			previousState = null;
@@ -172,26 +169,35 @@ namespace Othello
 			MakeMove(choice);
 		}
 
+		/// <summary>
+		/// - places a Piece and draws it
+		/// - flips all affected Pieces and animates them flipping
+		/// - changes Turn
+		/// </summary>
+		/// <param name="coord">where current Player is placing a Piece</param>
 		public void MakeMove(Coord coord)
 		{
-			Square square = boardState.GetSquare(coord);
-            boardState.FlipPieces(coord);
+            boardState.PlacePieceAndFlipPieces(coord);
 
+			// draw the placed Piece
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
 			g.TranslateTransform((coord.x-1) * squareDimension, (coord.y-1) * squareDimension, MatrixOrder.Append);
+            Square square = boardState.GetSquare(coord);
             square.Draw(g);
 
-			cancelFlipping = false;
-
-			// animate flipped pieces
-			Animation.coordsToFlip = boardState.coordsToFlip;
+            // animate flipping affected Pieces
+            Animation.cancelFlipping = false;
+            Animation.coordsToFlip = boardState.coordsFlipped;
 			Animation.newState = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
             Animation.Animate();
 
 			ChangeTurns();
 		}
 
+		/// <summary>
+		/// handles changing Turn, skipping Turn when no Legal Moves, and end of game
+		/// </summary>
 		public void ChangeTurns()
 		{
 			ClearLegalMoves();
@@ -221,24 +227,31 @@ namespace Othello
 
 			UpdateStatus();
 
+			// delay ComputerPlayer's turn until flipping animation finishes
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				computersTurnTimer = new Timer();
-				computersTurnTimer.Interval = flipDelay * 20;
-				computersTurnTimer.Tick += new EventHandler(OnComputersTurn);
-				computersTurnTimer.Start();
+				computerTurnDelayTimer = new Timer();
+				computerTurnDelayTimer.Interval = Animation.flipDelay * (180 / Animation.flipDegrees + 4); // Delay a little longer than Flipping Animation takes
+				computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurn);
+				computerTurnDelayTimer.Start();
 			}
 		}
 
-		public void OnComputersTurn(Object sender, EventArgs e)
+        /// <summary>
+        /// when computersTurnDelayTimer ends, ComputerPlay chooses and makes a Move
+        /// </summary>
+        public void OnComputersTurn(Object sender, EventArgs e)
 		{
-			computersTurnTimer.Stop();
-			computersTurnTimer = null;
+			computerTurnDelayTimer.Stop();
+			computerTurnDelayTimer = null;
 
 			Coord choice = ComputerPlayer.Choose();
             MakeMove(choice);
 		}
 
+		/// <summary>
+		/// Status Bar shows Turn & Scores
+		/// </summary>
 		private void UpdateStatus()
 		{
 			if (boardState.WhitesTurn)
@@ -250,6 +263,9 @@ namespace Othello
             MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
 		}
 		
+		/// <summary>
+		/// loops all Squares setting State to LegalMove if IsLegalMove() and redrawing Square
+		/// </summary>
 		public void ShowLegalMoves()
 		{
             Graphics g = MainForm.instance.CreateGraphics();
@@ -274,7 +290,10 @@ namespace Othello
 			}
 		}
 
-		private void ClearLegalMoves()
+        /// <summary>
+        /// loops all Squares setting LegalMove State to Empty and redrawing Square
+        /// </summary>
+        private void ClearLegalMoves()
 		{
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);

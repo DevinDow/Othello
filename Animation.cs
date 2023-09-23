@@ -12,6 +12,9 @@ namespace Othello
 
 		private static Graphics boardGraphics;
         private static Timer flipTimer = null;
+        public const int flipDelay = 100;
+        public const int flipDegrees = 10;
+        public static bool cancelFlipping = false;
         private static int flipAngle = 0;
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace Othello
 			}
 
 			flipTimer = new Timer();
-			flipTimer.Interval = Board.flipDelay;
+			flipTimer.Interval = flipDelay;
 			flipTimer.Tick += new EventHandler(OnFlipTimer);
 			flipTimer.Start();
 		}
@@ -43,7 +46,7 @@ namespace Othello
         /// <param name="myEventArgs"></param>
         private static void OnFlipTimer(Object myObject, EventArgs myEventArgs)
 		{
-			if (Board.cancelFlipping)
+			if (cancelFlipping)
 			{
 				flipTimer.Stop();
 				flipTimer = null;
@@ -93,7 +96,7 @@ namespace Othello
 			}
 
 			// increment by 10 degrees
-			flipAngle += 10;
+			flipAngle += flipDegrees;
 
 			return bitmap;
 		}
