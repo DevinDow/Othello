@@ -38,14 +38,32 @@ namespace Othello
             squares[coord.x - 1, coord.y - 1] = square;
         }
 
+        /// <summary>
+        /// finds all legal Moves
+        /// </summary>
+        /// <returns>list of Coord</returns>
+        public List<Coord> LegalMoves()
+        {
+            List<Coord> legalMoves = new List<Coord>();
+
+            for (int x = 1; x <= 8; x++)
+            {
+                for (int y = 1; y <= 8; y++)
+                {
+                    Coord coord = new Coord(x, y);
+                    if (IsLegalMove(coord))
+                    {
+                        legalMoves.Add(coord);
+                    }
+                }
+            }
+
+            return legalMoves;
+        }
+
         public bool IsLegalMoveAvailable()
         {
-            for (int x = 1; x <= 8; x++)
-                for (int y = 1; y <= 8; y++)
-                    if (IsLegalMove(new Coord(x, y)))
-                        return true;
-
-            return false;
+            return LegalMoves().Count > 0;
         }
 
         public bool IsLegalMove(Coord coord)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -263,32 +264,26 @@ namespace Othello
             MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
 		}
 		
-		/// <summary>
-		/// loops all Squares setting State to LegalMove if IsLegalMove() and redrawing Square
-		/// </summary>
-		public void ShowLegalMoves()
+        /// <summary>
+        /// loops all Squares setting State to LegalMove if IsLegalMove() and redrawing Square
+        /// </summary>
+        public void ShowLegalMoves()
 		{
             Graphics g = MainForm.instance.CreateGraphics();
             SetupGraphics(g);
 
-			for (int x = 1; x <= 8; x++)
+			List<Coord> legalMoves = boardState.LegalMoves();
+			foreach (Coord coord in legalMoves)
 			{
-				for (int y = 1; y <= 8; y++)
-				{
-					Coord coord = new Coord(x, y);
-                    if (boardState.IsLegalMove(coord))
-					{
-                        Square square = boardState.GetSquare(coord);
-                        square.State = StateEnum.LegalMove;
+				Square square = boardState.GetSquare(coord);
+				square.State = StateEnum.LegalMove;
 
-                        GraphicsState graphicsState = g.Save();
-                        g.TranslateTransform((x - 1) * squareDimension, (y - 1) * squareDimension, MatrixOrder.Append);
-                        square.Draw(g);
-                        g.Restore(graphicsState);
-                    }
-                }
+				GraphicsState graphicsState = g.Save();
+				g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append); // -1 for 0-based
+				square.Draw(g);
+				g.Restore(graphicsState);
 			}
-		}
+        }
 
         /// <summary>
         /// loops all Squares setting LegalMove State to Empty and redrawing Square
