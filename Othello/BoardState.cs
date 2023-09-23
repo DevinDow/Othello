@@ -21,10 +21,10 @@ namespace Othello
                     squares[x, y] = new Square(StateEnum.Empty);
                 }
 
-            squares[3, 3].State = StateEnum.Black;
-            squares[4, 4].State = StateEnum.Black;
-            squares[3, 4].State = StateEnum.White;
-            squares[4, 3].State = StateEnum.White;
+            GetSquare(new Coord(4, 4)).State = StateEnum.Black;
+            GetSquare(new Coord(5, 5)).State = StateEnum.Black;
+            GetSquare(new Coord(4, 5)).State = StateEnum.White;
+            GetSquare(new Coord(5, 4)).State = StateEnum.White;
         }
 
         // Methods
