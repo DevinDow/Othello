@@ -2,6 +2,7 @@
 using Othello;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace UnitTests
 {
@@ -9,56 +10,32 @@ namespace UnitTests
     public class ComputerPlayerTests
     {
         [TestMethod]
-        public void TestBeginnerFirstMove()
+        public void TestFirstMove()
         {
             BoardState boardState = new BoardState();
             ComputerPlayer computerPlayer = new ComputerPlayer();
+            computerPlayer.BoardState = boardState;
+            List<Coord> acceptableChoices = new List<Coord>
+            {
+                new Coord(3,5),
+                new Coord(4,6),
+                new Coord(5,3),
+                new Coord(6,4),
+            };
+
+            Debug.Print("** Beginner **");
             computerPlayer.Level = LevelEnum.Beginner;
-            computerPlayer.BoardState = boardState;
             Coord choice = computerPlayer.ChooseNextMove();
-            List<Coord> acceptableChoices = new List<Coord>
-            {
-                new Coord(3,5),
-                new Coord(4,6),
-                new Coord(5,3),
-                new Coord(6,4),
-            };
             Assert.IsTrue(acceptableChoices.Contains(choice));
-        }
 
-        [TestMethod]
-        public void TestIntermediateFirstMove()
-        {
-            BoardState boardState = new BoardState();
-            ComputerPlayer computerPlayer = new ComputerPlayer();
+            Debug.Print("** Intermediate **");
             computerPlayer.Level = LevelEnum.Intermediate;
-            computerPlayer.BoardState = boardState;
-            Coord choice = computerPlayer.ChooseNextMove();
-            List<Coord> acceptableChoices = new List<Coord>
-            {
-                new Coord(3,5),
-                new Coord(4,6),
-                new Coord(5,3),
-                new Coord(6,4),
-            };
+            choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice));
-        }
 
-        [TestMethod]
-        public void TestAdvancedFirstMove()
-        {
-            BoardState boardState = new BoardState();
-            ComputerPlayer computerPlayer = new ComputerPlayer();
+            Debug.Print("** Advanced **");
             computerPlayer.Level = LevelEnum.Advanced;
-            computerPlayer.BoardState = boardState;
-            Coord choice = computerPlayer.ChooseNextMove();
-            List<Coord> acceptableChoices = new List<Coord>
-            {
-                new Coord(3,5),
-                new Coord(4,6),
-                new Coord(5,3),
-                new Coord(6,4),
-            };
+            choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice));
         }
     }
