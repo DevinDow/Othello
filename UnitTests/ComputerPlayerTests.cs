@@ -42,27 +42,31 @@ namespace UnitTests
         [TestMethod]
         public void TestLevels()
         {
-            BoardState boardState = new BoardState(false);
+            BoardState boardState = new BoardState(true, false);
             boardState.SetSquare(new Coord(2, 1), new Square(StateEnum.White));
             boardState.SetSquare(new Coord(2, 2), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.White));
 
             ComputerPlayer computerPlayer = new ComputerPlayer();
             computerPlayer.BoardState = boardState;
 
-            Debug.Print("** Beginner **");
+            Debug.Print("** Beginner chooses to flip 3 **");
             computerPlayer.Level = LevelEnum.Beginner;
             Coord? choice = computerPlayer.ChooseNextMove();
-            //Assert.IsTrue(acceptableChoices.Contains(choice));
+            Assert.AreEqual(new Coord(2, 5), choice.Value);
 
-            Debug.Print("** Intermediate **");
+            Debug.Print("** Intermediate chooses to flip 2 and get an edge **");
             computerPlayer.Level = LevelEnum.Intermediate;
             choice = computerPlayer.ChooseNextMove();
-            //Assert.IsTrue(acceptableChoices.Contains(choice));
+            Assert.AreEqual(new Coord(1, 4), choice.Value);
 
             Debug.Print("** Advanced **");
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
-            //Assert.IsTrue(acceptableChoices.Contains(choice));
+            Assert.AreEqual(new Coord(1, 4), choice.Value);
         }
     }
 }

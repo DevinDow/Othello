@@ -10,10 +10,10 @@ namespace Othello
         public List<Coord> coordsFlipped;
 
         // Constructor
-        public BoardState(bool addInitialPieces = true)
+        public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
         {
             squares = new Square[8, 8];
-            WhitesTurn = false;
+            WhitesTurn = whitesTurn;
 
             for (int x = 0; x < 8; x++)
                 for (int y = 0; y < 8; y++)
