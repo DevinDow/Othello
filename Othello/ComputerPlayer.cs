@@ -19,7 +19,11 @@ namespace Othello
 		public LevelEnum Level;
 		private Random random = new Random();
 
-		public ComputerPlayer() { }
+		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
+		{
+			AmIWhite = amIWhite;
+			Level = level;
+		}
 
 		/// <summary>
 		/// returns ComputerPlayer's choice for next move

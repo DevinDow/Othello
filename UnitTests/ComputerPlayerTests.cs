@@ -13,7 +13,7 @@ namespace UnitTests
         public void TestFirstMove()
         {
             BoardState boardState = new BoardState();
-            ComputerPlayer computerPlayer = new ComputerPlayer();
+            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Beginner);
             computerPlayer.BoardState = boardState;
             List<Coord> acceptableChoices = new List<Coord>
             {

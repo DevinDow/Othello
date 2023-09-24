@@ -225,9 +225,7 @@ namespace Othello
 
 		private void beginerItem_Click(object sender, System.EventArgs e)
 		{
-			board.ComputerPlayer = new ComputerPlayer();
-			board.ComputerPlayer.Level = LevelEnum.Beginner;
-			board.ComputerPlayer.AmIWhite = true;
+			board.ComputerPlayer = new ComputerPlayer(LevelEnum.Beginner);
 			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;
@@ -241,9 +239,7 @@ namespace Othello
 
 		private void intermediateItem_Click(object sender, System.EventArgs e)
 		{
-			board.ComputerPlayer = new ComputerPlayer();
-			board.ComputerPlayer.Level = LevelEnum.Intermediate;
-			board.ComputerPlayer.AmIWhite = true;
+			board.ComputerPlayer = new ComputerPlayer(LevelEnum.Intermediate);
 			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;
@@ -257,9 +253,7 @@ namespace Othello
 
         private void advancedItem_Click(object sender, EventArgs e)
         {
-            board.ComputerPlayer = new ComputerPlayer();
-            board.ComputerPlayer.Level = LevelEnum.Advanced;
-            board.ComputerPlayer.AmIWhite = true;
+            board.ComputerPlayer = new ComputerPlayer(LevelEnum.Advanced);
             board.ComputerPlayer.BoardState = board.boardState;
 
             humanPlayerItem.Checked = false;
