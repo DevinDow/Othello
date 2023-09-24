@@ -257,6 +257,8 @@ namespace Othello
 				{
 					Coord coord = new Coord(x, y);
 					Square square = boardState.GetSquare(coord);
+					if (square.State != StateEnum.White && square.State != StateEnum.Black)
+						continue;
 					int weightedCoordValue = WeightedCoordValue(coord);
 
 					if (AmIWhite) // Computer is White
@@ -340,7 +342,7 @@ namespace Othello
 									return -5;
 							}
 						case 3:
-						case 5:
+						case 6:
 							switch (coord.y)
 							{
 								case 1:
