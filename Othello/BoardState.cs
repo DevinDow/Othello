@@ -10,21 +10,22 @@ namespace Othello
         public List<Coord> coordsFlipped;
 
         // Constructor
-        public BoardState()
+        public BoardState(bool addInitialPieces = true)
         {
             squares = new Square[8, 8];
             WhitesTurn = false;
 
             for (int x = 0; x < 8; x++)
                 for (int y = 0; y < 8; y++)
-                {
                     squares[x, y] = new Square(StateEnum.Empty);
-                }
 
-            GetSquare(new Coord(4, 4)).State = StateEnum.Black;
-            GetSquare(new Coord(5, 5)).State = StateEnum.Black;
-            GetSquare(new Coord(4, 5)).State = StateEnum.White;
-            GetSquare(new Coord(5, 4)).State = StateEnum.White;
+            if (addInitialPieces)
+            {
+                GetSquare(new Coord(4, 4)).State = StateEnum.Black;
+                GetSquare(new Coord(5, 5)).State = StateEnum.Black;
+                GetSquare(new Coord(4, 5)).State = StateEnum.White;
+                GetSquare(new Coord(5, 4)).State = StateEnum.White;
+            }
         }
 
         // Methods
@@ -205,7 +206,7 @@ namespace Othello
         /// <returns>a Deep Copy of this</returns>
         public BoardState Clone()
         {
-            BoardState newBoardState = new BoardState();
+            BoardState newBoardState = new BoardState(false);
             newBoardState.squares = new Square[8, 8];
             newBoardState.WhitesTurn = WhitesTurn;
 
