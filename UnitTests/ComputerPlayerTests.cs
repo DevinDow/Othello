@@ -25,18 +25,44 @@ namespace UnitTests
 
             Debug.Print("** Beginner **");
             computerPlayer.Level = LevelEnum.Beginner;
-            Coord choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice));
+            Coord? choice = computerPlayer.ChooseNextMove();
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
 
             Debug.Print("** Intermediate **");
             computerPlayer.Level = LevelEnum.Intermediate;
             choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice));
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
 
             Debug.Print("** Advanced **");
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice));
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
+        }
+
+        [TestMethod]
+        public void TestLevels()
+        {
+            BoardState boardState = new BoardState(false);
+            boardState.SetSquare(new Coord(2, 1), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(2, 2), new Square(StateEnum.Black));
+
+            ComputerPlayer computerPlayer = new ComputerPlayer();
+            computerPlayer.BoardState = boardState;
+
+            Debug.Print("** Beginner **");
+            computerPlayer.Level = LevelEnum.Beginner;
+            Coord? choice = computerPlayer.ChooseNextMove();
+            //Assert.IsTrue(acceptableChoices.Contains(choice));
+
+            Debug.Print("** Intermediate **");
+            computerPlayer.Level = LevelEnum.Intermediate;
+            choice = computerPlayer.ChooseNextMove();
+            //Assert.IsTrue(acceptableChoices.Contains(choice));
+
+            Debug.Print("** Advanced **");
+            computerPlayer.Level = LevelEnum.Advanced;
+            choice = computerPlayer.ChooseNextMove();
+            //Assert.IsTrue(acceptableChoices.Contains(choice));
         }
     }
 }

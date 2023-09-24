@@ -83,7 +83,9 @@ namespace Othello
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				MakeMove(ComputerPlayer.ChooseNextMove());
+				Coord? choice = ComputerPlayer.ChooseNextMove();
+                if (choice != null)
+	                MakeMove(choice.Value);
 			}
 		}
 
@@ -246,13 +248,15 @@ namespace Othello
 			computerTurnDelayTimer.Stop();
 			computerTurnDelayTimer = null;
 
-            MakeMove(ComputerPlayer.ChooseNextMove());
-		}
+            Coord? choice = ComputerPlayer.ChooseNextMove();
+            if (choice != null)
+                MakeMove(choice.Value);
+        }
 
-		/// <summary>
-		/// Status Bar shows Turn & Scores
-		/// </summary>
-		private void UpdateStatus()
+        /// <summary>
+        /// Status Bar shows Turn & Scores
+        /// </summary>
+        private void UpdateStatus()
 		{
 			if (boardState.WhitesTurn)
                 MainForm.instance.statusBarTurn.Text = "White's Turn";

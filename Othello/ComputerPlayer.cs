@@ -28,7 +28,7 @@ namespace Othello
 		/// <summary>
 		/// returns ComputerPlayer's choice for next move
 		/// </summary>
-		public Coord ChooseNextMove()
+		public Coord? ChooseNextMove()
 		{
             List<Coord> choices = new List<Coord>();
 
@@ -49,19 +49,26 @@ namespace Othello
 					break;*/
             }
 
+			// no legal Moves
+            if (choices.Count == 0)
+                return null;
+            
+			// only 1 best Move
 			if (choices.Count == 1)
 			{
 				Coord choice = choices[0];
                 Debug.Print("chose {0}", choice);
                 return choice;
 			}
+
+			// multiple equally best Moves
 			StringBuilder sb = new StringBuilder();
 			sb.Append("Equal Choices: ");
 			foreach (Coord choice in choices)
 				sb.Append(choice + " ");
             Debug.Print(sb.ToString());
 
-            // randomly pick one of the choices
+			// randomly pick one of the choices
             int randomIndex = random.Next(choices.Count);
 			Coord randomChoice = choices[randomIndex];
             Debug.Print("chose {0}", randomChoice);
