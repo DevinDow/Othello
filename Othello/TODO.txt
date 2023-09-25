@@ -1,7 +1,9 @@
 ﻿TODO
 ----
 - Advanced
-	- figure out how to fix/improve what it's doing using Tests
+	- change Turns, handle no legal Moves & end of Game
+	- calculate scores, bubble them up to determine Move
+
 - Expert
 	- convert code to using recursion, consider merging code with other shallower algorithms
 
