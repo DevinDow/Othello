@@ -41,7 +41,7 @@ namespace Othello
 					break;
 
                 case LevelEnum.Advanced:
-                    choices = chooseLowestScoringOpponentMove();
+                    choices = chooseHighestScoringAfterOpponentMove();
 					break;
 
                 /*case LevelEnum.Expert:
@@ -91,7 +91,7 @@ namespace Othello
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
 				int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print("Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+				Debug.Print("Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
 
 				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
 				{
@@ -112,7 +112,7 @@ namespace Othello
         /// finds Moves that minimize best weighted Score that Human can attain and picks one that has highest weighted Score
         /// </summary>
         /// <returns>a Choice that minimizes weighted Score that Human can attain</returns>
-        private List<Coord> chooseLowestScoringOpponentMove()
+        private List<Coord> chooseHighestScoringAfterOpponentMove()
         {
             int maxScoreAfterHumanTurn = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
@@ -123,36 +123,34 @@ namespace Othello
 			{
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
-				int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print(" - Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+                int computerChoiceScore = ScoreBoard(computerBoardState);
+				Debug.Print(" - Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
 
-                List<Coord> legalHumanMoves = BoardState.LegalMoves();
+                List<Coord> legalHumanMoves = computerBoardState.LegalMoves();
 				foreach (Coord humanChoice in legalHumanMoves)
 				{
-					if (computerBoardState.IsLegalMove(humanChoice))
+					BoardState humanBoardState = computerBoardState.Clone();
+                    humanBoardState.WhitesTurn = !humanBoardState.WhitesTurn;
+                    humanBoardState.PlacePieceAndFlipPieces(humanChoice);
+					int humanChoiceScore = ScoreBoard(humanBoardState);
+					Debug.Print("    - Human choice: {0} humanChoiceScore={1:+#;-#;+0} humanBoardState={2}", humanChoice, humanChoiceScore, humanBoardState);
+
+					if (humanChoiceScore > maxScoreAfterHumanTurn) // remember maxScore and start a new List of Moves that attain it
 					{
-						BoardState humanBoardState = BoardState.Clone();
-						humanBoardState.PlacePieceAndFlipPieces(humanChoice);
-						int humanChoiceScore = ScoreBoard(humanBoardState);
-						Debug.Print("    - Human choice: {0} humanChoiceScore={1} humanBoardState={2}", humanChoice, humanChoiceScore, humanBoardState);
+						maxScoreAfterHumanTurn = humanChoiceScore;
+						bestComputerChoices = new List<Coord>();
+					}
 
-						if (humanChoiceScore > maxScoreAfterHumanTurn) // remember maxScore and start a new List of Moves that attain it
-						{
-							maxScoreAfterHumanTurn = humanChoiceScore;
-							bestComputerChoices = new List<Coord>();
-						}
-
-						if (humanChoiceScore >= maxScoreAfterHumanTurn) // add choice to maxScoringChoices
-						{
-							bestComputerChoices.Add(computerChoice);
-						}
+					if (humanChoiceScore >= maxScoreAfterHumanTurn) // add choice to maxScoringChoices
+					{
+						bestComputerChoices.Add(computerChoice);
 					}
 				}
 
-                Debug.Print("    - maxScoreAfterHumanTurn={0}", maxScoreAfterHumanTurn);
+                Debug.Print("    - maxScoreAfterHumanTurn={0:+#;-#;+0}", maxScoreAfterHumanTurn);
             }
 
-            Debug.Print("maxScoreAfterHumanTurn={0}", maxScoreAfterHumanTurn);
+            Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxScoreAfterHumanTurn);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -162,7 +160,7 @@ namespace Othello
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPieces(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                Debug.Print("Top Computer choice: {0} computerScore={1} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+                Debug.Print("Top Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
 				{
 					maxComputerScore = computerChoiceScore;
@@ -385,6 +383,11 @@ namespace Othello
 							}
 					}
 			}
-		}	
-	}
+		}
+
+        public override string ToString()
+        {
+			return string.Format("{0} {1} BoardState={2}", Level, AmIWhite ? "W" : "B", BoardState);
+        }
+    }
 }
