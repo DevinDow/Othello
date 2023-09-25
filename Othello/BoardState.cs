@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Othello
 {
@@ -224,7 +225,8 @@ namespace Othello
         // Overrides
         public override string ToString()
         {
-            string s = string.Empty;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Turn={0} ", WhitesTurn ? "W" : "B");
             for (int y = 1; y <= 8; y++) // loop rows
             {
                 for (int x = 1; x <= 8; x++) // loop columns
@@ -232,11 +234,11 @@ namespace Othello
                     Square square = GetSquare(new Coord(x, y));
                     if (square.State != StateEnum.Empty)
                     {
-                        s += string.Format("({0},{1})={2}, ", x, y, square.State == StateEnum.Black ? "B" : "W");
+                        sb.AppendFormat("({0},{1})={2}, ", x, y, square.State == StateEnum.Black ? "B" : "W");
                     }
                 }
             }
-            return s;
+            return sb.ToString();
         }
     }
 }
