@@ -143,11 +143,10 @@ namespace Othello
 
 					if (humanChoiceScore >= maxScoreAfterHumanTurn) // add choice to maxScoringChoices
 					{
-						bestComputerChoices.Add(computerChoice);
+						if (!bestComputerChoices.Contains(computerChoice))
+							bestComputerChoices.Add(computerChoice);
 					}
 				}
-
-                Debug.Print("    - maxScoreAfterHumanTurn={0:+#;-#;+0}", maxScoreAfterHumanTurn);
             }
 
             Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxScoreAfterHumanTurn);

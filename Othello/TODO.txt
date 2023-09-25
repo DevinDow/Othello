@@ -1,5 +1,10 @@
 ﻿TODO
 ----
+- Test Computer playing against itself
+	- 2 ComputerPlayers
+	- Loop each taking a turn and change Turns
+	- Test that Intermediate beats Beginner & Advanced beats Intermediate
+
 - Advanced
 	- change Turns, handle no legal Moves & end of Game
 	- calculate scores, bubble them up to determine Move
