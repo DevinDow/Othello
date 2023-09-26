@@ -180,10 +180,14 @@ namespace Othello
 		/// <param name="coord">where current Player is placing a Piece</param>
 		public void MakeMove(Coord coord)
 		{
-            boardState.PlacePieceAndFlipPieces(coord);
+            ClearLegalMoves();
 
-			// draw the placed Piece
-			Graphics g = MainForm.instance.CreateGraphics();
+            StateEnum flipToState = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+            boardState.PlacePieceAndFlipPieces(coord);
+            boardState.WhitesTurn = !boardState.WhitesTurn;
+
+            // draw the placed Piece
+            Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
 			g.TranslateTransform((coord.x-1) * squareDimension, (coord.y-1) * squareDimension, MatrixOrder.Append);
             Square square = boardState.GetSquare(coord);
@@ -192,20 +196,8 @@ namespace Othello
             // animate flipping affected Pieces
             Animation.cancelFlipping = false;
             Animation.coordsToFlip = boardState.coordsFlipped;
-			Animation.newState = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+			Animation.newState = flipToState;
             Animation.Animate();
-
-			ChangeTurns();
-		}
-
-		/// <summary>
-		/// handles changing Turn, skipping Turn when no Legal Moves, and end of game
-		/// </summary>
-		public void ChangeTurns()
-		{
-			ClearLegalMoves();
-
-            boardState.WhitesTurn = !boardState.WhitesTurn;
 
 			if (!boardState.IsLegalMoveAvailable())
 			{
@@ -248,6 +240,7 @@ namespace Othello
 			computerTurnDelayTimer.Stop();
 			computerTurnDelayTimer = null;
 
+			ComputerPlayer.BoardState = boardState;
             Coord? choice = ComputerPlayer.ChooseNextMove();
             if (choice != null)
                 MakeMove(choice.Value);

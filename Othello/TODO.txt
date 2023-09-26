@@ -1,8 +1,9 @@
 ﻿TODO
 ----
+- FlipPieces() handle change Turns
+	- handle no legal Moves & end of Game
+
 - Advanced
-	- change Turns, handle no legal Moves & end of Game
-		- should FlipPieces() add this to the end?  Board.ChangeTurns() would need to be reworked.
 	- calculate scores, bubble them up to determine Move
 	- find a BoardState where Advanced would make a smarter decision than Intermediate
 
