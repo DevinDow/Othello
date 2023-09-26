@@ -12,6 +12,35 @@ namespace Othello
         public bool endOfGame;
         public List<Coord> coordsFlipped;
 
+
+        // Properties
+        public int WhiteCount
+        {
+            get
+            {
+                int count = 0;
+                for (int row = 0; row < 8; row++)
+                    for (int column = 0; column < 8; column++)
+                        if (squares[row, column].State == StateEnum.White)
+                            count++;
+                return count;
+            }
+        }
+
+        public int BlackCount
+        {
+            get
+            {
+                int count = 0;
+                for (int row = 0; row < 8; row++)
+                    for (int column = 0; column < 8; column++)
+                        if (squares[row, column].State == StateEnum.Black)
+                            count++;
+                return count;
+            }
+        }
+
+
         // Constructor
         public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
         {
@@ -31,6 +60,7 @@ namespace Othello
                 GetSquare(new Coord(5, 4)).State = StateEnum.White;
             }
         }
+
 
         // Methods
         public Square GetSquare(Coord coord)

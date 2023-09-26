@@ -18,34 +18,6 @@ namespace Othello
         private Timer computerTurnDelayTimer = null;
 
 
-        // Properties
-        public int WhiteCount
-		{
-			get
-			{
-				int count = 0;
-				for (int row = 0; row < 8; row++)
-					for (int column = 0; column < 8; column++)
-						if (boardState.squares[row, column].State == StateEnum.White)
-							count++;
-				return count;
-			}
-		}
-
-		public int BlackCount
-		{
-			get
-			{
-				int count = 0;
-				for (int row = 0; row < 8; row++)
-					for (int column = 0; column < 8; column++)
-						if (boardState.squares[row, column].State == StateEnum.Black)
-							count++;
-				return count;
-			}
-		}
-
-
 		// Constructor
 		public Board()
 		{
@@ -203,10 +175,10 @@ namespace Othello
 			// handle End of Game
 			if (boardState.endOfGame)
 			{
-				if (BlackCount > WhiteCount)
-					System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", BlackCount, WhiteCount));
-				else if (WhiteCount > BlackCount)
-					System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", WhiteCount, BlackCount));
+				if (boardState.BlackCount > boardState.WhiteCount)
+					System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", boardState.BlackCount, boardState.WhiteCount));
+				else if (boardState.WhiteCount > boardState.BlackCount)
+					System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", boardState.WhiteCount, boardState.BlackCount));
 				else
 					System.Windows.Forms.MessageBox.Show("Tie");
 				return;
@@ -261,8 +233,8 @@ namespace Othello
 			else
                 MainForm.instance.statusBarTurn.Text = "Black's Turn";
 
-            MainForm.instance.statusBarBlackScore.Text = string.Format("Black={0}", BlackCount);
-            MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", WhiteCount); 
+            MainForm.instance.statusBarBlackScore.Text = string.Format("Black={0}", boardState.BlackCount);
+            MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", boardState.WhiteCount); 
 		}
 		
         /// <summary>

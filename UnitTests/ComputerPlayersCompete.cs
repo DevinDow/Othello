@@ -26,6 +26,10 @@ namespace UnitTests
                 else if (boardState.endOfGame)
                     break;
             }
+
+            Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
+
+            Assert.IsTrue(boardState.WhiteCount > boardState.BlackCount);
         }
     }
 }
