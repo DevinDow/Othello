@@ -79,32 +79,33 @@ namespace UnitTests
         public void TestLevels_Adv()
         {
             BoardState boardState = new BoardState(true, false);
+            boardState.SetSquare(new Coord(2, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(5, 4), new Square(StateEnum.Black));
-            boardState.SetSquare(new Coord(6, 4), new Square(StateEnum.Black));
-            boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.White));
-            boardState.SetSquare(new Coord(8, 4), new Square(StateEnum.Black));
-            boardState.SetSquare(new Coord(7, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.Black));
 
             ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Beginner, true);
             computerPlayer.BoardState = boardState;
 
-            Debug.Print("\n** Beginner chooses (4,4) to flip 2 **");
+            Debug.Print("\n** Beginner chooses (3,4) to flip 2 **");
             computerPlayer.Level = LevelEnum.Beginner;
             Debug.Print(computerPlayer.ToString());
             Coord? choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(4, 4), choice.Value);
+            Assert.AreEqual(new Coord(3, 4), choice.Value);
 
-            Debug.Print("\n** Intermediate chooses (4,4) to flip 2 **");
+            Debug.Print("\n** Intermediate chooses (6,6) to get higher value pieces in col 6 **");
             computerPlayer.Level = LevelEnum.Intermediate;
             Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(4, 4), choice.Value);
+            Assert.AreEqual(new Coord(6, 6), choice.Value);
 
-            Debug.Print("\n** Advanced chooses (7,6) to avoid Human reflipping row of 4 **");
+            Debug.Print("\n** Advanced chooses (6,6) to avoid Human reflipping row **");
             computerPlayer.Level = LevelEnum.Advanced;
             Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(7, 6), choice.Value);
+            Assert.AreEqual(new Coord(6, 6), choice.Value);
         }
     }
 }

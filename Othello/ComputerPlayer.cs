@@ -115,10 +115,11 @@ namespace Othello
         /// <returns>a Choice that minimizes weighted Score that Human can attain</returns>
         private List<Coord> chooseHighestScoringAfterOpponentMove()
         {
-            int maxScoreAfterHumanTurn = -int.MaxValue;
+            int maxComputerScoreAfterHumansBestResponse = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
+			// collect the ones that don't let the human score well
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
 			foreach (Coord computerChoice in legalComputerMoves)
 			{
@@ -128,29 +129,22 @@ namespace Othello
                 int computerChoiceScore = ScoreBoard(computerBoardState);
 				Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
-                List<Coord> legalHumanMoves = computerBoardState.LegalMoves();
-				foreach (Coord humanChoice in legalHumanMoves)
-				{
-					BoardState humanBoardState = computerBoardState.Clone();
-                    humanBoardState.PlacePieceAndFlipPieces(humanChoice);
-					int humanChoiceScore = ScoreBoard(humanBoardState);
-					Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+                int humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
 
-					if (humanChoiceScore > maxScoreAfterHumanTurn) // remember maxScore and start a new List of Moves that attain it
-					{
-						maxScoreAfterHumanTurn = humanChoiceScore;
-						bestComputerChoices = new List<Coord>();
-					}
+                if (humansBestResponseScore > maxComputerScoreAfterHumansBestResponse) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
+                {
+                    maxComputerScoreAfterHumansBestResponse = humansBestResponseScore;
+                    bestComputerChoices = new List<Coord>();
+                }
 
-					if (humanChoiceScore >= maxScoreAfterHumanTurn) // add choice to maxScoringChoices
-					{
-						if (!bestComputerChoices.Contains(computerChoice))
-							bestComputerChoices.Add(computerChoice);
-					}
-				}
+                if (humansBestResponseScore >= maxComputerScoreAfterHumansBestResponse) // add choice to bestComputerChoices
+                {
+                    if (!bestComputerChoices.Contains(computerChoice))
+                        bestComputerChoices.Add(computerChoice);
+                }
             }
 
-            Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxScoreAfterHumanTurn);
+            Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxComputerScoreAfterHumansBestResponse);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -176,7 +170,44 @@ namespace Othello
 			return finalComputerChoices;
         }
 
-/*
+		private int findHumansBestResponseScore(BoardState computerBoardState)
+		{
+			int minScoreAfterHumanTurn = int.MaxValue;
+            //List<Coord> bestHumanResponses = new List<Coord>();
+            Coord? bestHumanResponse = null;
+            BoardState bestHumanResponseBoardState = null;
+
+            List<Coord> legalHumanMoves = computerBoardState.LegalMoves();
+            foreach (Coord humanResponse in legalHumanMoves)
+            {
+                BoardState humanResponseBoardState = computerBoardState.Clone();
+                humanResponseBoardState.PlacePieceAndFlipPieces(humanResponse);
+                humanResponseBoardState.WhitesTurn = !humanResponseBoardState.WhitesTurn;
+                int humanResponseScore = ScoreBoard(humanResponseBoardState);
+                //Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+
+                if (humanResponseScore < minScoreAfterHumanTurn) // remember minScoreAfterHumanTurn and start a new List of Moves that attain it
+                {
+                    minScoreAfterHumanTurn = humanResponseScore;
+                    bestHumanResponse = humanResponse;
+                    bestHumanResponseBoardState = humanResponseBoardState;
+                    //bestHumanResponses = new List<Coord>();
+                }
+
+                /*if (humanResponseScore <= minScoreAfterHumanTurn) // add choice to maxScoringChoices
+                {
+                    if (!bestHumanResponses.Contains(humanResponse))
+                        bestHumanResponses.Add(humanResponse);
+                }*/
+            }
+
+            Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}",
+                bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
+
+            return minScoreAfterHumanTurn;
+        }
+
+        /*
         /// <summary>
         /// loops through all Legal Moves
         /// https://en.wikipedia.org/wiki/Minimax#Pseudocode
@@ -201,7 +232,7 @@ namespace Othello
                     {
                         BoardState newBoardState = boardState.Clone();
                         newBoardState.PlacePieceAndFlipPieces(choice);
-						newBoardState.WhitesTurn = !newBoardState.WhitesTurn;
+                        newBoardState.WhitesTurn = !newBoardState.WhitesTurn;
                         int score = ScoreBoard(newBoardState);
                         Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
 
@@ -250,7 +281,7 @@ namespace Othello
             Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
             return minimaxScore;
         }
-*/
+        */
 
         /// <summary>
         /// calculates a Score for a BoardState
@@ -314,11 +345,14 @@ namespace Othello
 			{
                 // Beginner Level scores each square as 1
                 case LevelEnum.Beginner:
+				//case LevelEnum.Advanced:
+				default:
 					return 1;
 
                 // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
-                default:
-					switch (coord.x)
+				case LevelEnum.Intermediate:
+                case LevelEnum.Advanced:
+                    switch (coord.x)
 					{
 						case 1:
 						case 8:
