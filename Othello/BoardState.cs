@@ -226,17 +226,31 @@ namespace Othello
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Turn={0} ", WhitesTurn ? "W" : "B");
+            sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
             for (int y = 1; y <= 8; y++) // loop rows
             {
                 for (int x = 1; x <= 8; x++) // loop columns
                 {
                     Square square = GetSquare(new Coord(x, y));
-                    if (square.State != StateEnum.Empty)
+                    switch (square.State)
+                    {
+                        case StateEnum.Black:
+                            sb.Append(" B");
+                            break;
+                        case StateEnum.White:
+                            sb.Append(" W");
+                            break;
+                        case StateEnum.Empty:
+                            sb.Append(" .");
+                            break;
+                    }
+                    /*if (square.State != StateEnum.Empty)
                     {
                         sb.AppendFormat("({0},{1})={2}, ", x, y, square.State == StateEnum.Black ? "B" : "W");
-                    }
+                    }*/
                 }
+                if (y<8)
+                    sb.Append("\n");
             }
             return sb.ToString();
         }
