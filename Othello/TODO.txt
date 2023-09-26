@@ -9,7 +9,6 @@
 	- Test that Intermediate beats Beginner & Advanced beats Intermediate
 
 - implement IEnumerable for Board's Squares
-- change Opponent does not need to reset Board
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
 - show Legal Moves can show number of pieces flipped

@@ -180,40 +180,40 @@ namespace Othello
 		/// <param name="coord">where current Player is placing a Piece</param>
 		public void MakeMove(Coord coord)
 		{
-            ClearLegalMoves();
+			ClearLegalMoves();
 
 			// update boardState with Move and flipped Pieces
-            StateEnum colorToFlipTo = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
-            boardState.PlacePieceAndFlipPiecesAndChangeTurns(coord);
-            UpdateStatus();
+			StateEnum colorToFlipTo = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+			boardState.PlacePieceAndFlipPiecesAndChangeTurns(coord);
+			UpdateStatus();
 
-            // draw the placed Piece
-            Graphics g = MainForm.instance.CreateGraphics();
+			// draw the placed Piece
+			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
-			g.TranslateTransform((coord.x-1) * squareDimension, (coord.y-1) * squareDimension, MatrixOrder.Append);
-            Square square = boardState.GetSquare(coord);
-            square.Draw(g);
+			g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
+			Square square = boardState.GetSquare(coord);
+			square.Draw(g);
 
-            // animate flipping affected Pieces
-            Animation.cancelFlipping = false;
-            Animation.coordsToFlip = boardState.coordsFlipped;
+			// animate flipping affected Pieces
+			Animation.cancelFlipping = false;
+			Animation.coordsToFlip = boardState.coordsFlipped;
 			Animation.newState = colorToFlipTo;
-            Animation.Animate();
+			Animation.Animate();
 
 			// handle End of Game
 			if (boardState.endOfGame)
 			{
-                if (BlackCount > WhiteCount)
-                    System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", BlackCount, WhiteCount));
-                else if (WhiteCount > BlackCount)
-                    System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", WhiteCount, BlackCount));
-                else
-                    System.Windows.Forms.MessageBox.Show("Tie");
-                return;
-            }
+				if (BlackCount > WhiteCount)
+					System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", BlackCount, WhiteCount));
+				else if (WhiteCount > BlackCount)
+					System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", WhiteCount, BlackCount));
+				else
+					System.Windows.Forms.MessageBox.Show("Tie");
+				return;
+			}
 
 			// report skipped Turn
-            if (boardState.skippedTurn)
+			if (boardState.skippedTurn)
 			{
 				System.Windows.Forms.MessageBox.Show("No legal moves available...  Skipping turn");
 			}
@@ -224,23 +224,31 @@ namespace Othello
                 // delay ComputerPlayer's turn until flipping animation finishes
                 computerTurnDelayTimer = new Timer();
 				computerTurnDelayTimer.Interval = Animation.flipDelay * (180 / Animation.flipDegrees + 4); // Delay a little longer than Flipping Animation takes
-				computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurn);
+				computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurnTimer);
 				computerTurnDelayTimer.Start();
 			}
 		}
 
-        /// <summary>
-        /// when computersTurnDelayTimer ends, ComputerPlay chooses and makes a Move
-        /// </summary>
-        public void OnComputersTurn(Object sender, EventArgs e)
+		/// <summary>
+		/// when computersTurnDelayTimer ends, ComputerPlay chooses and makes a Move
+		/// </summary>
+		public void OnComputersTurnTimer(Object sender, EventArgs e)
 		{
 			computerTurnDelayTimer.Stop();
 			computerTurnDelayTimer = null;
+			ExecuteComputerPlayerTurn();
+        }
 
-			ComputerPlayer.BoardState = boardState;
-            Coord? choice = ComputerPlayer.ChooseNextMove();
-            if (choice != null)
-                MakeMove(choice.Value);
+		public void ExecuteComputerPlayerTurn()
+		{
+			// if ComputerPlayer's Turn
+			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
+			{
+				ComputerPlayer.BoardState = boardState;
+				Coord? choice = ComputerPlayer.ChooseNextMove();
+				if (choice != null)
+					MakeMove(choice.Value);
+			}
         }
 
         /// <summary>

@@ -233,8 +233,7 @@ namespace Othello
 			intermediateItem.Checked = false;
             advancedItem.Checked = false;
 
-			board.NewGame();
-			Invalidate();
+			board.ExecuteComputerPlayerTurn();
 		}
 
 		private void intermediateItem_Click(object sender, System.EventArgs e)
@@ -247,8 +246,7 @@ namespace Othello
 			intermediateItem.Checked = true;
             advancedItem.Checked = false;
 
-            board.NewGame();
-			Invalidate();
+            board.ExecuteComputerPlayerTurn();
 		}
 
         private void advancedItem_Click(object sender, EventArgs e)
@@ -261,8 +259,7 @@ namespace Othello
             intermediateItem.Checked = false;
             advancedItem.Checked = true;
 
-            board.NewGame();
-            Invalidate();
+            board.ExecuteComputerPlayerTurn();
         }
 
         private void humanPlayerItem_Click(object sender, System.EventArgs e)
