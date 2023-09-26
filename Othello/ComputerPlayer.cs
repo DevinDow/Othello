@@ -90,8 +90,9 @@ namespace Othello
 			{
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
-				int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print("Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+				computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
+                int computerChoiceScore = ScoreBoard(computerBoardState);
+				Debug.Print("Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
 				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
 				{
@@ -123,17 +124,17 @@ namespace Othello
 			{
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
+                computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print(" - Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+				Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
                 List<Coord> legalHumanMoves = computerBoardState.LegalMoves();
 				foreach (Coord humanChoice in legalHumanMoves)
 				{
 					BoardState humanBoardState = computerBoardState.Clone();
-                    humanBoardState.WhitesTurn = !humanBoardState.WhitesTurn;
                     humanBoardState.PlacePieceAndFlipPieces(humanChoice);
 					int humanChoiceScore = ScoreBoard(humanBoardState);
-					Debug.Print("    - Human choice: {0} humanChoiceScore={1:+#;-#;+0} humanBoardState={2}", humanChoice, humanChoiceScore, humanBoardState);
+					Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
 
 					if (humanChoiceScore > maxScoreAfterHumanTurn) // remember maxScore and start a new List of Moves that attain it
 					{
@@ -158,8 +159,9 @@ namespace Othello
 			{
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPieces(computerChoice);
+                computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                Debug.Print("Top Computer choice: {0} computerScore={1:+#;-#;+0} computerBoardState={2}", computerChoice, computerChoiceScore, computerBoardState);
+                Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
 				{
 					maxComputerScore = computerChoiceScore;
@@ -175,9 +177,9 @@ namespace Othello
         }
 
 /*
-		/// <summary>
+        /// <summary>
         /// loops through all Legal Moves
-		/// https://en.wikipedia.org/wiki/Minimax#Pseudocode
+        /// https://en.wikipedia.org/wiki/Minimax#Pseudocode
         /// </summary>
         /// <param name="boardState">recursive Board State</param>
         /// <param name="depth">how many times to recurse through minimax</param>
@@ -186,20 +188,21 @@ namespace Othello
         /// <returns>minimaxScore</returns>
         private int scoreAllSquares(BoardState boardState, int depth, bool maximizing, out Coord minimaxChoice)
         {
-			minimaxChoice = new Coord();
+            minimaxChoice = new Coord();
             int minimaxScore = maximizing ? -int.MaxValue : int.MaxValue;
 
-			// loop through all Legal Moves
+            // loop through all Legal Moves
             for (int x = 1; x <= 8; x++)
-			{
-				for (int y = 1; y <= 8; y++)
-				{
-					Coord choice = new Coord(x, y);
-					if (BoardState.IsLegalMove(choice))
-					{
-						BoardState newBoardState = boardState.Clone();
-						newBoardState.PlacePieceAndFlipPieces(choice);
-						int score = ScoreBoard(newBoardState);
+            {
+                for (int y = 1; y <= 8; y++)
+                {
+                    Coord choice = new Coord(x, y);
+                    if (BoardState.IsLegalMove(choice))
+                    {
+                        BoardState newBoardState = boardState.Clone();
+                        newBoardState.PlacePieceAndFlipPieces(choice);
+						newBoardState.WhitesTurn = !newBoardState.WhitesTurn;
+                        int score = ScoreBoard(newBoardState);
                         Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
 
                         if (score > minimaxScore || (score == minimaxScore && random.NextDouble() > 0.5))
@@ -210,31 +213,31 @@ namespace Othello
                         }
 
                         /*int squareScore;
-						if (depth == 0)
-						{
-							squareScore = Score(choice);
-						}
-						else
-						{
-							Coord miniMaxChoice;
-							squareScore = scoreAllSquares(, !maximizing, depth - 1, out miniMaxChoice);
-						}
+                        if (depth == 0)
+                        {
+                            squareScore = Score(choice);
+                        }
+                        else
+                        {
+                            Coord miniMaxChoice;
+                            squareScore = scoreAllSquares(, !maximizing, depth - 1, out miniMaxChoice);
+                        }
 
                         //Debug.Print("legal: {0} score={1}", choice, squareScore);
 
                         if (maximizing) // maximizing ComputerPlayer's Score
                         {
-							if (squareScore > minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
-							{
-								minimaxChoice.x = x;
-								minimaxChoice.y = y;
-								minimaxScore = squareScore;
+                            if (squareScore > minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
+                            {
+                                minimaxChoice.x = x;
+                                minimaxChoice.y = y;
+                                minimaxScore = squareScore;
                             }
                         }
                         else // minimizing Human's Score
                         {
-							if (squareScore < minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
-							{
+                            if (squareScore < minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
+                            {
                                 minimaxChoice.x = x;
                                 minimaxChoice.y = y;
                                 minimaxScore = squareScore;
@@ -242,21 +245,21 @@ namespace Othello
                         }
                     }
                 }
-			}
+            }
 
             Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
             return minimaxScore;
         }
 */
 
-		/// <summary>
-		/// calculates a Score for a BoardState
-		/// uses WeightedCoordValue()
-		/// uses difference between Computer's Score & Human's Score
-		/// </summary>
-		/// <param name="boardState">BoardState to caluclate Score for</param>
-		/// <returns>weighted Score of boardState</returns>
-		private int ScoreBoard(BoardState boardState)
+        /// <summary>
+        /// calculates a Score for a BoardState
+        /// uses WeightedCoordValue()
+        /// uses difference between Computer's Score & Human's Score
+        /// </summary>
+        /// <param name="boardState">BoardState to caluclate Score for</param>
+        /// <returns>weighted Score of boardState</returns>
+        private int ScoreBoard(BoardState boardState)
 		{
 			int score = 0;
 			for (int x = 1; x <= 8; x++)
@@ -386,7 +389,7 @@ namespace Othello
 
         public override string ToString()
         {
-			return string.Format("{0} {1} BoardState={2}", Level, AmIWhite ? "W" : "B", BoardState);
+			return string.Format("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
         }
     }
 }
