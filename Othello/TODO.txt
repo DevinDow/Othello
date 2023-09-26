@@ -1,19 +1,12 @@
 ﻿TODO
 ----
-- FlipPieces() handle change Turns
-	- handle no legal Moves & end of Game
-
-- Advanced
-	- calculate scores, bubble them up to determine Move
-	- find a BoardState where Advanced would make a smarter decision than Intermediate
+- Expert
+	- recurse, calculate scores (possibly just 1), bubble them up to determine Move
 
 - Test Computer playing against itself
 	- 2 ComputerPlayers
 	- Loop each taking a turn and change Turns
 	- Test that Intermediate beats Beginner & Advanced beats Intermediate
-
-- Expert
-	- convert code to using recursion, consider merging code with other shallower algorithms
 
 - implement IEnumerable for Board's Squares
 - change Opponent does not need to reset Board
