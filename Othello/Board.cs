@@ -182,9 +182,10 @@ namespace Othello
 		{
             ClearLegalMoves();
 
-            StateEnum flipToState = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
-            boardState.PlacePieceAndFlipPieces(coord);
-            boardState.WhitesTurn = !boardState.WhitesTurn;
+			// update boardState with Move and flipped Pieces
+            StateEnum colorToFlipTo = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+            boardState.PlacePieceAndFlipPiecesAndChangeTurns(coord);
+            UpdateStatus();
 
             // draw the placed Piece
             Graphics g = MainForm.instance.CreateGraphics();
@@ -196,36 +197,32 @@ namespace Othello
             // animate flipping affected Pieces
             Animation.cancelFlipping = false;
             Animation.coordsToFlip = boardState.coordsFlipped;
-			Animation.newState = flipToState;
+			Animation.newState = colorToFlipTo;
             Animation.Animate();
 
-			if (!boardState.IsLegalMoveAvailable())
+			// handle End of Game
+			if (boardState.endOfGame)
 			{
-                boardState.WhitesTurn = !boardState.WhitesTurn;
+                if (BlackCount > WhiteCount)
+                    System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", BlackCount, WhiteCount));
+                else if (WhiteCount > BlackCount)
+                    System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", WhiteCount, BlackCount));
+                else
+                    System.Windows.Forms.MessageBox.Show("Tie");
+                return;
+            }
 
-				if (boardState.IsLegalMoveAvailable())
-				{
-					System.Windows.Forms.MessageBox.Show("No legal moves available...  Skipping turn");
-				}
-				else
-				{
-					if (BlackCount > WhiteCount)
-						System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", BlackCount, WhiteCount));
-					else if (WhiteCount > BlackCount)
-						System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", WhiteCount, BlackCount));
-					else
-						System.Windows.Forms.MessageBox.Show("Tie");
-
-					return;
-				}
+			// report skipped Turn
+            if (boardState.skippedTurn)
+			{
+				System.Windows.Forms.MessageBox.Show("No legal moves available...  Skipping turn");
 			}
 
-			UpdateStatus();
-
-			// delay ComputerPlayer's turn until flipping animation finishes
+			// if ComputerPlayer's Turn
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				computerTurnDelayTimer = new Timer();
+                // delay ComputerPlayer's turn until flipping animation finishes
+                computerTurnDelayTimer = new Timer();
 				computerTurnDelayTimer.Interval = Animation.flipDelay * (180 / Animation.flipDegrees + 4); // Delay a little longer than Flipping Animation takes
 				computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurn);
 				computerTurnDelayTimer.Start();

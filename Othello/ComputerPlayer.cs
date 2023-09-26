@@ -91,8 +91,7 @@ namespace Othello
 			foreach (Coord computerChoice in legalMoves)
 			{
 				BoardState computerBoardState = BoardState.Clone();
-				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
-				computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
+				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
 				Debug.Print("Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
@@ -126,8 +125,7 @@ namespace Othello
 			foreach (Coord computerChoice in legalComputerMoves)
 			{
 				BoardState computerBoardState = BoardState.Clone();
-				computerBoardState.PlacePieceAndFlipPieces(computerChoice);
-                computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
+				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
 				Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
@@ -154,8 +152,7 @@ namespace Othello
             foreach (Coord computerChoice in bestComputerChoices)
 			{
                 BoardState computerBoardState = BoardState.Clone();
-                computerBoardState.PlacePieceAndFlipPieces(computerChoice);
-                computerBoardState.WhitesTurn = !computerBoardState.WhitesTurn;
+                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
@@ -183,8 +180,7 @@ namespace Othello
             foreach (Coord humanResponse in legalHumanMoves)
             {
                 BoardState humanResponseBoardState = computerBoardState.Clone();
-                humanResponseBoardState.PlacePieceAndFlipPieces(humanResponse);
-                humanResponseBoardState.WhitesTurn = !humanResponseBoardState.WhitesTurn;
+                humanResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(humanResponse);
                 int humanResponseScore = ScoreBoard(humanResponseBoardState);
                 //Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
 
@@ -234,7 +230,6 @@ namespace Othello
                     {
                         BoardState newBoardState = boardState.Clone();
                         newBoardState.PlacePieceAndFlipPieces(choice);
-                        newBoardState.WhitesTurn = !newBoardState.WhitesTurn;
                         int score = ScoreBoard(newBoardState);
                         Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
 

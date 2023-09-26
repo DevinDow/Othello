@@ -8,11 +8,14 @@ namespace Othello
         // Fields
         public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
         public bool WhitesTurn;
+        public bool skippedTurn;
+        public bool endOfGame;
         public List<Coord> coordsFlipped;
 
         // Constructor
         public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
         {
+            skippedTurn = endOfGame = false;
             squares = new Square[8, 8];
             WhitesTurn = whitesTurn;
 
@@ -137,7 +140,7 @@ namespace Othello
             return false;
         }
 
-        public void PlacePieceAndFlipPieces(Coord coord)
+        public void PlacePieceAndFlipPiecesAndChangeTurns(Coord coord)
         {
             // place Piece at coord
             Square square = GetSquare(coord);
@@ -156,6 +159,17 @@ namespace Othello
             FlipInDirection(coord, 1, 1);
             FlipInDirection(coord, 1, 0);
             FlipInDirection(coord, 1, -1);
+
+            // change Turns
+            skippedTurn = false;
+            WhitesTurn = !WhitesTurn;
+            if (!IsLegalMoveAvailable())
+            {
+                skippedTurn = true;
+                WhitesTurn = !WhitesTurn;
+                if (!IsLegalMoveAvailable())
+                    endOfGame = true;
+            }
         }
 
         private void FlipInDirection(Coord choice, int dx, int dy)
