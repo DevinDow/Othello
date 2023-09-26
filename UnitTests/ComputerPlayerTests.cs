@@ -25,19 +25,16 @@ namespace UnitTests
 
             Debug.Print("\n** Beginner **");
             computerPlayer.Level = LevelEnum.Beginner;
-            Debug.Print(computerPlayer.ToString());
             Coord? choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice.Value));
 
             Debug.Print("\n** Intermediate **");
             computerPlayer.Level = LevelEnum.Intermediate;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice.Value));
 
             Debug.Print("\n** Advanced **");
             computerPlayer.Level = LevelEnum.Advanced;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice.Value));
         }
@@ -58,19 +55,16 @@ namespace UnitTests
 
             Debug.Print("\n** Beginner chooses (2,5) to flip 3 **");
             computerPlayer.Level = LevelEnum.Beginner;
-            Debug.Print(computerPlayer.ToString());
             Coord? choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(2, 5), choice.Value);
 
             Debug.Print("\n** Intermediate chooses (1,4) to flip 2 and get an edge **");
             computerPlayer.Level = LevelEnum.Intermediate;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 4), choice.Value);
 
             Debug.Print("\n** Advanced chooses to (1,4) flip 2 and get an edge while preventing Human from getting edge **");
             computerPlayer.Level = LevelEnum.Advanced;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 4), choice.Value);
         }
@@ -91,19 +85,16 @@ namespace UnitTests
 
             Debug.Print("\n** Beginner chooses (3,4) to flip 2 **");
             computerPlayer.Level = LevelEnum.Beginner;
-            Debug.Print(computerPlayer.ToString());
             Coord? choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(3, 4), choice.Value);
 
             Debug.Print("\n** Intermediate chooses (6,6) to get higher value pieces in col 6 **");
             computerPlayer.Level = LevelEnum.Intermediate;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(6, 6), choice.Value);
 
             Debug.Print("\n** Advanced chooses (6,6) to avoid Human reflipping row **");
             computerPlayer.Level = LevelEnum.Advanced;
-            Debug.Print(computerPlayer.ToString());
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(6, 6), choice.Value);
         }

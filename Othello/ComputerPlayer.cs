@@ -30,6 +30,8 @@ namespace Othello
 		/// </summary>
 		public Coord? ChooseNextMove()
 		{
+            Debug.Print("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
+
             List<Coord> choices = new List<Coord>();
 
             switch (Level)
@@ -420,10 +422,5 @@ namespace Othello
 					}
 			}
 		}
-
-        public override string ToString()
-        {
-			return string.Format("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
-        }
     }
 }
