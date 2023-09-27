@@ -54,6 +54,20 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void ExpVsAdv()
+        {
+            int expWins = 0;
+            for (int i = 0; i < RUNS; i++)
+            {
+                BoardState boardState = ComputerVsComputer(LevelEnum.Expert, LevelEnum.Advanced);
+                if (boardState.WhiteCount > boardState.BlackCount)
+                    expWins++;
+            }
+            Debug.Print("Expert won {0}/{1}", expWins, RUNS);
+            Assert.IsTrue(expWins > 5);
+        }
+
+        [TestMethod]
         public void IntVsAdv()
         {
             int advWins = 0;

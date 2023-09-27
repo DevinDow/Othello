@@ -37,6 +37,11 @@ namespace UnitTests
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice.Value));
+
+            Debug.Print("\n** Expert **");
+            computerPlayer.Level = LevelEnum.Expert;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
         }
 
         [TestMethod]
@@ -65,6 +70,11 @@ namespace UnitTests
 
             Debug.Print("\n** Advanced chooses to (1,4) flip 2 and get an edge while preventing Human from getting edge **");
             computerPlayer.Level = LevelEnum.Advanced;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(1, 4), choice.Value);
+
+            Debug.Print("\n** Expert chooses to (1,4) flip 2 and get an edge while preventing Human from getting edge **");
+            computerPlayer.Level = LevelEnum.Expert;
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 4), choice.Value);
         }
@@ -97,6 +107,11 @@ namespace UnitTests
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(6, 6), choice.Value);
+
+            Debug.Print("\n** Expert chooses (8,4) to get edge and eventually get row **");
+            computerPlayer.Level = LevelEnum.Expert;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(8, 4), choice.Value);
         }
     }
 }

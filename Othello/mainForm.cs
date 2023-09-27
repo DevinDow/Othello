@@ -25,6 +25,7 @@ namespace Othello
 		private System.Windows.Forms.MenuItem beginnerItem;
 		private System.Windows.Forms.MenuItem undoItem;
         private MenuItem advancedItem;
+        private MenuItem expertItem;
         private IContainer components;
 
         public MainForm()
@@ -68,8 +69,9 @@ namespace Othello
             this.humanPlayerItem = new System.Windows.Forms.MenuItem();
             this.beginnerItem = new System.Windows.Forms.MenuItem();
             this.intermediateItem = new System.Windows.Forms.MenuItem();
-            this.undoItem = new System.Windows.Forms.MenuItem();
             this.advancedItem = new System.Windows.Forms.MenuItem();
+            this.undoItem = new System.Windows.Forms.MenuItem();
+            this.expertItem = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarTurn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarBlackScore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarWhiteScore)).BeginInit();
@@ -77,7 +79,7 @@ namespace Othello
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 342);
+            this.statusBar.Location = new System.Drawing.Point(0, 322);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusBarTurn,
@@ -135,7 +137,8 @@ namespace Othello
             this.humanPlayerItem,
             this.beginnerItem,
             this.intermediateItem,
-            this.advancedItem});
+            this.advancedItem,
+            this.expertItem});
             this.menuItem1.Text = "&Opponent";
             // 
             // humanPlayerItem
@@ -157,22 +160,28 @@ namespace Othello
             this.intermediateItem.Text = "&Intermediate Algorithm";
             this.intermediateItem.Click += new System.EventHandler(this.intermediateItem_Click);
             // 
-            // undoItem
-            // 
-            this.undoItem.Index = 3;
-            this.undoItem.Text = "&Undo";
-            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
-            // 
             // advancedItem
             // 
             this.advancedItem.Index = 3;
             this.advancedItem.Text = "&Advanced Algorithm";
             this.advancedItem.Click += new System.EventHandler(this.advancedItem_Click);
             // 
+            // undoItem
+            // 
+            this.undoItem.Index = 3;
+            this.undoItem.Text = "&Undo";
+            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
+            // 
+            // expertItem
+            // 
+            this.expertItem.Index = 4;
+            this.expertItem.Text = "&Expert Algorithm";
+            this.expertItem.Click += new System.EventHandler(this.expertItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(424, 364);
+            this.ClientSize = new System.Drawing.Size(424, 344);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;
@@ -232,8 +241,9 @@ namespace Othello
 			beginnerItem.Checked = true;
 			intermediateItem.Checked = false;
             advancedItem.Checked = false;
+            expertItem.Checked = false;
 
-			board.ExecuteComputerPlayerTurn();
+            board.ExecuteComputerPlayerTurn();
 		}
 
 		private void intermediateItem_Click(object sender, System.EventArgs e)
@@ -245,6 +255,7 @@ namespace Othello
 			beginnerItem.Checked = false;
 			intermediateItem.Checked = true;
             advancedItem.Checked = false;
+            expertItem.Checked = false;
 
             board.ExecuteComputerPlayerTurn();
 		}
@@ -258,6 +269,21 @@ namespace Othello
             beginnerItem.Checked = false;
             intermediateItem.Checked = false;
             advancedItem.Checked = true;
+            expertItem.Checked = false;
+
+            board.ExecuteComputerPlayerTurn();
+        }
+
+        private void expertItem_Click(object sender, EventArgs e)
+        {
+            board.ComputerPlayer = new ComputerPlayer(LevelEnum.Expert);
+            board.ComputerPlayer.BoardState = board.boardState;
+
+            humanPlayerItem.Checked = false;
+            beginnerItem.Checked = false;
+            intermediateItem.Checked = false;
+            advancedItem.Checked = false;
+            expertItem.Checked = true;
 
             board.ExecuteComputerPlayerTurn();
         }
