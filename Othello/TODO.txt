@@ -1,9 +1,14 @@
 ﻿TODO
 ----
+- show Legal Moves
+	- hot key
+	- can leave it on each time it's player's turn?
+	- can show number of pieces flipped
+
 - Expert
+	- Test for "Expert should choose (1,1).txt"
 	- often when Advanced goes first @ depth=8, Advanced wins 46-18, Expert wins 44-20 & 52-12
 
 - implement IEnumerable for Board's Squares
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
-- show Legal Moves can show number of pieces flipped
