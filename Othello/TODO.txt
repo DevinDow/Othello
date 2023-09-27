@@ -3,11 +3,6 @@
 - Expert
 	- recurse, calculate scores (possibly just 1), bubble them up to determine Move
 
-- Test Computer playing against itself
-	- 2 ComputerPlayers
-	- Loop each taking a turn and change Turns
-	- Test that Intermediate beats Beginner & Advanced beats Intermediate
-
 - implement IEnumerable for Board's Squares
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
