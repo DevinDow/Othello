@@ -12,14 +12,42 @@ namespace UnitTests
         [TestMethod]
         public void BegVsInt()
         {
+            BoardState boardState = ComputerVsComputer(LevelEnum.Beginner, LevelEnum.Intermediate);
+            Assert.IsTrue(boardState.BlackCount > boardState.WhiteCount);
+        }
+
+        [TestMethod]
+        public void IntVsBeg()
+        {
+            BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Beginner);
+            Assert.IsTrue(boardState.WhiteCount > boardState.BlackCount);
+        }
+
+        [TestMethod]
+        public void AdvVsInt()
+        {
+            BoardState boardState = ComputerVsComputer(LevelEnum.Advanced, LevelEnum.Intermediate);
+            Assert.IsTrue(boardState.WhiteCount > boardState.BlackCount);
+        }
+
+        [TestMethod]
+        public void IntVsAdv()
+        {
+            BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Advanced);
+            Assert.IsTrue(boardState.BlackCount > boardState.WhiteCount);
+        }
+
+        public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
+        { 
             ComputerPlayer.LogDecisions = false;
             BoardState boardState = new BoardState();
-            ComputerPlayer blackBeg = new ComputerPlayer(LevelEnum.Beginner, false);
-            ComputerPlayer whiteInt = new ComputerPlayer(LevelEnum.Intermediate, true);
+            ComputerPlayer white = new ComputerPlayer(whiteLevel, true);
+            ComputerPlayer black = new ComputerPlayer(blackLevel, false);
+            Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
             while (true)
             {
-                ComputerPlayer currentPlayer = boardState.WhitesTurn ? whiteInt : blackBeg;
+                ComputerPlayer currentPlayer = boardState.WhitesTurn ? white : black;
                 currentPlayer.BoardState = boardState;
                 Coord? choice = currentPlayer.ChooseNextMove();
                 if (choice != null)
@@ -30,10 +58,8 @@ namespace UnitTests
                 }
 
                 if (boardState.endOfGame)
-                    break;
+                    return boardState;
             }
-
-            Assert.IsTrue(boardState.WhiteCount > boardState.BlackCount);
         }
     }
 }
