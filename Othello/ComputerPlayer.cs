@@ -380,14 +380,13 @@ namespace Othello
 			{
                 // Beginner Level scores each square as 1
                 case LevelEnum.Beginner:
-                //case LevelEnum.Advanced:
-                case LevelEnum.Expert:
                 default:
 					return 1;
 
                 // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
 				case LevelEnum.Intermediate:
                 case LevelEnum.Advanced:
+                case LevelEnum.Expert:
                     switch (coord.x)
 					{
 						case 1:
