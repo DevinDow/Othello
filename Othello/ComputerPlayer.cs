@@ -19,6 +19,7 @@ namespace Othello
 		public LevelEnum Level;
         public static bool LogDecisions = true;
 		private Random random = new Random();
+        private const int EXPERT_DEPTH = 8;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -229,7 +230,7 @@ namespace Othello
                 if (LogDecisions)
                     Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
-                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, 2);
+                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
 
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
                 {

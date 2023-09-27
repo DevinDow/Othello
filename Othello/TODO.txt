@@ -1,7 +1,7 @@
 ﻿TODO
 ----
 - Expert
-	- recurse, calculate scores (possibly just 1), bubble them up to determine Move
+	- often when Advanced goes first @ depth=8, Advanced wins 46-18, Expert wins 44-20 & 52-12
 
 - implement IEnumerable for Board's Squares
 - submenus under Level to choose Black or White
