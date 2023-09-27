@@ -14,72 +14,88 @@ namespace UnitTests
         [TestMethod]
         public void BegVsInt()
         {
+            int begWins = 0;
             int intWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(LevelEnum.Beginner, LevelEnum.Intermediate);
+                if (boardState.WhiteCount > boardState.BlackCount)
+                    begWins++;
                 if (boardState.BlackCount > boardState.WhiteCount)
                     intWins++;
             }
-            Debug.Print("Intermediate won {0}/{1}", intWins, RUNS);
-            Assert.IsTrue(intWins > 5);
+            Debug.Print("Intermediate {0} - Beginner {1}", intWins, intWins);
+            Assert.IsTrue(intWins > begWins);
         }
 
         [TestMethod]
         public void IntVsBeg()
         {
             int intWins = 0;
+            int begWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Beginner);
                 if (boardState.WhiteCount > boardState.BlackCount)
                     intWins++;
+                if (boardState.BlackCount > boardState.WhiteCount)
+                    begWins++;
             }
-            Debug.Print("Intermediate won {0}/{1}", intWins, RUNS);
-            Assert.IsTrue(intWins > 5);
+            Debug.Print("Intermediate {0} - Beginner {1}", intWins, intWins);
+            Assert.IsTrue(intWins > begWins);
         }
 
         [TestMethod]
         public void AdvVsInt()
         {
             int advWins = 0;
+            int intWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(LevelEnum.Advanced, LevelEnum.Intermediate);
                 if (boardState.WhiteCount > boardState.BlackCount)
                     advWins++;
+                if (boardState.BlackCount > boardState.WhiteCount)
+                    intWins++;
             }
-            Debug.Print("Advanced won {0}/{1}", advWins, RUNS);
-            Assert.IsTrue(advWins > 5);
+            Debug.Print("Advanced {0} - Intermediate {1}", advWins, intWins);
+            Assert.IsTrue(advWins > intWins);
+        }
+
+        [TestMethod]
+        public void IntVsAdv()
+        {
+            int intWins = 0;
+            int advWins = 0;
+            for (int i = 0; i < RUNS; i++)
+            {
+                BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Advanced);
+                if (boardState.WhiteCount > boardState.BlackCount)
+                    intWins++;
+                if (boardState.BlackCount > boardState.WhiteCount)
+                    advWins++;
+            }
+            Debug.Print("Advanced {0} - Intermediate {1}", advWins, intWins);
+            Assert.IsTrue(advWins > intWins);
         }
 
         [TestMethod]
         public void ExpVsAdv()
         {
             int expWins = 0;
+            int advWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(LevelEnum.Expert, LevelEnum.Advanced);
                 if (boardState.WhiteCount > boardState.BlackCount)
                     expWins++;
-            }
-            Debug.Print("Expert won {0}/{1}", expWins, RUNS);
-            Assert.IsTrue(expWins > 5);
-        }
-
-        [TestMethod]
-        public void IntVsAdv()
-        {
-            int advWins = 0;
-            for (int i = 0; i < RUNS; i++)
-            {
-                BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Advanced);
                 if (boardState.BlackCount > boardState.WhiteCount)
                     advWins++;
             }
-            Debug.Print("Advanced won {0}/{1}", advWins, RUNS);
-            Assert.IsTrue(advWins > 5);
+            Debug.Print("Expert {0} - Advanced {1}", expWins, advWins);
+            Assert.IsTrue(expWins > advWins);
         }
+
 
         public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
         { 
