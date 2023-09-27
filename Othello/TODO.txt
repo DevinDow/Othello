@@ -6,6 +6,7 @@
 	- can show number of pieces flipped
 
 - Expert
+	- how does Expert do vs Advanced at depth=1?
 	- Test for "Expert should choose (1,1).txt"
 	- often when Advanced goes first @ depth=8, Advanced wins 46-18, Expert wins 44-20 & 52-12
 
