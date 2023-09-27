@@ -17,6 +17,7 @@ namespace Othello
 		public bool AmIWhite;
 		public BoardState BoardState;
 		public LevelEnum Level;
+        public static bool LogDecisions = true;
 		private Random random = new Random();
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
@@ -30,7 +31,8 @@ namespace Othello
 		/// </summary>
 		public Coord? ChooseNextMove()
 		{
-            Debug.Print("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
+            if (LogDecisions)
+                Debug.Print("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
 
             List<Coord> choices = new List<Coord>();
 
@@ -59,7 +61,8 @@ namespace Othello
 			if (choices.Count == 1)
 			{
 				Coord choice = choices[0];
-                Debug.Print("chose {0}", choice);
+                if (LogDecisions)
+                    Debug.Print("chose {0}", choice);
                 return choice;
 			}
 
@@ -68,12 +71,14 @@ namespace Othello
 			sb.Append("Equal Choices: ");
 			foreach (Coord choice in choices)
 				sb.Append(choice + " ");
-            Debug.Print(sb.ToString());
+            if (LogDecisions)
+                Debug.Print(sb.ToString());
 
 			// randomly pick one of the choices
             int randomIndex = random.Next(choices.Count);
 			Coord randomChoice = choices[randomIndex];
-            Debug.Print("chose {0}", randomChoice);
+            if (LogDecisions)
+                Debug.Print("chose {0}", randomChoice);
             return randomChoice;
         }
 
@@ -93,7 +98,8 @@ namespace Othello
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print("Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                if (LogDecisions)
+				    Debug.Print("Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
 				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
 				{
@@ -127,7 +133,8 @@ namespace Othello
 				BoardState computerBoardState = BoardState.Clone();
 				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-				Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                if (LogDecisions)
+                    Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
 
                 int humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
 
@@ -144,7 +151,8 @@ namespace Othello
                 }
             }
 
-            Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxComputerScoreAfterHumansBestResponse);
+            if (LogDecisions)
+                Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxComputerScoreAfterHumansBestResponse);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -154,7 +162,8 @@ namespace Othello
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                if (LogDecisions)
+                    Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
 				{
 					maxComputerScore = computerChoiceScore;
@@ -182,7 +191,7 @@ namespace Othello
                 BoardState humanResponseBoardState = computerBoardState.Clone();
                 humanResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(humanResponse);
                 int humanResponseScore = ScoreBoard(humanResponseBoardState);
-                //Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+                //if (LogDecisions) Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
 
                 if (humanResponseScore < minScoreAfterHumanTurn) // remember minScoreAfterHumanTurn and start a new List of Moves that attain it
                 {
@@ -199,8 +208,8 @@ namespace Othello
                 }*/
             }
 
-            Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}",
-                bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
+            if (LogDecisions)
+                Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
 
             return minScoreAfterHumanTurn;
         }
@@ -231,7 +240,8 @@ namespace Othello
                         BoardState newBoardState = boardState.Clone();
                         newBoardState.PlacePieceAndFlipPieces(choice);
                         int score = ScoreBoard(newBoardState);
-                        Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
+                        if (LogDecisions)
+				            Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
 
                         if (score > minimaxScore || (score == minimaxScore && random.NextDouble() > 0.5))
                         {
@@ -251,7 +261,7 @@ namespace Othello
                             squareScore = scoreAllSquares(, !maximizing, depth - 1, out miniMaxChoice);
                         }
 
-                        //Debug.Print("legal: {0} score={1}", choice, squareScore);
+                        //if (LogDecisions) Debug.Print("legal: {0} score={1}", choice, squareScore);
 
                         if (maximizing) // maximizing ComputerPlayer's Score
                         {
@@ -275,7 +285,8 @@ namespace Othello
                 }
             }
 
-            Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
+            if (LogDecisions)
+				Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
             return minimaxScore;
         }
         */

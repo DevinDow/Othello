@@ -12,6 +12,7 @@ namespace UnitTests
         [TestMethod]
         public void BegVsInt()
         {
+            ComputerPlayer.LogDecisions = false;
             BoardState boardState = new BoardState();
             ComputerPlayer blackBeg = new ComputerPlayer(LevelEnum.Beginner, false);
             ComputerPlayer whiteInt = new ComputerPlayer(LevelEnum.Intermediate, true);
@@ -22,12 +23,15 @@ namespace UnitTests
                 currentPlayer.BoardState = boardState;
                 Coord? choice = currentPlayer.ChooseNextMove();
                 if (choice != null)
+                {
                     boardState.PlacePieceAndFlipPiecesAndChangeTurns(choice.Value);
-                else if (boardState.endOfGame)
+                    Debug.Print(boardState.ToString());
+                    Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
+                }
+
+                if (boardState.endOfGame)
                     break;
             }
-
-            Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
 
             Assert.IsTrue(boardState.WhiteCount > boardState.BlackCount);
         }
