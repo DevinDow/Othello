@@ -14,62 +14,71 @@ namespace UnitTests
         [TestMethod]
         public void BegVsInt()
         {
-            int intWins = 0;
-            for (int i = 0; i < RUNS; i++)
-            {
-                BoardState boardState = ComputerVsComputer(LevelEnum.Beginner, LevelEnum.Intermediate);
-                if (boardState.BlackCount > boardState.WhiteCount)
-                    intWins++;
-            }
-            Debug.Print("Intermediate won {0}/{1}", intWins, RUNS);
-            Assert.IsTrue(intWins > 5);
+            int begWins, intWins;
+            WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, out begWins, out intWins);
+            Assert.IsTrue(intWins > begWins);
         }
 
         [TestMethod]
         public void IntVsBeg()
         {
-            int intWins = 0;
-            for (int i = 0; i < RUNS; i++)
-            {
-                BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Beginner);
-                if (boardState.WhiteCount > boardState.BlackCount)
-                    intWins++;
-            }
-            Debug.Print("Intermediate won {0}/{1}", intWins, RUNS);
-            Assert.IsTrue(intWins > 5);
+            int intWins, begWins;
+            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, out intWins, out begWins);
+            Assert.IsTrue(intWins > begWins);
         }
 
         [TestMethod]
         public void AdvVsInt()
         {
-            int advWins = 0;
-            for (int i = 0; i < RUNS; i++)
-            {
-                BoardState boardState = ComputerVsComputer(LevelEnum.Advanced, LevelEnum.Intermediate);
-                if (boardState.WhiteCount > boardState.BlackCount)
-                    advWins++;
-            }
-            Debug.Print("Advanced won {0}/{1}", advWins, RUNS);
-            Assert.IsTrue(advWins > 5);
+            int advWins, intWins;
+            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, out advWins, out intWins);
+            Assert.IsTrue(advWins > intWins);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
-            int advWins = 0;
+            int intWins, advWins;
+            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, out intWins, out advWins);
+            Assert.IsTrue(advWins > intWins);
+        }
+
+        [TestMethod]
+        public void ExpVsAdv()
+        {
+            int expWins, advWins;
+            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, out expWins, out advWins);
+            Assert.IsTrue(expWins > advWins);
+        }
+
+        [TestMethod]
+        public void AdvVsExp()
+        {
+            int advWins, expWins;
+            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, out advWins, out expWins);
+            Assert.IsTrue(expWins > advWins);
+        }
+
+        public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, out int whiteWins, out int blackWins)
+        {
+            whiteWins = blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
-                BoardState boardState = ComputerVsComputer(LevelEnum.Intermediate, LevelEnum.Advanced);
+                BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
+                if (boardState.WhiteCount > boardState.BlackCount)
+                    whiteWins++;
                 if (boardState.BlackCount > boardState.WhiteCount)
-                    advWins++;
+                    blackWins++;
             }
-            Debug.Print("Advanced won {0}/{1}", advWins, RUNS);
-            Assert.IsTrue(advWins > 5);
+            Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
         }
 
         public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
-        { 
+        {
+            // don't Log Decisions for Computer vs Computer, but reset it when done
+            bool prevLogDecisions = ComputerPlayer.LogDecisions;
             ComputerPlayer.LogDecisions = false;
+
             BoardState boardState = new BoardState();
             ComputerPlayer white = new ComputerPlayer(whiteLevel, true);
             ComputerPlayer black = new ComputerPlayer(blackLevel, false);
@@ -95,9 +104,14 @@ namespace UnitTests
                         Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
                     else
                         Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
+
+                    // reset Log Decisions for other Tests
+                    ComputerPlayer.LogDecisions = prevLogDecisions;
+
                     return boardState;
                 }
             }
+
         }
     }
 }

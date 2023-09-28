@@ -37,6 +37,11 @@ namespace UnitTests
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
             Assert.IsTrue(acceptableChoices.Contains(choice.Value));
+
+            Debug.Print("\n** Expert **");
+            computerPlayer.Level = LevelEnum.Expert;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
         }
 
         [TestMethod]
@@ -63,8 +68,13 @@ namespace UnitTests
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 4), choice.Value);
 
-            Debug.Print("\n** Advanced chooses to (1,4) flip 2 and get an edge while preventing Human from getting edge **");
+            Debug.Print("\n** Advanced chooses (1,4) to flip 2 and get an edge while preventing Human from getting edge **");
             computerPlayer.Level = LevelEnum.Advanced;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(1, 4), choice.Value);
+
+            Debug.Print("\n** Expert chooses (1,4) to flip 2 and get an edge while preventing Human from getting edge **");
+            computerPlayer.Level = LevelEnum.Expert;
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 4), choice.Value);
         }
@@ -97,6 +107,106 @@ namespace UnitTests
             computerPlayer.Level = LevelEnum.Advanced;
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(6, 6), choice.Value);
+
+            Debug.Print("\n** Expert chooses (8,4) to get edge and eventually get row **");
+            computerPlayer.Level = LevelEnum.Expert;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(8, 4), choice.Value);
+        }
+
+        [TestMethod]
+        public void TestLevels_Exp()
+        {
+            BoardState boardState = new BoardState(true, false);
+            // col 1
+            boardState.SetSquare(new Coord(1, 2), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 7), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(1, 8), new Square(StateEnum.Black));
+            // col 2
+            boardState.SetSquare(new Coord(2, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(2, 7), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(2, 8), new Square(StateEnum.Black));
+            // col 3
+            boardState.SetSquare(new Coord(3, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 7), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 8), new Square(StateEnum.Black));
+            // col 4
+            boardState.SetSquare(new Coord(4, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 8), new Square(StateEnum.Black));
+            // col 5
+            boardState.SetSquare(new Coord(5, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(5, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 8), new Square(StateEnum.Black));
+            // col 6
+            boardState.SetSquare(new Coord(6, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 8), new Square(StateEnum.Black));
+            // col 7
+            boardState.SetSquare(new Coord(7, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 8), new Square(StateEnum.Black));
+            // col 8
+            boardState.SetSquare(new Coord(8, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(8, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(8, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(8, 8), new Square(StateEnum.Black));
+
+            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Expert, true);
+            computerPlayer.BoardState = boardState;
+
+            Debug.Print("\n** Beginner chooses to flip 5 in 2 ways **");
+            computerPlayer.Level = LevelEnum.Beginner;
+            Coord? choice = computerPlayer.ChooseNextMove();
+            List<Coord> begAcceptableChoices = new List<Coord>
+            {
+                new Coord(1,1),
+                new Coord(3,2),
+            };
+            Assert.IsTrue(begAcceptableChoices.Contains(choice.Value));
+
+            Debug.Print("\n** Intermediate chooses valuable (1,1) to flip left edge **");
+            computerPlayer.Level = LevelEnum.Intermediate;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(1, 1), choice.Value);
+
+            Debug.Print("\n** Advanced chooses valuable (1,1) to flip left edge **");
+            // TODO: Human Black gets skipped, but algorithm doesn't handle it
+            computerPlayer.Level = LevelEnum.Advanced;
+            choice = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(new Coord(1, 1), choice.Value);
+
+            Debug.Print("\n** Expert chooses (5,2) or (8,2) over (1,1) because it does better by saving (1,1) until later since it's not at risk of being taken **");
+            computerPlayer.Level = LevelEnum.Expert;
+            choice = computerPlayer.ChooseNextMove();
+            List<Coord> acceptableChoices = new List<Coord>
+            {
+                new Coord(5,2),
+                new Coord(8,2),
+            };
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
         }
     }
 }

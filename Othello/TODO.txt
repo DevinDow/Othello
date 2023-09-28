@@ -1,9 +1,13 @@
 ﻿TODO
 ----
-- Expert
-	- recurse, calculate scores (possibly just 1), bubble them up to determine Move
+- ComputerPlayersCompete could sort/group results
+
+- show Legal Moves
+	- hot key
+	- can leave it on each time it's player's turn?
+	- can show number of pieces flipped
+
 
 - implement IEnumerable for Board's Squares
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
-- show Legal Moves can show number of pieces flipped

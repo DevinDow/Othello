@@ -19,6 +19,7 @@ namespace Othello
 		public LevelEnum Level;
         public static bool LogDecisions = true;
 		private Random random = new Random();
+        private const int EXPERT_DEPTH = 8;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -48,9 +49,9 @@ namespace Othello
                     choices = chooseHighestScoringAfterOpponentMove();
 					break;
 
-                /*case LevelEnum.Expert:
-                    scoreAllSquares(BoardState, Level == LevelEnum.Advanced ? 2 : 0, true, out choice);
-					break;*/
+                case LevelEnum.Expert:
+                    choices = chooseHighestScoringAfterSeveralTurns();
+					break;
             }
 
 			// no legal Moves
@@ -126,12 +127,12 @@ namespace Othello
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-			// collect the ones that don't let the human score well
+            // collect the ones that don't let the human score well
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
-			foreach (Coord computerChoice in legalComputerMoves)
-			{
-				BoardState computerBoardState = BoardState.Clone();
-				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
+            foreach (Coord computerChoice in legalComputerMoves)
+            {
+                BoardState computerBoardState = BoardState.Clone();
+                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
                     Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
@@ -158,29 +159,29 @@ namespace Othello
             int maxComputerScore = -int.MaxValue;
             List<Coord> finalComputerChoices = new List<Coord>();
             foreach (Coord computerChoice in bestComputerChoices)
-			{
+            {
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
                     Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
-				{
-					maxComputerScore = computerChoiceScore;
-					finalComputerChoices = new List<Coord>();
-				}
+                {
+                    maxComputerScore = computerChoiceScore;
+                    finalComputerChoices = new List<Coord>();
+                }
                 if (computerChoiceScore >= maxComputerScore)
-				{
-					finalComputerChoices.Add(computerChoice);
-				}
+                {
+                    finalComputerChoices.Add(computerChoice);
+                }
             }
 
-			return finalComputerChoices;
+            return finalComputerChoices;
         }
 
-		private int findHumansBestResponseScore(BoardState computerBoardState)
-		{
-			int minScoreAfterHumanTurn = int.MaxValue;
+        private int findHumansBestResponseScore(BoardState computerBoardState)
+        {
+            int minScoreAfterHumanTurn = int.MaxValue;
             //List<Coord> bestHumanResponses = new List<Coord>();
             Coord? bestHumanResponse = null;
             BoardState bestHumanResponseBoardState = null;
@@ -214,82 +215,112 @@ namespace Othello
             return minScoreAfterHumanTurn;
         }
 
-        /*
-        /// <summary>
-        /// loops through all Legal Moves
-        /// https://en.wikipedia.org/wiki/Minimax#Pseudocode
-        /// </summary>
-        /// <param name="boardState">recursive Board State</param>
-        /// <param name="depth">how many times to recurse through minimax</param>
-        /// <param name="maximizing">whether to Maximize or Minimize Score</param>
-        /// <param name="minimaxChoice">Choice that minimizes/maximizes score</param>
-        /// <returns>minimaxScore</returns>
-        private int scoreAllSquares(BoardState boardState, int depth, bool maximizing, out Coord minimaxChoice)
+        private List<Coord> chooseHighestScoringAfterSeveralTurns()
         {
-            minimaxChoice = new Coord();
-            int minimaxScore = maximizing ? -int.MaxValue : int.MaxValue;
-
-            // loop through all Legal Moves
-            for (int x = 1; x <= 8; x++)
+            int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
+            List<Coord> bestComputerChoices = new List<Coord>();
+            // loop through all of Computer's Legal Moves
+            // collect the ones that maximize Score after several Turns
+            List<Coord> legalComputerMoves = BoardState.LegalMoves();
+            foreach (Coord computerChoice in legalComputerMoves)
             {
-                for (int y = 1; y <= 8; y++)
+                BoardState computerBoardState = BoardState.Clone();
+                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
+                int computerChoiceScore = ScoreBoard(computerBoardState);
+                if (LogDecisions)
+                    Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+
+                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
+
+                if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
                 {
-                    Coord choice = new Coord(x, y);
-                    if (BoardState.IsLegalMove(choice))
+                    maxComputerScoreAfterSeveralTurns = minMaxScoreAfterSeveralTurns;
+                    bestComputerChoices = new List<Coord>();
+                }
+
+                if (minMaxScoreAfterSeveralTurns >= maxComputerScoreAfterSeveralTurns) // add choice to bestComputerChoices
+                {
+                    if (!bestComputerChoices.Contains(computerChoice))
+                        bestComputerChoices.Add(computerChoice);
+                }
+            }
+
+            if (LogDecisions)
+                Debug.Print("maxScoreAfterSeveralTurns={0:+#;-#;+0}", maxComputerScoreAfterSeveralTurns);
+
+            // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
+            int maxComputerScore = -int.MaxValue;
+            List<Coord> finalComputerChoices = new List<Coord>();
+            foreach (Coord computerChoice in bestComputerChoices)
+            {
+                BoardState computerBoardState = BoardState.Clone();
+                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
+                int computerChoiceScore = ScoreBoard(computerBoardState);
+                if (LogDecisions)
+                    Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                if (computerChoiceScore > maxComputerScore)
+                {
+                    maxComputerScore = computerChoiceScore;
+                    finalComputerChoices = new List<Coord>();
+                }
+                if (computerChoiceScore >= maxComputerScore)
+                {
+                    finalComputerChoices.Add(computerChoice);
+                }
+            }
+
+            return finalComputerChoices;
+        }
+
+        private int findMinMaxScore(BoardState boardState, int depth)
+        {
+            bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
+            int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
+            Coord minMaxResponse = new Coord();
+            BoardState minMaxResponseBoardState = null;
+
+            List<Coord> legalMoves = boardState.LegalMoves();
+            if (legalMoves.Count == 0) // game over
+            {
+                return ScoreBoard(boardState);
+            }
+
+            foreach (Coord response in legalMoves)
+            {
+                BoardState responseBoardState = boardState.Clone();
+                responseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(response);
+                int responseScore = ScoreBoard(responseBoardState);
+                //if (LogDecisions) Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+
+                if (myTurn)
+                {
+                    if (responseScore > minMaxScore) // my Turn goes for highest Score for me
                     {
-                        BoardState newBoardState = boardState.Clone();
-                        newBoardState.PlacePieceAndFlipPieces(choice);
-                        int score = ScoreBoard(newBoardState);
-                        if (LogDecisions)
-				            Debug.Print("choice: {0} score={1} newBoardState={2}", choice, score, newBoardState);
-
-                        if (score > minimaxScore || (score == minimaxScore && random.NextDouble() > 0.5))
-                        {
-                            minimaxChoice.x = x;
-                            minimaxChoice.y = y;
-                            minimaxScore = score;
-                        }
-
-                        /*int squareScore;
-                        if (depth == 0)
-                        {
-                            squareScore = Score(choice);
-                        }
-                        else
-                        {
-                            Coord miniMaxChoice;
-                            squareScore = scoreAllSquares(, !maximizing, depth - 1, out miniMaxChoice);
-                        }
-
-                        //if (LogDecisions) Debug.Print("legal: {0} score={1}", choice, squareScore);
-
-                        if (maximizing) // maximizing ComputerPlayer's Score
-                        {
-                            if (squareScore > minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
-                            {
-                                minimaxChoice.x = x;
-                                minimaxChoice.y = y;
-                                minimaxScore = squareScore;
-                            }
-                        }
-                        else // minimizing Human's Score
-                        {
-                            if (squareScore < minimaxScore || (squareScore == minimaxScore && random.NextDouble() > 0.5))
-                            {
-                                minimaxChoice.x = x;
-                                minimaxChoice.y = y;
-                                minimaxScore = squareScore;
-                            }
-                        }
+                        minMaxScore = responseScore;
+                        minMaxResponse = response;
+                        minMaxResponseBoardState = responseBoardState;
+                    }
+                }
+                else
+                {
+                    if (responseScore < minMaxScore) // opponent's Turn chooses lowest Score for me
+                    {
+                        minMaxScore = responseScore;
+                        minMaxResponse = response;
+                        minMaxResponseBoardState = responseBoardState;
                     }
                 }
             }
 
             if (LogDecisions)
-				Debug.Print("choosing: {0} score={1}", minimaxChoice, minimaxScore);
-            return minimaxScore;
+                Debug.Print("- response {0}={1}: resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", depth, minMaxResponse, minMaxScore, minMaxResponseBoardState);
+
+            if (depth == 0)
+                return minMaxScore;
+
+            // return minMaxScore after depth more Turns
+            return findMinMaxScore(minMaxResponseBoardState, depth - 1);
         }
-        */
 
         /// <summary>
         /// calculates a Score for a BoardState
@@ -310,6 +341,8 @@ namespace Othello
 					if (square.State != StateEnum.White && square.State != StateEnum.Black)
 						continue;
 					int weightedCoordValue = WeightedCoordValue(coord);
+                    if (Level == LevelEnum.Expert && BoardState.WhiteCount + BoardState.BlackCount > 60)
+                        weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
 
 					if (AmIWhite) // Computer is White
 					{
@@ -353,13 +386,13 @@ namespace Othello
 			{
                 // Beginner Level scores each square as 1
                 case LevelEnum.Beginner:
-				//case LevelEnum.Advanced:
-				default:
+                default:
 					return 1;
 
                 // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
 				case LevelEnum.Intermediate:
                 case LevelEnum.Advanced:
+                case LevelEnum.Expert:
                     switch (coord.x)
 					{
 						case 1:
