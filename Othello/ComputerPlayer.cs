@@ -338,6 +338,8 @@ namespace Othello
 					if (square.State != StateEnum.White && square.State != StateEnum.Black)
 						continue;
 					int weightedCoordValue = WeightedCoordValue(coord);
+                    if (Level == LevelEnum.Expert && BoardState.WhiteCount + BoardState.BlackCount > 60)
+                        weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
 
 					if (AmIWhite) // Computer is White
 					{
