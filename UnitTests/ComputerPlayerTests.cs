@@ -198,10 +198,15 @@ namespace UnitTests
             choice = computerPlayer.ChooseNextMove();
             Assert.AreEqual(new Coord(1, 1), choice.Value);
 
-            Debug.Print("\n** Expert chooses (1,1) to flip left edge **");
+            Debug.Print("\n** Expert chooses (5,2) or (8,2) over (1,1) because it does better by saving (1,1) until later since it's not at risk of being taken **");
             computerPlayer.Level = LevelEnum.Expert;
             choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 1), choice.Value);
+            List<Coord> acceptableChoices = new List<Coord>
+            {
+                new Coord(5,2),
+                new Coord(8,2),
+            };
+            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
         }
     }
 }
