@@ -113,6 +113,19 @@
      W B W B B B B B
      B B B B B B B B
 
+
+     -------------------------------------------
+
+
+    initial BoardState:Turn=W
+     . . . . . . . .
+     B . . . . . . .
+     B B B B B B B .
+     B B B B W B B .
+     B B B B B B B B
+     B W B W B B B B
+     W W W B B B B B
+     B B B B B B B B
      - Computer choice: (5,2) resulting Score=-205
     resulting BoardState:Turn=B
      . . . . . . . .
