@@ -9,7 +9,7 @@ namespace UnitTests
     [TestClass]
     public class ComputerPlayersCompete
     {
-        private const int RUNS = 20;
+        private const int RUNS = 20; // number of times to play each other so that Test judge by which wins most of the time instead of judging by a fluke win by a lower Level
 
         [TestMethod]
         public void BegVsInt()
@@ -59,59 +59,75 @@ namespace UnitTests
             Assert.IsTrue(expWins > advWins);
         }
 
+        /// <summary>
+        /// run multiple Games of whiteLevel vs blackLevel to tally how many times each wins
+        /// </summary>
+        /// <param name="whiteLevel">Level for White</param>
+        /// <param name="blackLevel">Level for Black</param>
+        /// <param name="whiteWins">returns how many times White won</param>
+        /// <param name="blackWins">returns how many times Black won</param>
         public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, out int whiteWins, out int blackWins)
         {
+            // don't Log Decisions for Computer vs Computer, but reset it when done
+            bool prevLogDecisions = ComputerPlayer.LogDecisions;
+            ComputerPlayer.LogDecisions = false; // don't log every Decision, esp. Expert going DEPTH Responses for every Legal Move available
+
+            Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
+
             whiteWins = blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
+                //Debug.Print(boardState.ToString()); // log final BoardState
                 if (boardState.WhiteCount > boardState.BlackCount)
+                {
+                    Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
                     whiteWins++;
-                if (boardState.BlackCount > boardState.WhiteCount)
+                }
+                else if (boardState.BlackCount > boardState.WhiteCount)
+                {
+                    Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
                     blackWins++;
+                }
+                else
+                {
+                    Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
+                }
             }
             Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
+
+            // reset Log Decisions for other Tests
+            ComputerPlayer.LogDecisions = prevLogDecisions;
         }
 
+        /// <summary>
+        /// run a Game of whiteLevel vs blackLevel
+        /// </summary>
+        /// <param name="whiteLevel">Level for White</param>
+        /// <param name="blackLevel">Level for Black</param>
+        /// <returns>BoardState after end of Game</returns>
         public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
         {
-            // don't Log Decisions for Computer vs Computer, but reset it when done
-            bool prevLogDecisions = ComputerPlayer.LogDecisions;
-            ComputerPlayer.LogDecisions = false;
-
             BoardState boardState = new BoardState();
             ComputerPlayer white = new ComputerPlayer(whiteLevel, true);
             ComputerPlayer black = new ComputerPlayer(blackLevel, false);
-            //Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
-            while (true)
+            while (true) // repeat currentPlayer making a Move until endOfGame
             {
+                // which Player's turn is it (boardState.WhitesTurn knows if a Player is skipped due to no Legal Moves)
                 ComputerPlayer currentPlayer = boardState.WhitesTurn ? white : black;
                 currentPlayer.BoardState = boardState;
                 Coord? choice = currentPlayer.ChooseNextMove();
                 if (choice != null)
                 {
                     boardState.PlacePieceAndFlipPiecesAndChangeTurns(choice.Value);
-                    //Debug.Print(boardState.ToString());
+                    //Debug.Print(boardState.ToString()); // log BoardState after every Move
                     //Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
                 }
 
                 if (boardState.endOfGame)
-                {
-                    if (boardState.WhiteCount > boardState.BlackCount)
-                        Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
-                    else if (boardState.BlackCount > boardState.WhiteCount)
-                        Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
-                    else
-                        Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
-
-                    // reset Log Decisions for other Tests
-                    ComputerPlayer.LogDecisions = prevLogDecisions;
-
                     return boardState;
-                }
             }
-
         }
     }
 }
