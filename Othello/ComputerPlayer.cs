@@ -276,6 +276,7 @@ namespace Othello
         {
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
+            Coord minMaxResponse = new Coord();
             BoardState minMaxResponseBoardState = null;
 
             List<Coord> legalMoves = boardState.LegalMoves();
@@ -296,6 +297,7 @@ namespace Othello
                     if (responseScore > minMaxScore) // my Turn goes for highest Score for me
                     {
                         minMaxScore = responseScore;
+                        minMaxResponse = response;
                         minMaxResponseBoardState = responseBoardState;
                     }
                 }
@@ -304,13 +306,14 @@ namespace Othello
                     if (responseScore < minMaxScore) // opponent's Turn chooses lowest Score for me
                     {
                         minMaxScore = responseScore;
+                        minMaxResponse = response;
                         minMaxResponseBoardState = responseBoardState;
                     }
                 }
             }
 
             if (LogDecisions)
-                Debug.Print("- response {0}: resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", depth, minMaxScore, minMaxResponseBoardState);
+                Debug.Print("- response {0}={1}: resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", depth, minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
             if (depth == 0)
                 return minMaxScore;
