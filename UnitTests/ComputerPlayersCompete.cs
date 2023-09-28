@@ -74,8 +74,11 @@ namespace UnitTests
         }
 
         public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
-        { 
+        {
+            // don't Log Decisions for Computer vs Computer, but reset it when done
+            bool prevLogDecisions = ComputerPlayer.LogDecisions;
             ComputerPlayer.LogDecisions = false;
+
             BoardState boardState = new BoardState();
             ComputerPlayer white = new ComputerPlayer(whiteLevel, true);
             ComputerPlayer black = new ComputerPlayer(blackLevel, false);
@@ -101,9 +104,14 @@ namespace UnitTests
                         Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
                     else
                         Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
+
+                    // reset Log Decisions for other Tests
+                    ComputerPlayer.LogDecisions = prevLogDecisions;
+
                     return boardState;
                 }
             }
+
         }
     }
 }
