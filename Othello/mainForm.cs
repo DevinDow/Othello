@@ -70,8 +70,8 @@ namespace Othello
             this.beginnerItem = new System.Windows.Forms.MenuItem();
             this.intermediateItem = new System.Windows.Forms.MenuItem();
             this.advancedItem = new System.Windows.Forms.MenuItem();
-            this.undoItem = new System.Windows.Forms.MenuItem();
             this.expertItem = new System.Windows.Forms.MenuItem();
+            this.undoItem = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarTurn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarBlackScore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarWhiteScore)).BeginInit();
@@ -79,7 +79,7 @@ namespace Othello
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 322);
+            this.statusBar.Location = new System.Drawing.Point(0, 302);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusBarTurn,
@@ -127,7 +127,8 @@ namespace Othello
             // leaglMovesItem
             // 
             this.leaglMovesItem.Index = 1;
-            this.leaglMovesItem.Text = "Show Legal &Moves";
+            this.leaglMovesItem.Shortcut = System.Windows.Forms.Shortcut.F1;
+            this.leaglMovesItem.Text = "Show Legal &Moves (F1)";
             this.leaglMovesItem.Click += new System.EventHandler(this.leaglMovesItem_Click);
             // 
             // menuItem1
@@ -166,22 +167,22 @@ namespace Othello
             this.advancedItem.Text = "&Advanced Algorithm";
             this.advancedItem.Click += new System.EventHandler(this.advancedItem_Click);
             // 
-            // undoItem
-            // 
-            this.undoItem.Index = 3;
-            this.undoItem.Text = "&Undo";
-            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
-            // 
             // expertItem
             // 
             this.expertItem.Index = 4;
             this.expertItem.Text = "&Expert Algorithm";
             this.expertItem.Click += new System.EventHandler(this.expertItem_Click);
             // 
+            // undoItem
+            // 
+            this.undoItem.Index = 3;
+            this.undoItem.Text = "&Undo";
+            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(424, 344);
+            this.ClientSize = new System.Drawing.Size(424, 324);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;
