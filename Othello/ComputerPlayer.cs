@@ -318,8 +318,12 @@ namespace Othello
             if (depth == 0)
                 return minMaxScore;
 
-            // return minMaxScore after depth more Turns
-            return findMinMaxScore(minMaxResponseBoardState, depth - 1);
+            int levelsLeft = depth - 1;
+            if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+                levelsLeft--; // depth should go down to same Player to compare equally
+
+            // return minMaxScore after levelsLeft more Turns
+            return findMinMaxScore(minMaxResponseBoardState, levelsLeft);
         }
 
         /// <summary>
