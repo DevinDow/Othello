@@ -2,7 +2,6 @@
 ----
 - ComputerPlayersCompete could sort/group results
 
-- implement IEnumerable for Board's Squares
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
 
