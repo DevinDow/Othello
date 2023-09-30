@@ -335,8 +335,8 @@ namespace Othello
         /// <returns>weighted Score of boardState</returns>
         private int ScoreBoard(BoardState boardState)
 		{
-            const int numEmptyToConsiderBoardMostlyFilled = 6;
-            bool boardMostlyFilled = BoardState.EmptyCount < numEmptyToConsiderBoardMostlyFilled;
+            const int numEmptyToConsiderBoardMostlyFilled = 3;
+            bool boardMostlyFilled = BoardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
 
             int score = 0;
             foreach (Coord coord in boardState)

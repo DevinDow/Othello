@@ -1,6 +1,7 @@
 ﻿TODO
 ----
 - Expert is broken since doing IEnumerable & speed up
+- should ComputerVsComputer Tests compare total Pieces instead of Wins
 
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
