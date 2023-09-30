@@ -74,30 +74,51 @@ namespace UnitTests
 
             Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
+            SortedDictionary<int, int> results = new SortedDictionary<int, int>(); // sort results by Pieces diff
             whiteWins = blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
+                AddResult(results, boardState);
                 //Debug.Print(boardState.ToString()); // log final BoardState
                 if (boardState.WhiteCount > boardState.BlackCount)
                 {
-                    Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
+                    //Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
                     whiteWins++;
                 }
                 else if (boardState.BlackCount > boardState.WhiteCount)
                 {
-                    Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
+                    //Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
                     blackWins++;
                 }
                 else
                 {
-                    Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
+                    //Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
                 }
+            }
+            // print results
+            foreach (int diff in results.Keys)
+            {
+                if (diff > 0)
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", whiteLevel, diff, results[diff]);
+                else if (diff == 0)
+                    Debug.Print("Tied {0} time(s)", results[diff]);
+                else
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", blackLevel, -diff, results[diff]);
             }
             Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
 
             // reset Log Decisions for other Tests
             ComputerPlayer.LogDecisions = prevLogDecisions;
+        }
+
+        private void AddResult(SortedDictionary<int, int> results, BoardState boardState)
+        {
+            int diff = boardState.WhiteCount - boardState.BlackCount;
+            if (results.ContainsKey(diff))
+                results[diff]++;
+            else
+                results[diff] = 1;
         }
 
         /// <summary>

@@ -1,7 +1,5 @@
 ﻿TODO
 ----
-- ComputerPlayersCompete could sort/group results
-
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
 
