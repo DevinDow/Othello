@@ -335,17 +335,22 @@ namespace Othello
         /// <returns>weighted Score of boardState</returns>
         private int ScoreBoard(BoardState boardState)
 		{
-			int score = 0;
+            const int numEmptyToConsiderBoardMostlyFilled = 6;
+            bool boardMostlyFilled = BoardState.EmptyCount < numEmptyToConsiderBoardMostlyFilled;
+
+            int score = 0;
             foreach (Coord coord in boardState)
             { 
 				Square square = boardState.GetSquare(coord);
 				if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
-				int weightedCoordValue = WeightedCoordValue(coord);
-                if (Level == LevelEnum.Expert && BoardState.WhiteCount + BoardState.BlackCount > 60)
+				int weightedCoordValue;
+                if (Level == LevelEnum.Expert && boardMostlyFilled)
                     weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
+                else
+                    weightedCoordValue = WeightedCoordValue(coord);
 
-				if (AmIWhite) // Computer is White
+                if (AmIWhite) // Computer is White
 				{
 					switch (square.State)
 					{

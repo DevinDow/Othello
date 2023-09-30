@@ -1,5 +1,7 @@
 ﻿TODO
 ----
+- Expert is broken since doing IEnumerable & speed up
+
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack
 
