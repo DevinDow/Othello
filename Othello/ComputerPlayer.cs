@@ -19,7 +19,7 @@ namespace Othello
 		public LevelEnum Level;
         public static bool LogDecisions = true;
 		private Random random = new Random();
-        private const int EXPERT_DEPTH = 8;
+        private const int EXPERT_DEPTH = 4;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
