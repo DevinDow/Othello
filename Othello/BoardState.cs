@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Othello
 {
-    public class BoardState
+    public class BoardState : IEnumerable<Coord>
     {
         // Fields
         public Square[,] squares; // 8x8 Array ( 0..7 , 0..7 )
@@ -19,10 +20,9 @@ namespace Othello
             get
             {
                 int count = 0;
-                for (int row = 0; row < 8; row++)
-                    for (int column = 0; column < 8; column++)
-                        if (squares[row, column].State == StateEnum.White)
-                            count++;
+                foreach (Coord coord in this)
+                    if (GetSquare(coord).State == StateEnum.White)
+                        count++;
                 return count;
             }
         }
@@ -32,10 +32,9 @@ namespace Othello
             get
             {
                 int count = 0;
-                for (int row = 0; row < 8; row++)
-                    for (int column = 0; column < 8; column++)
-                        if (squares[row, column].State == StateEnum.Black)
-                            count++;
+                foreach (Coord coord in this)
+                    if (GetSquare(coord).State == StateEnum.Black)
+                        count++;
                 return count;
             }
         }
@@ -48,9 +47,8 @@ namespace Othello
             squares = new Square[8, 8];
             WhitesTurn = whitesTurn;
 
-            for (int x = 0; x < 8; x++)
-                for (int y = 0; y < 8; y++)
-                    squares[x, y] = new Square(StateEnum.Empty);
+            foreach (Coord coord in this)
+                SetSquare(coord, new Square());
 
             if (addInitialPieces)
             {
@@ -81,17 +79,11 @@ namespace Othello
         {
             List<Coord> legalMoves = new List<Coord>();
 
-            for (int x = 1; x <= 8; x++)
-            {
-                for (int y = 1; y <= 8; y++)
+            foreach (Coord coord in this)
+                if (IsLegalMove(coord))
                 {
-                    Coord coord = new Coord(x, y);
-                    if (IsLegalMove(coord))
-                    {
-                        legalMoves.Add(coord);
-                    }
+                    legalMoves.Add(coord);
                 }
-            }
 
             return legalMoves;
         }
@@ -255,13 +247,11 @@ namespace Othello
             newBoardState.squares = new Square[8, 8];
             newBoardState.WhitesTurn = WhitesTurn;
 
-            for (int x = 1; x <= 8; x++)
-                for (int y = 1; y <= 8; y++)
-                {
-                    Coord coord = new Coord(x, y);
-                    Square square = GetSquare(coord);
-                    newBoardState.SetSquare(coord, new Square(square.State));
-                }
+            foreach (Coord coord in this)
+            {
+                Square square = GetSquare(coord);
+                newBoardState.SetSquare(coord, new Square(square.State));
+            }
 
             return newBoardState;
         }
@@ -271,32 +261,50 @@ namespace Othello
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
+            foreach (Coord coord in this)
+            {
+                Square square = GetSquare(coord);
+                switch (square.State)
+                {
+                    case StateEnum.Black:
+                        sb.Append(" B");
+                        break;
+                    case StateEnum.White:
+                        sb.Append(" W");
+                        break;
+                    case StateEnum.Empty:
+                        sb.Append(" .");
+                        break;
+                }
+                if (coord.x == 8 && coord.y < 8)
+                    sb.Append("\n");
+            }
+            return sb.ToString();
+        }
+
+        // implement IEnureable<Coord>
+        // could have returned Squares instead, but sometimes also need Coord, so just get Square from Coord
+        public IEnumerator<Coord> GetEnumerator()
+        {
             for (int y = 1; y <= 8; y++) // loop rows
             {
                 for (int x = 1; x <= 8; x++) // loop columns
                 {
-                    Square square = GetSquare(new Coord(x, y));
-                    switch (square.State)
-                    {
-                        case StateEnum.Black:
-                            sb.Append(" B");
-                            break;
-                        case StateEnum.White:
-                            sb.Append(" W");
-                            break;
-                        case StateEnum.Empty:
-                            sb.Append(" .");
-                            break;
-                    }
-                    /*if (square.State != StateEnum.Empty)
-                    {
-                        sb.AppendFormat("({0},{1})={2}, ", x, y, square.State == StateEnum.Black ? "B" : "W");
-                    }*/
+                    Coord coord = new Coord(x, y);
+                    yield return coord;
                 }
-                if (y<8)
-                    sb.Append("\n");
             }
-            return sb.ToString();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            for (int y = 1; y <= 8; y++) // loop rows
+            {
+                for (int x = 1; x <= 8; x++) // loop columns
+                {
+                    Coord coord = new Coord(x, y);
+                    yield return coord;
+                }
+            }
         }
     }
 }

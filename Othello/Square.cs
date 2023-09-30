@@ -14,6 +14,8 @@ namespace Othello
 
 		public StateEnum State { get{return state;} set{state = value;} }
 
+        public Square() : this(StateEnum.Empty) { }
+
         public Square(StateEnum state)
         {
             this.state = state;

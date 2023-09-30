@@ -336,41 +336,37 @@ namespace Othello
         private int ScoreBoard(BoardState boardState)
 		{
 			int score = 0;
-			for (int x = 1; x <= 8; x++)
-			{
-				for (int y = 1; y <= 8; y++)
-				{
-					Coord coord = new Coord(x, y);
-					Square square = boardState.GetSquare(coord);
-					if (square.State != StateEnum.White && square.State != StateEnum.Black)
-						continue;
-					int weightedCoordValue = WeightedCoordValue(coord);
-                    if (Level == LevelEnum.Expert && BoardState.WhiteCount + BoardState.BlackCount > 60)
-                        weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
+            foreach (Coord coord in boardState)
+            { 
+				Square square = boardState.GetSquare(coord);
+				if (square.State != StateEnum.White && square.State != StateEnum.Black)
+					continue;
+				int weightedCoordValue = WeightedCoordValue(coord);
+                if (Level == LevelEnum.Expert && BoardState.WhiteCount + BoardState.BlackCount > 60)
+                    weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
 
-					if (AmIWhite) // Computer is White
+				if (AmIWhite) // Computer is White
+				{
+					switch (square.State)
 					{
-						switch (square.State)
-						{
-							case StateEnum.White:
-								score += weightedCoordValue;
-								break;
-							case StateEnum.Black:
-								score -= weightedCoordValue;
-								break;
-						}
+						case StateEnum.White:
+							score += weightedCoordValue;
+							break;
+						case StateEnum.Black:
+							score -= weightedCoordValue;
+							break;
 					}
-					else // Computer is Black
-					{
-                        switch (square.State)
-                        {
-                            case StateEnum.Black:
-                                score += weightedCoordValue;
-                                break;
-                            case StateEnum.White:
-                                score -= weightedCoordValue;
-                                break;
-                        }
+				}
+				else // Computer is Black
+				{
+                    switch (square.State)
+                    {
+                        case StateEnum.Black:
+                            score += weightedCoordValue;
+                            break;
+                        case StateEnum.White:
+                            score -= weightedCoordValue;
+                            break;
                     }
                 }
 			}
