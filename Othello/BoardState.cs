@@ -39,6 +39,18 @@ namespace Othello
             }
         }
 
+        public int EmptyCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (Coord coord in this)
+                    if (GetSquare(coord).State == StateEnum.Empty)
+                        count++;
+                return count;
+            }
+        }
+
 
         // Constructor
         public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
