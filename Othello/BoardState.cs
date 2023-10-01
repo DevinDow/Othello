@@ -275,7 +275,7 @@ namespace Othello
             if (endOfGame)
                 sb.Append(" *** END OF GAME *** \n");
             else
-            sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
+                sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
             foreach (Coord coord in this)
             {
                 Square square = GetSquare(coord);
