@@ -146,6 +146,7 @@ namespace Othello
                 int humansBestResponseScore;
                 if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Human Turn skipped
                 {
+                    if (LogDecisions)
                     Debug.Print("    - Human response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
                             computerChoiceScore, computerBoardState);
                     humansBestResponseScore = computerChoiceScore;
