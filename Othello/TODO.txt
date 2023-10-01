@@ -1,5 +1,8 @@
 ﻿TODO
 ----
+- Game Over should take move if Wins and not take if Loses
+	- TestLevels_Adv() Exp W->(3,4) Loses, so return -int.Max
+
 - Expert is broken since doing skipped Turn & IEnumerable & speed up
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins

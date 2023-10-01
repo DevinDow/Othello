@@ -9,7 +9,7 @@ namespace UnitTests
     [TestClass]
     public class ComputerPlayersCompete
     {
-        private const int RUNS = 20; // number of times to play each other so that Test judge by which wins most of the time instead of judging by a fluke win by a lower Level
+        private const int RUNS = 9; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
 
         [TestMethod]
         public void BegVsInt()

@@ -19,7 +19,7 @@ namespace Othello
 		public LevelEnum Level;
         public static bool LogDecisions = true;
 		private Random random = new Random();
-        private const int EXPERT_DEPTH = 4;
+        private const int EXPERT_DEPTH = 7;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -147,8 +147,8 @@ namespace Othello
                 if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Human Turn skipped
                 {
                     if (LogDecisions)
-                    Debug.Print("    - Human response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
-                            computerChoiceScore, computerBoardState);
+                        Debug.Print("    - Human response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
+                                computerChoiceScore, computerBoardState);
                     humansBestResponseScore = computerChoiceScore;
                 }
                 else
@@ -246,7 +246,7 @@ namespace Othello
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
                     Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
-                            computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
+                            BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
 
