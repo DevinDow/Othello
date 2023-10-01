@@ -1,7 +1,5 @@
 ﻿TODO
 ----
-TestLevels_Exp: Advanced (1,1) skips Human Turn
-
 - Expert is broken since doing skipped Turn & IEnumerable & speed up
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins

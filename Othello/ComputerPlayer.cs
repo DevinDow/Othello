@@ -143,7 +143,15 @@ namespace Othello
                     Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
+                int humansBestResponseScore;
+                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Human Turn skipped
+                {
+                    Debug.Print("    - Human response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
+                            computerChoiceScore, computerBoardState);
+                    humansBestResponseScore = computerChoiceScore;
+                }
+                else
+                    humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
 
                 if (humansBestResponseScore > maxComputerScoreAfterHumansBestResponse) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
                 {
