@@ -168,7 +168,7 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("maxScoreAfterHumanTurn={0:+#;-#;+0}", maxComputerScoreAfterHumansBestResponse);
+                Debug.Print("bestComputerChoices count={0}, maxScoreAfterHumanTurn={1:+#;-#;+0}", bestComputerChoices.Count, maxComputerScoreAfterHumansBestResponse);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -264,7 +264,7 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("maxScoreAfterSeveralTurns={0:+#;-#;+0}", maxComputerScoreAfterSeveralTurns);
+                Debug.Print("bestComputerChoices count={0}, maxComputerScoreAfterSeveralTurns={1:+#;-#;+0}", bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
