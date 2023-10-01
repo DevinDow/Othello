@@ -33,7 +33,11 @@ namespace Othello
 		public Coord? ChooseNextMove()
 		{
             if (LogDecisions)
-                Debug.Print("{0} {1}\ninitial BoardState:{2}", Level, AmIWhite ? "W" : "B", BoardState);
+            {
+                int initialScore = ScoreBoard(BoardState);
+                Debug.Print("{0} {1}\ninitial BoardState:{2}\ninitial Score={3:+#;-#;+0}", 
+                        Level, AmIWhite ? "W" : "B", BoardState, initialScore);
+            }
 
             List<Coord> choices = new List<Coord>();
 
@@ -63,13 +67,13 @@ namespace Othello
 			{
 				Coord choice = choices[0];
                 if (LogDecisions)
-                    Debug.Print("chose {0}", choice);
+                    Debug.Print("chose {0}->{1}", BoardState.WhitesTurn ? 'W' : 'B', choice);
                 return choice;
 			}
 
 			// multiple equally best Moves
 			StringBuilder sb = new StringBuilder();
-			sb.Append("Equal Choices: ");
+			sb.AppendFormat("Equal Choices: {0}->", BoardState.WhitesTurn ? 'W' : 'B');
 			foreach (Coord choice in choices)
 				sb.Append(choice + " ");
             if (LogDecisions)
@@ -79,7 +83,7 @@ namespace Othello
             int randomIndex = random.Next(choices.Count);
 			Coord randomChoice = choices[randomIndex];
             if (LogDecisions)
-                Debug.Print("chose {0}", randomChoice);
+                Debug.Print("chose {0}->{1}", BoardState.WhitesTurn ? 'W' : 'B', randomChoice);
             return randomChoice;
         }
 
@@ -100,7 +104,8 @@ namespace Othello
 				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-				    Debug.Print("Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+				    Debug.Print("Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                            BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
 				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
 				{
@@ -135,7 +140,8 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-                    Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                    Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                            computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
 
@@ -164,7 +170,8 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-                    Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                    Debug.Print("Top Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                            computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
                 {
                     maxComputerScore = computerChoiceScore;
@@ -210,7 +217,8 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
+                Debug.Print("    - Human response: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                        computerBoardState.WhitesTurn ? 'W' : 'B', bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
 
             return minScoreAfterHumanTurn;
         }
@@ -228,7 +236,8 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-                    Debug.Print(" - Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                    Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
+                            computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
 
@@ -257,7 +266,8 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-                    Debug.Print("Top Computer choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", computerChoice, computerChoiceScore, computerBoardState);
+                    Debug.Print("Top Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
+                            computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
                 {
                     maxComputerScore = computerChoiceScore;
@@ -313,7 +323,8 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("- response {0}={1}: resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", depth, minMaxResponse, minMaxScore, minMaxResponseBoardState);
+                Debug.Print("- response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
+                        depth, boardState.WhitesTurn?'W':'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
             if (depth == 0)
                 return minMaxScore;
