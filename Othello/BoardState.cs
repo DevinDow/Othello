@@ -272,6 +272,9 @@ namespace Othello
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
+            if (endOfGame)
+                sb.Append(" *** END OF GAME *** \n");
+            else
             sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
             foreach (Coord coord in this)
             {
