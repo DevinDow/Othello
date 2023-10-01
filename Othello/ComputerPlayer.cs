@@ -301,14 +301,23 @@ namespace Othello
             List<Coord> legalMoves = boardState.LegalMoves();
             if (legalMoves.Count == 0) // game over
             {
-                return ScoreBoard(boardState);
+                return ScoreEndOfGame(boardState);
             }
 
             foreach (Coord response in legalMoves)
             {
                 BoardState responseBoardState = boardState.Clone();
                 responseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(response);
-                int responseScore = ScoreBoard(responseBoardState);
+
+                int responseScore;
+                if (responseBoardState.endOfGame)
+                {
+                    responseScore = ScoreEndOfGame(responseBoardState);
+                }
+                else
+                {
+                    responseScore = ScoreBoard(responseBoardState);
+                }
                 //if (LogDecisions) Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
 
                 if (myTurn)
@@ -344,6 +353,18 @@ namespace Othello
 
             // recurse to return resulting minMaxScore after levelsLeft more Turns
             return findMinMaxScore(minMaxResponseBoardState, levelsLeft);
+        }
+
+        private int ScoreEndOfGame(BoardState boardState)
+        {
+            int endOfGameScore;
+            const int MULTIPLIER = 10;
+            if (AmIWhite)
+                endOfGameScore = MULTIPLIER * (boardState.WhiteCount - boardState.BlackCount);
+            else
+                endOfGameScore = MULTIPLIER * (boardState.BlackCount - boardState.WhiteCount);
+
+            return endOfGameScore;
         }
 
         /// <summary>
