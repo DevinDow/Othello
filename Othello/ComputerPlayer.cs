@@ -18,7 +18,9 @@ namespace Othello
 		public BoardState BoardState;
 		public LevelEnum Level;
         public static bool LogDecisions = true;
-		private Random random = new Random();
+        public static bool LogEachExpertTurn = false;
+        public static bool LogEachLegalMoveResponse = false;
+        private Random random = new Random();
         private const int EXPERT_DEPTH = 7;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
@@ -198,7 +200,7 @@ namespace Othello
         private int findHumansBestResponseScore(BoardState computerBoardState)
         {
             int minScoreAfterHumanTurn = int.MaxValue;
-            //List<Coord> bestHumanResponses = new List<Coord>();
+            //List<Coord> bestHumanResponses = new List<Coord>(); // don't need a list, any of the ties will do
             Coord? bestHumanResponse = null;
             BoardState bestHumanResponseBoardState = null;
 
@@ -208,7 +210,8 @@ namespace Othello
                 BoardState humanResponseBoardState = computerBoardState.Clone();
                 humanResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(humanResponse);
                 int humanResponseScore = ScoreBoard(humanResponseBoardState);
-                //if (LogDecisions) Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+                if (LogEachLegalMoveResponse) 
+                    Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanResponse, humanResponseScore, humanResponseBoardState);
 
                 if (humanResponseScore < minScoreAfterHumanTurn) // remember minScoreAfterHumanTurn and start a new List of Moves that attain it
                 {
@@ -325,7 +328,9 @@ namespace Othello
                 {
                     responseScore = ScoreBoard(responseBoardState);
                 }
-                //if (LogDecisions) Debug.Print("    - Human choice: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanChoice, humanChoiceScore, humanBoardState);
+                // Log each legalMove response
+                if (LogEachLegalMoveResponse) 
+                    Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", response, responseScore, responseBoardState);
 
                 if (myTurn)
                 {
@@ -347,7 +352,8 @@ namespace Othello
                 }
             }
 
-            if (LogDecisions)
+            // Log the chosen minMaxResponse
+            if (LogEachExpertTurn)
                 Debug.Print("- response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
                         depth, boardState.WhitesTurn?'W':'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
