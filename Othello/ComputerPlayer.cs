@@ -67,7 +67,7 @@ namespace Othello
 			{
 				Coord choice = choices[0];
                 if (LogDecisions)
-                    Debug.Print("chose {0}->{1}", BoardState.WhitesTurn ? 'W' : 'B', choice);
+                    Debug.Print("{0} chose {1}->{2}", Level, BoardState.WhitesTurn ? 'W' : 'B', choice);
                 return choice;
 			}
 
@@ -83,7 +83,7 @@ namespace Othello
             int randomIndex = random.Next(choices.Count);
 			Coord randomChoice = choices[randomIndex];
             if (LogDecisions)
-                Debug.Print("chose {0}->{1}", BoardState.WhitesTurn ? 'W' : 'B', randomChoice);
+                Debug.Print("{0} chose {1}->{2}", Level, BoardState.WhitesTurn ? 'W' : 'B', randomChoice);
             return randomChoice;
         }
 
