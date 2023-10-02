@@ -3,12 +3,56 @@ using Othello;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace UnitTests
 {
     [TestClass]
     public class ComputerPlayerTests
     {
+        /// <summary>
+        /// runs a Test for a BoardState & Level where there is one Expected Choice
+        /// </summary>
+        /// <param name="boardState"></param>
+        /// <param name="level"></param>
+        /// <param name="expected"></param>
+        /// <param name="reasoning">text explaining why it should make this choice</param>
+        private void TestExpectedChoice(BoardState boardState, LevelEnum level, Coord expected, string reasoning)
+        {
+            ComputerPlayer computerPlayer = new ComputerPlayer(level, true);
+            computerPlayer.BoardState = boardState;
+            Coord? chose;
+
+            Debug.Print("\n** {0} chooses {1} {2} **", computerPlayer.Level, expected, reasoning);
+            chose = computerPlayer.ChooseNextMove();
+            Assert.AreEqual(expected, chose.Value, string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.Level, chose.Value, expected, reasoning));
+            Debug.Print("{0} SUCCESSFULLY choose {1} {2}", computerPlayer.Level, expected, reasoning);
+        }
+
+        /// <summary>
+        /// runs a Test for a BoardState & Level where there are multiple Acceptable Choices
+        /// </summary>
+        /// <param name="boardState"></param>
+        /// <param name="level"></param>
+        /// <param name="acceptableChoices"></param>
+        /// <param name="reasoning">text explaining why it should make this choice</param>
+        private void TestAcceptableChoices(BoardState boardState, LevelEnum level, List<Coord> acceptableChoices, string reasoning)
+        {
+            ComputerPlayer computerPlayer = new ComputerPlayer(level, true);
+            computerPlayer.BoardState = boardState;
+            Coord? chose;
+
+            StringBuilder acceptableChoicesString = new StringBuilder();
+            foreach (Coord coord in acceptableChoices)
+                acceptableChoicesString.Append(coord.ToString());
+
+            Debug.Print("\n** {0} chooses from {1} {2} **", computerPlayer.Level, acceptableChoicesString, reasoning);
+            chose = computerPlayer.ChooseNextMove();
+            Assert.IsTrue(acceptableChoices.Contains(chose.Value), string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.Level, chose.Value, acceptableChoicesString, reasoning));
+            Debug.Print("{0} SUCCESSFULLY chose from {1} {2}", computerPlayer.Level, acceptableChoicesString, reasoning);
+        }
+
+
         [TestMethod]
         public void TestFirstMove()
         {
@@ -17,31 +61,16 @@ namespace UnitTests
             computerPlayer.BoardState = boardState;
             List<Coord> acceptableChoices = new List<Coord>
             {
-                new Coord(3,5),
-                new Coord(4,6),
-                new Coord(5,3),
-                new Coord(6,4),
+                new Coord(3, 5),
+                new Coord(4, 6),
+                new Coord(5, 3),
+                new Coord(6, 4),
             };
 
-            Debug.Print("\n** Beginner **");
-            computerPlayer.Level = LevelEnum.Beginner;
-            Coord? choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
-
-            Debug.Print("\n** Intermediate **");
-            computerPlayer.Level = LevelEnum.Intermediate;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
-
-            Debug.Print("\n** Advanced **");
-            computerPlayer.Level = LevelEnum.Advanced;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
-
-            Debug.Print("\n** Expert **");
-            computerPlayer.Level = LevelEnum.Expert;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
+            TestAcceptableChoices(boardState, LevelEnum.Beginner, acceptableChoices, string.Empty);
+            TestAcceptableChoices(boardState, LevelEnum.Intermediate, acceptableChoices, string.Empty);
+            TestAcceptableChoices(boardState, LevelEnum.Advanced, acceptableChoices, string.Empty);
+            TestAcceptableChoices(boardState, LevelEnum.Expert, acceptableChoices, string.Empty);
         }
 
         [TestMethod]
@@ -55,28 +84,10 @@ namespace UnitTests
             boardState.SetSquare(new Coord(3, 4), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.White));
 
-            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Beginner, true);
-            computerPlayer.BoardState = boardState;
-
-            Debug.Print("\n** Beginner chooses (2,5) to flip 3 **");
-            computerPlayer.Level = LevelEnum.Beginner;
-            Coord? choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(2, 5), choice.Value);
-
-            Debug.Print("\n** Intermediate chooses (1,4) to flip 2 and get an edge **");
-            computerPlayer.Level = LevelEnum.Intermediate;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 4), choice.Value);
-
-            Debug.Print("\n** Advanced chooses (1,4) to flip 2 and get an edge while preventing Human from getting edge **");
-            computerPlayer.Level = LevelEnum.Advanced;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 4), choice.Value);
-
-            Debug.Print("\n** Expert chooses (1,4) to flip 2 and get an edge while preventing Human from getting edge **");
-            computerPlayer.Level = LevelEnum.Expert;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 4), choice.Value);
+            TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(2, 5), "to flip 3");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an edge");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an edge while preventing Human from getting edge");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(2, 5), "to win game after Human's next Move");
         }
 
         [TestMethod]
@@ -90,28 +101,10 @@ namespace UnitTests
             boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.Black));
 
-            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Beginner, true);
-            computerPlayer.BoardState = boardState;
-
-            Debug.Print("\n** Beginner chooses (3,4) to flip 2 **");
-            computerPlayer.Level = LevelEnum.Beginner;
-            Coord? choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(3, 4), choice.Value);
-
-            Debug.Print("\n** Intermediate chooses (6,6) to get higher value pieces in col 6 **");
-            computerPlayer.Level = LevelEnum.Intermediate;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(6, 6), choice.Value);
-
-            Debug.Print("\n** Advanced chooses (6,6) to avoid Human reflipping row **");
-            computerPlayer.Level = LevelEnum.Advanced;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(6, 6), choice.Value);
-
-            Debug.Print("\n** Expert chooses (8,4) to get edge and eventually get row **");
-            computerPlayer.Level = LevelEnum.Expert;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(8, 4), choice.Value);
+            TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(3, 4), "to flip 2");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(6, 6), "to get higher value pieces in col 6");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping row");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get edge and eventually get row");
         }
 
         [TestMethod]
@@ -174,39 +167,10 @@ namespace UnitTests
             boardState.SetSquare(new Coord(8, 7), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(8, 8), new Square(StateEnum.Black));
 
-            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Expert, true);
-            computerPlayer.BoardState = boardState;
-
-            Debug.Print("\n** Beginner chooses to flip 5 in 2 ways **");
-            computerPlayer.Level = LevelEnum.Beginner;
-            Coord? choice = computerPlayer.ChooseNextMove();
-            List<Coord> begAcceptableChoices = new List<Coord>
-            {
-                new Coord(1,1),
-                new Coord(3,2),
-            };
-            Assert.IsTrue(begAcceptableChoices.Contains(choice.Value));
-
-            Debug.Print("\n** Intermediate chooses valuable (1,1) to flip left edge **");
-            computerPlayer.Level = LevelEnum.Intermediate;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 1), choice.Value);
-
-            Debug.Print("\n** Advanced chooses valuable (1,1) to flip left edge **");
-            // TODO: Human Black gets skipped, but algorithm doesn't handle it
-            computerPlayer.Level = LevelEnum.Advanced;
-            choice = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(new Coord(1, 1), choice.Value);
-
-            Debug.Print("\n** Expert chooses (5,2) or (8,2) over (1,1) because it does better by saving (1,1) until later since it's not at risk of being taken **");
-            computerPlayer.Level = LevelEnum.Expert;
-            choice = computerPlayer.ChooseNextMove();
-            List<Coord> acceptableChoices = new List<Coord>
-            {
-                new Coord(5,2),
-                new Coord(8,2),
-            };
-            Assert.IsTrue(acceptableChoices.Contains(choice.Value));
+            TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left edge");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left edge");
+            TestAcceptableChoices(boardState, LevelEnum.Expert, new List<Coord> { new Coord(5, 2), new Coord(8, 2) }, "over (1,1) because it does better by saving (1,1) until later since it's not at risk of being taken");
         }
     }
 }
