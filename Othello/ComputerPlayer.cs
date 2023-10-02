@@ -249,10 +249,13 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
-                    Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
+                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
+                if (LogDecisions)
+                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n",
+                            BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
                 {
