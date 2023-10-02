@@ -170,7 +170,7 @@ namespace UnitTests
             TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left edge");
-            TestAcceptableChoices(boardState, LevelEnum.Expert, new List<Coord> { new Coord(5, 2), new Coord(8, 2) }, "over (1,1) because it does better by saving (1,1) until later since it's not at risk of being taken");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(6, 2), "over (1,1) because it happens to do better by saving (1,1) until later since it's not at risk of being taken");
         }
     }
 }
