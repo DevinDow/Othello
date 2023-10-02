@@ -437,9 +437,9 @@ namespace Othello
 
                 // Higher Levels value Corners highest, then Ends.  It devalues Squares before Corners & Ends since they lead to Opponent getting Corners & Ends.
                 // 50 -5 10 10
-                // -5 -9 -5 -5
-                // 10 -5  4  2
-                // 10 -5  2  1
+                // -5 -9 -2 -2
+                // 10 -2  4  2
+                // 10 -2  2  1
 				case LevelEnum.Intermediate:
                 case LevelEnum.Advanced:
                 case LevelEnum.Expert:
@@ -455,9 +455,6 @@ namespace Othello
 								case 2:
 								case 7:
 									return -5;
-								case 3:
-								case 6:
-									return 10;
 								default:
 									return 10;
 							}
@@ -471,11 +468,8 @@ namespace Othello
 								case 2:
 								case 7:
 									return -9;
-								case 3:
-								case 6:
-									return -5;
 								default:
-									return -5;
+									return -2;
 							}
 						case 3:
 						case 6:
@@ -486,7 +480,7 @@ namespace Othello
 									return 10;
 								case 2:
 								case 7:
-									return -5;
+									return -2;
 								case 3:
 								case 6:
 									return 4;
@@ -501,7 +495,7 @@ namespace Othello
 									return 10;
 								case 2:
 								case 7:
-									return -5;
+									return -2;
 								case 3:
 								case 6:
 									return 2;
