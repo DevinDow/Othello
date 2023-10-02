@@ -87,7 +87,7 @@ namespace UnitTests
             TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(2, 5), "to flip 3");
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an edge while preventing Human from getting edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(2, 5), "to win game after Human's next Move");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an edge while preventing Human from getting edge");
         }
 
         [TestMethod]

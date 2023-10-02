@@ -1,6 +1,5 @@
 ﻿TODO
 ----
-- TestLevel_Beg() EXPERT chooses (2,5), Human should choose (1,4) instead of (5,4) & lose 
 - TestLevel_Adv() EXPERT should score differently to get better result
 
 - Expert is broken since doing skipped Turn & IEnumerable & speed up
