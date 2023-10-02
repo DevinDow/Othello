@@ -1,6 +1,6 @@
 ﻿TODO
 ----
-- TestLevel_Adv() EXPERT should score differently to get better result
+- Intermediate beat Beginner more with old Scoring that had Negatives
 
 - Expert is broken since doing skipped Turn & IEnumerable & speed up
 
