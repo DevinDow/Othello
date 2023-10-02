@@ -232,12 +232,16 @@ namespace Othello
             return minScoreAfterHumanTurn;
         }
 
+        /// <summary>
+        /// loop through all of Computer's Legal Moves
+        /// collect the ones that maximize Score after several Turns
+        /// if multiple Choices tie after several Turns then choose the ones with the highest first-move Score
+        /// </summary>
+        /// <returns>list of equal Computer Choices</returns>
         private List<Coord> chooseHighestScoringAfterSeveralTurns()
         {
             int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
-            // loop through all of Computer's Legal Moves
-            // collect the ones that maximize Score after several Turns
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
             foreach (Coord computerChoice in legalComputerMoves)
             {
@@ -266,7 +270,7 @@ namespace Othello
             if (LogDecisions)
                 Debug.Print("** bestComputerChoices count={0}, maxComputerScoreAfterSeveralTurns={1:+#;-#;+0}.  Choose the highest scoring Move.", bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
 
-            // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
+            // find finalComputerChoices from equal bestComputerChoices based on the one with best computerChoiceScore
             int maxComputerScore = -int.MaxValue;
             List<Coord> finalComputerChoices = new List<Coord>();
             foreach (Coord computerChoice in bestComputerChoices)
