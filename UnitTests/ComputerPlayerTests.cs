@@ -85,9 +85,9 @@ namespace UnitTests
             boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.White));
 
             TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(2, 5), "to flip 3");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an edge");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an edge while preventing Human from getting edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an edge while preventing Human from getting edge");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an Edge");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
         }
 
         [TestMethod]
@@ -102,9 +102,9 @@ namespace UnitTests
             boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.Black));
 
             TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(3, 4), "to flip 2");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(6, 6), "to get higher value pieces in col 6");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping row");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(6, 6), "to avoid Human reflipping row\"");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(8, 4), "to get an Edge");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping Row");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get an Edge");
         }
 
         [TestMethod]
@@ -168,9 +168,9 @@ namespace UnitTests
             boardState.SetSquare(new Coord(8, 8), new Square(StateEnum.Black));
 
             TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left edge");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 1), "because it's valuable to flip left edge but nearly chooses others first because it can save (1,1) until later since it's not at risk of being taken");
+            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left Edge");
+            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left Edge");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(5, 2), "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
         }
     }
 }
