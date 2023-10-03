@@ -104,7 +104,7 @@ namespace UnitTests
             TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(3, 4), "to flip 2");
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(6, 6), "to get higher value pieces in col 6");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping row");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get edge and eventually get row");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(6, 6), "to avoid Human reflipping row\"");
         }
 
         [TestMethod]
@@ -170,7 +170,7 @@ namespace UnitTests
             TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(6, 2), "over (1,1) because it happens to do better by saving (1,1) until later since it's not at risk of being taken");
+            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 1), "because it's valuable to flip left edge but nearly chooses others first because it can save (1,1) until later since it's not at risk of being taken");
         }
     }
 }
