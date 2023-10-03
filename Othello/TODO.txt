@@ -1,8 +1,6 @@
 ﻿TODO
 ----
-- Intermediate beat Beginner more with old Scoring that had Negatives
-
-- Expert is broken since doing skipped Turn & IEnumerable & speed up
+- Skipping Turn still triggers FlipTimer, and it's confusing
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins
 
