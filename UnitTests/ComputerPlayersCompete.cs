@@ -59,6 +59,23 @@ namespace UnitTests
             Assert.IsTrue(expWins > advWins);
         }
 
+
+        [TestMethod]
+        public void UltVsExp()
+        {
+            int ultWins, expWins;
+            WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, out ultWins, out expWins);
+            Assert.IsTrue(ultWins > expWins);
+        }
+
+        [TestMethod]
+        public void ExpVsUlt()
+        {
+            int expWins, ultWins;
+            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, out expWins, out ultWins);
+            Assert.IsTrue(ultWins > expWins);
+        }
+
         /// <summary>
         /// run multiple Games of whiteLevel vs blackLevel to tally how many times each wins
         /// </summary>

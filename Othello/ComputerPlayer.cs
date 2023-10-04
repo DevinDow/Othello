@@ -6,13 +6,14 @@ using System.Text;
 namespace Othello
 {
 	public enum LevelEnum {
-		Beginner,		// maximizes relative Score using number of Square
-		Intermediate,	// maximizes relative Score using weighting for more valuable/dangerous Squares
-        Advanced,		// minimizes Opponents best response
-		Expert			// Minimax algorithm to a Depth
-	}
+        Beginner,       // maximizes relative Score using number of Square
+        Intermediate,   // maximizes relative Score using weighting for more valuable/dangerous Squares
+        Advanced,       // minimizes Opponents best response
+        Expert,         // Minimax algorithm to a Depth using Highest Scoring Move
+        Ultimate,       // Minimax algorithm to a Depth
+    }
 
-	public class ComputerPlayer
+    public class ComputerPlayer
 	{
 		public bool AmIWhite;
 		public BoardState BoardState;
@@ -57,10 +58,14 @@ namespace Othello
 
                 case LevelEnum.Expert:
                     choices = chooseHighestScoringAfterSeveralTurns();
-					break;
+                    break;
+
+                case LevelEnum.Ultimate:
+                    choices = chooseHighestScoringAfterSeveralTurns();
+                    break;
             }
 
-			// no legal Moves
+            // no legal Moves
             if (choices.Count == 0)
                 return null;
             
@@ -422,7 +427,7 @@ namespace Othello
 				if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
 				int weightedCoordValue;
-                if (Level == LevelEnum.Expert && boardMostlyFilled)
+                if ((Level == LevelEnum.Expert ||Level == LevelEnum.Ultimate) && boardMostlyFilled)
                     weightedCoordValue = 1000; // after board is mostly full, Expert should just try to win the game
                 else
                     weightedCoordValue = WeightedCoordValue(coord);
@@ -555,6 +560,7 @@ namespace Othello
                 //  200   3  30  10
                 case LevelEnum.Advanced:
                 case LevelEnum.Expert:
+                case LevelEnum.Ultimate:
                     switch (coord.x)
 					{
                         // Edge COLs
