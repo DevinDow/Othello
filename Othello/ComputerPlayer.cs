@@ -441,11 +441,15 @@ namespace Othello
         /// <returns>weighted Score of coord</returns>
         private int WeightedCoordValue(Coord coord)
 		{
-            // Beginner Level scores each square as 1
+            // Beginner Level scores each square as 1, so it's just trying to fliup the most Pieces.
+
             // Higher Levels value Coords differently
             // Corners are highest, then Ends.
             // Coords before Corners & Ends are devalued since they lead to Opponent getting Corners & Ends.
             // And Coords before those are valuable since they lead to Opponent getting those devalued Coords.
+
+            // Intermediate performs better with Negatives helping make better decisions.
+            // Advanced & Expert perform worse when Negatives throw a wrench in comparing BoardStates, esp near the end of the Game.
             switch (Level)
 			{
                 case LevelEnum.Beginner:
