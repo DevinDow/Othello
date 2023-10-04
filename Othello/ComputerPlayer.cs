@@ -280,7 +280,8 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("** bestComputerChoices count={0}, maxComputerScoreAfterSeveralTurns={1:+#;-#;+0}.  Choose the highest scoring Move.", bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
+                Debug.Print("** bestComputerChoices count={0}, maxComputerScoreAfterSeveralTurns={1:+#;-#;+0}.  Choose the highest scoring Move.", 
+                        bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
 
             // find finalComputerChoices from equal bestComputerChoices based on the one with best computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -345,7 +346,8 @@ namespace Othello
                 }
                 // Log each legalMove response
                 if (LogEachExpertTurn && LogEachLegalMoveResponse) 
-                    Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", response, responseScore, responseBoardState);
+                    Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", 
+                            response, responseScore, responseBoardState);
 
                 if (myTurn)
                 {
