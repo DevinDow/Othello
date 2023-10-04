@@ -380,10 +380,16 @@ namespace Othello
             return findMinMaxScore(minMaxResponseBoardState, levelsLeft);
         }
 
+        /// <summary>
+        /// End-of-Game Score should just be a comparison of Counts
+        /// MULTIPLIER helps it fit in with & out-weigh other Scores
+        /// </summary>
+        /// <param name="boardState"></param>
+        /// <returns>a high Score if won, a low negative Score if lost</returns>
         private int ScoreEndOfGame(BoardState boardState)
         {
             int endOfGameScore;
-            const int MULTIPLIER = 10;
+            const int MULTIPLIER = 10000;
             if (AmIWhite)
                 endOfGameScore = MULTIPLIER * (boardState.WhiteCount - boardState.BlackCount);
             else
@@ -412,7 +418,7 @@ namespace Othello
 					continue;
 				int weightedCoordValue;
                 if (Level == LevelEnum.Expert && boardMostlyFilled)
-                    weightedCoordValue = 1; // after board is mostly full, Expert should just try to win the game
+                    weightedCoordValue = 1000; // after board is mostly full, Expert should just try to win the game
                 else
                     weightedCoordValue = WeightedCoordValue(coord);
 
