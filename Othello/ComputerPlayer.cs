@@ -125,9 +125,10 @@ namespace Othello
         }
 
         /// <summary>
-        /// finds Moves that minimize best weighted Score that Human can attain and picks one that has highest weighted Score
+        /// finds Moves that minimize best weighted Score that Opponent can attain
+        /// if multiple Moves tie then picks one that has highest Weighted Score
         /// </summary>
-        /// <returns>a Choice that minimizes weighted Score that Human can attain</returns>
+        /// <returns>a Choice that minimizes weighted Score that Opponent can attain</returns>
         private List<Coord> chooseHighestScoringAfterOpponentMove()
         {
             int maxComputerScoreAfterHumansBestResponse = -int.MaxValue;

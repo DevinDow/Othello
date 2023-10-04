@@ -3,8 +3,8 @@
 - new Weighted Scores
 	- Expert changed answers
 
-- minMax
-	should recurse for all choices and return final Score
+- Ultimate Level
+	should recurse for all Computer choices and return final Score, but should only recurse for Opponent's best Score because we don't want to choose based on Opponent making a bad Choice
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
