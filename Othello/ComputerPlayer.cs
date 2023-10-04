@@ -131,11 +131,11 @@ namespace Othello
         /// <returns>a Choice that minimizes weighted Score that Opponent can attain</returns>
         private List<Coord> chooseHighestScoringAfterOpponentMove()
         {
-            int maxComputerScoreAfterHumansBestResponse = -int.MaxValue;
+            int maxComputerScoreAfterOpponentsBestResponse = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            // collect the ones that don't let the human score well
+            // collect the ones that don't let the Opponent score well
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
             foreach (Coord computerChoice in legalComputerMoves)
             {
@@ -146,24 +146,24 @@ namespace Othello
                     Debug.Print(" - Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int humansBestResponseScore;
-                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Human Turn skipped
+                int opponentsBestResponseScore;
+                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Opponent's Turn skipped
                 {
                     if (LogDecisions)
-                        Debug.Print("    - Human response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
+                        Debug.Print("    - Opponent response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
                                 computerChoiceScore, computerBoardState);
-                    humansBestResponseScore = computerChoiceScore;
+                    opponentsBestResponseScore = computerChoiceScore;
                 }
                 else
-                    humansBestResponseScore = findHumansBestResponseScore(computerBoardState);
+                    opponentsBestResponseScore = findOpponentsBestResponseScore(computerBoardState);
 
-                if (humansBestResponseScore > maxComputerScoreAfterHumansBestResponse) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
+                if (opponentsBestResponseScore > maxComputerScoreAfterOpponentsBestResponse) // remember maxComputerScoreAfterOpponentsBestResponse and start a new List of Moves that attain it
                 {
-                    maxComputerScoreAfterHumansBestResponse = humansBestResponseScore;
+                    maxComputerScoreAfterOpponentsBestResponse = opponentsBestResponseScore;
                     bestComputerChoices = new List<Coord>();
                 }
 
-                if (humansBestResponseScore >= maxComputerScoreAfterHumansBestResponse) // add choice to bestComputerChoices
+                if (opponentsBestResponseScore >= maxComputerScoreAfterOpponentsBestResponse) // add choice to bestComputerChoices
                 {
                     if (!bestComputerChoices.Contains(computerChoice))
                         bestComputerChoices.Add(computerChoice);
@@ -171,7 +171,8 @@ namespace Othello
             }
 
             if (LogDecisions)
-                Debug.Print("** bestComputerChoices count={0}, maxScoreAfterHumanTurn={1:+#;-#;+0}.  Choose the highest scoring Move.", bestComputerChoices.Count, maxComputerScoreAfterHumansBestResponse);
+                Debug.Print("** bestComputerChoices count={0}, maxComputerScoreAfterOpponentsBestResponse={1:+#;-#;+0}.  Choose the highest scoring Move.", 
+                        bestComputerChoices.Count, maxComputerScoreAfterOpponentsBestResponse);
 
             // find finalComputerChoices from bestComputerChoices based on computerChoiceScore
             int maxComputerScore = -int.MaxValue;
@@ -198,42 +199,43 @@ namespace Othello
             return finalComputerChoices;
         }
 
-        private int findHumansBestResponseScore(BoardState computerBoardState)
+        private int findOpponentsBestResponseScore(BoardState computerBoardState)
         {
-            int minScoreAfterHumanTurn = int.MaxValue;
-            //List<Coord> bestHumanResponses = new List<Coord>(); // don't need a list, any of the ties will do
-            Coord? bestHumanResponse = null;
-            BoardState bestHumanResponseBoardState = null;
+            int minScoreAfterOpponentTurn = int.MaxValue;
+            //List<Coord> bestOpponentResponses = new List<Coord>(); // don't need a list, any of the ties will do
+            Coord? bestOpponentResponse = null;
+            BoardState bestOpponentResponseBoardState = null;
 
-            List<Coord> legalHumanMoves = computerBoardState.LegalMoves();
-            foreach (Coord humanResponse in legalHumanMoves)
+            List<Coord> legalOpponentnMoves = computerBoardState.LegalMoves();
+            foreach (Coord opponentResponse in legalOpponentnMoves)
             {
-                BoardState humanResponseBoardState = computerBoardState.Clone();
-                humanResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(humanResponse);
-                int humanResponseScore = ScoreBoard(humanResponseBoardState);
+                BoardState opponentResponseBoardState = computerBoardState.Clone();
+                opponentResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(opponentResponse);
+                int opponentResponseScore = ScoreBoard(opponentResponseBoardState);
                 if (LogEachExpertTurn && LogEachLegalMoveResponse) 
-                    Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanResponse, humanResponseScore, humanResponseBoardState);
+                    Debug.Print("    - Opponent response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", 
+                            opponentResponse, opponentResponseScore, opponentResponseBoardState);
 
-                if (humanResponseScore < minScoreAfterHumanTurn) // remember minScoreAfterHumanTurn and start a new List of Moves that attain it
+                if (opponentResponseScore < minScoreAfterOpponentTurn) // remember minScoreAfterOpponentTurn and start a new List of Moves that attain it
                 {
-                    minScoreAfterHumanTurn = humanResponseScore;
-                    bestHumanResponse = humanResponse;
-                    bestHumanResponseBoardState = humanResponseBoardState;
-                    //bestHumanResponses = new List<Coord>();
+                    minScoreAfterOpponentTurn = opponentResponseScore;
+                    bestOpponentResponse = opponentResponse;
+                    bestOpponentResponseBoardState = opponentResponseBoardState;
+                    //bestOpponentResponses = new List<Coord>();
                 }
 
-                /*if (humanResponseScore <= minScoreAfterHumanTurn) // add choice to maxScoringChoices
+                /*if (opponentResponseScore <= minScoreAfterOpponentTurn) // add choice to maxScoringChoices
                 {
-                    if (!bestHumanResponses.Contains(humanResponse))
-                        bestHumanResponses.Add(humanResponse);
+                    if (!bestOpponentResponses.Contains(opponentResponse))
+                        bestOpponentResponses.Add(opponentResponse);
                 }*/
             }
 
             if (LogDecisions)
-                Debug.Print("    - Human response: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
-                        computerBoardState.WhitesTurn ? 'W' : 'B', bestHumanResponse, minScoreAfterHumanTurn, bestHumanResponseBoardState);
+                Debug.Print("    - Opponent response: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                        computerBoardState.WhitesTurn ? 'W' : 'B', bestOpponentResponse, minScoreAfterOpponentTurn, bestOpponentResponseBoardState);
 
-            return minScoreAfterHumanTurn;
+            return minScoreAfterOpponentTurn;
         }
 
         /// <summary>
@@ -264,7 +266,7 @@ namespace Othello
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
-                if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
+                if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterSeveralTurns and start a new List of Moves that attain it
                 {
                     maxComputerScoreAfterSeveralTurns = minMaxScoreAfterSeveralTurns;
                     bestComputerChoices = new List<Coord>();
@@ -402,7 +404,7 @@ namespace Othello
         /// <summary>
         /// calculates a Score for a BoardState
         /// uses WeightedCoordValue()
-        /// uses difference between Computer's Score & Human's Score
+        /// uses difference between Computer's Score for his Piecec & Opponent's Score for his Pieces
         /// </summary>
         /// <param name="boardState">BoardState to caluclate Score for</param>
         /// <returns>weighted Score of boardState</returns>
