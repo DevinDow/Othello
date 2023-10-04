@@ -1,5 +1,13 @@
 ﻿TODO
 ----
+- new Weighted Scores
+	- Expert changed answers
+
+- minMax
+	should recurse for all choices and return final Score
+
+- Expert End of Game Scores should be more extreme
+
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins

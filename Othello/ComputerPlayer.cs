@@ -21,7 +21,7 @@ namespace Othello
         public static bool LogEachExpertTurn = false;
         public static bool LogEachLegalMoveResponse = false;
         private Random random = new Random();
-        private const int EXPERT_DEPTH = 7;
+        private const int EXPERT_TURNS_DEPTH = 7;
 
 		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -210,7 +210,7 @@ namespace Othello
                 BoardState humanResponseBoardState = computerBoardState.Clone();
                 humanResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(humanResponse);
                 int humanResponseScore = ScoreBoard(humanResponseBoardState);
-                if (LogEachLegalMoveResponse) 
+                if (LogEachExpertTurn && LogEachLegalMoveResponse) 
                     Debug.Print("    - Human response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", humanResponse, humanResponseScore, humanResponseBoardState);
 
                 if (humanResponseScore < minScoreAfterHumanTurn) // remember minScoreAfterHumanTurn and start a new List of Moves that attain it
@@ -248,16 +248,19 @@ namespace Othello
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
             foreach (Coord computerChoice in legalComputerMoves)
             {
+                if (LogEachExpertTurn) // re-Log initial BoardState before each legal Move
+                    Debug.Print("initial BoardState:{0}", BoardState);
+
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogDecisions)
+                if (LogDecisions) // Log computerBoardState & computerChoiceScore for computerChoice
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_DEPTH);
-                if (LogDecisions)
-                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n",
+                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_TURNS_DEPTH);
+                if (LogDecisions) // Log minMaxScoreAfterSeveralTurns for computerChoice
+                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterHumansBestResponse and start a new List of Moves that attain it
@@ -301,7 +304,16 @@ namespace Othello
             return finalComputerChoices;
         }
 
-        private int findMinMaxScore(BoardState boardState, int depth)
+        /// <summary>
+        /// Recusively find optimal choice by finding highest/lowest Score possible on each Turn
+        /// on My/Computer's Turn: maximize my Score
+        /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
+        /// 
+        /// </summary>
+        /// <param name="boardState"></param>
+        /// <param name="turns">how many Turns to recursively try</param>
+        /// <returns></returns>
+        private int findMinMaxScore(BoardState boardState, int turns)
         {
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
@@ -329,7 +341,7 @@ namespace Othello
                     responseScore = ScoreBoard(responseBoardState);
                 }
                 // Log each legalMove response
-                if (LogEachLegalMoveResponse) 
+                if (LogEachExpertTurn && LogEachLegalMoveResponse) 
                     Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", response, responseScore, responseBoardState);
 
                 if (myTurn)
@@ -355,12 +367,12 @@ namespace Othello
             // Log the chosen minMaxResponse
             if (LogEachExpertTurn)
                 Debug.Print("- response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
-                        depth, boardState.WhitesTurn?'W':'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
+                        turns, boardState.WhitesTurn?'W':'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
-            if (depth == 0)
+            if (turns == 0)
                 return minMaxScore;
 
-            int levelsLeft = depth - 1;
+            int levelsLeft = turns - 1;
             if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                 levelsLeft--; // depth should go down to same Player to compare equally
 
