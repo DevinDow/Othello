@@ -63,7 +63,7 @@ namespace UnitTests
         [TestMethod]
         public void AdvVsExp()
         {
-            RUNS = RUNS_ADV;
+            RUNS = RUNS_EXP;
             int advWins, expWins;
             WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, out advWins, out expWins);
             Assert.IsTrue(expWins > advWins);
