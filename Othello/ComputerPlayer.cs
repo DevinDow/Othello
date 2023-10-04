@@ -538,10 +538,10 @@ namespace Othello
                             }
                     }
 
-                // 1000   0 100 100
-                //    0   0   1   1
-                //  100   1  50  20
-                //  100   1  20   2
+                // 2000   2 200 200
+                //    2   1   3   3
+                //  200   3  50  30
+                //  200   3  30  10
                 case LevelEnum.Advanced:
                 case LevelEnum.Expert:
                     switch (coord.x)
@@ -553,12 +553,12 @@ namespace Othello
 							{
 								case 1:
 								case 8:
-									return 1000; // Corner
+									return 2000; // Corner
 								case 2:
 								case 7:
-									return 0; // leads to Corner
+									return 2; // leads to Corner
 								default:
-									return 100; // Edge
+									return 200; // Edge
 							}
                         // COL before Edge
 						case 2:
@@ -567,11 +567,12 @@ namespace Othello
 							{
 								case 1:
 								case 8:
+                                    return 2; // leads to Corner
                                 case 2:
                                 case 7:
-                                    return 0; // leads to Corner
+                                    return 1; // leads to Corner
 								default:
-									return 1; // leads to Edge
+									return 3; // leads to Edge
 							}
                         // COL before COL before Edge
 						case 3:
@@ -580,15 +581,15 @@ namespace Othello
 							{
 								case 1:
 								case 8:
-									return 100; // Edge
+									return 200; // Edge
 								case 2:
 								case 7:
-									return 1; // leads to Edge
+									return 3; // leads to Edge
                                 case 3:
                                 case 6:
                                     return 50; // leads to Opponent getting devalued Coord near Corner
                                 default:
-									return 20; // leads to Opponent getting devalued Coord near Edge
+									return 30; // leads to Opponent getting devalued Coord near Edge
                             }
                         // middle COLs
 						default:
@@ -596,15 +597,15 @@ namespace Othello
 							{
 								case 1:
 								case 8:
-									return 100; // Edge
+									return 200; // Edge
 								case 2:
 								case 7:
-									return 1; // leads to Edge
+									return 3; // leads to Edge
 								case 3:
 								case 6:
-									return 20; // leads to Opponent getting devalued Coord near Edge
+									return 30; // leads to Opponent getting devalued Coord near Edge
                                 default:
-									return 2; // Middles
+									return 10; // Middles
 							}
 					}
 			}
