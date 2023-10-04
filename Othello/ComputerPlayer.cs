@@ -261,7 +261,7 @@ namespace Othello
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int minMaxScoreAfterSeveralTurns = findMinMaxScore(computerBoardState, EXPERT_TURNS_DEPTH);
+                int minMaxScoreAfterSeveralTurns = findMinMaxScoreForHighestScoringMove(computerBoardState, EXPERT_TURNS_DEPTH);
                 if (LogDecisions) // Log minMaxScoreAfterSeveralTurns for computerChoice
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
@@ -312,12 +312,12 @@ namespace Othello
         /// Recusively find optimal choice by finding highest/lowest Score possible on each Turn
         /// on My/Computer's Turn: maximize my Score
         /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
-        /// 
+        /// return the minMaxScore after several Turns/recusions
         /// </summary>
         /// <param name="boardState"></param>
         /// <param name="turns">how many Turns to recursively try</param>
-        /// <returns></returns>
-        private int findMinMaxScore(BoardState boardState, int turns)
+        /// <returns>minMaxScore after several Turns/recusions</returns>
+        private int findMinMaxScoreForHighestScoringMove(BoardState boardState, int turns)
         {
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
@@ -382,7 +382,7 @@ namespace Othello
                 levelsLeft--; // depth should go down to same Player to compare equally
 
             // recurse to return resulting minMaxScore after levelsLeft more Turns
-            return findMinMaxScore(minMaxResponseBoardState, levelsLeft);
+            return findMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, levelsLeft);
         }
 
         /// <summary>
