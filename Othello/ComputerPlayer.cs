@@ -23,8 +23,9 @@ namespace Othello
         public static bool LogEachExpertLegalMoveResponse = false;
         private Random random = new Random();
         private const int EXPERT_TURNS_DEPTH = 7;
+        private const int ULTIMATE_TURNS_DEPTH = 9;
 
-		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
+        public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
 			AmIWhite = amIWhite;
 			Level = level;
@@ -266,7 +267,11 @@ namespace Othello
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int minMaxScoreAfterSeveralTurns = findMinMaxScoreForHighestScoringMove(computerBoardState, EXPERT_TURNS_DEPTH);
+                int minMaxScoreAfterSeveralTurns;
+                if (Level == LevelEnum.Expert)
+                    minMaxScoreAfterSeveralTurns = findMinMaxScoreForHighestScoringMove(computerBoardState, EXPERT_TURNS_DEPTH);
+                else
+                    minMaxScoreAfterSeveralTurns = findMinMaxScoreForHighestScoringMove(computerBoardState, ULTIMATE_TURNS_DEPTH);
                 if (LogDecisions) // Log minMaxScoreAfterSeveralTurns for computerChoice
                     Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
