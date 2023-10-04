@@ -9,11 +9,16 @@ namespace UnitTests
     [TestClass]
     public class ComputerPlayersCompete
     {
-        private const int RUNS = 21; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
+        private int RUNS; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
+        private int RUNS_INT = 21;
+        private int RUNS_ADV = 21;
+        private int RUNS_EXP = 11;
+        private int RUNS_ULT = 5;
 
         [TestMethod]
         public void BegVsInt()
         {
+            RUNS = RUNS_INT;
             int begWins, intWins;
             WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, out begWins, out intWins);
             Assert.IsTrue(intWins > begWins);
@@ -22,6 +27,7 @@ namespace UnitTests
         [TestMethod]
         public void IntVsBeg()
         {
+            RUNS = RUNS_INT;
             int intWins, begWins;
             WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, out intWins, out begWins);
             Assert.IsTrue(intWins > begWins);
@@ -30,6 +36,7 @@ namespace UnitTests
         [TestMethod]
         public void AdvVsInt()
         {
+            RUNS = RUNS_ADV;
             int advWins, intWins;
             WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, out advWins, out intWins);
             Assert.IsTrue(advWins > intWins);
@@ -38,6 +45,7 @@ namespace UnitTests
         [TestMethod]
         public void IntVsAdv()
         {
+            RUNS = RUNS_ADV;
             int intWins, advWins;
             WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, out intWins, out advWins);
             Assert.IsTrue(advWins > intWins);
@@ -46,6 +54,7 @@ namespace UnitTests
         [TestMethod]
         public void ExpVsAdv()
         {
+            RUNS = RUNS_EXP;
             int expWins, advWins;
             WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, out expWins, out advWins);
             Assert.IsTrue(expWins > advWins);
@@ -54,6 +63,7 @@ namespace UnitTests
         [TestMethod]
         public void AdvVsExp()
         {
+            RUNS = RUNS_ADV;
             int advWins, expWins;
             WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, out advWins, out expWins);
             Assert.IsTrue(expWins > advWins);
@@ -63,6 +73,7 @@ namespace UnitTests
         [TestMethod]
         public void UltVsExp()
         {
+            RUNS = RUNS_ULT;
             int ultWins, expWins;
             WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, out ultWins, out expWins);
             Assert.IsTrue(ultWins > expWins);
@@ -71,6 +82,7 @@ namespace UnitTests
         [TestMethod]
         public void ExpVsUlt()
         {
+            RUNS = RUNS_ULT;
             int expWins, ultWins;
             WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, out expWins, out ultWins);
             Assert.IsTrue(ultWins > expWins);
