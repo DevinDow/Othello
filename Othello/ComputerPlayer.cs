@@ -19,7 +19,7 @@ namespace Othello
 		public LevelEnum Level;
         public static bool LogDecisions = true;
         public static bool LogEachExpertTurn = false;
-        public static bool LogEachLegalMoveResponse = false;
+        public static bool LogEachExpertLegalMoveResponse = false;
         private Random random = new Random();
         private const int EXPERT_TURNS_DEPTH = 7;
 
@@ -212,7 +212,7 @@ namespace Othello
                 BoardState opponentResponseBoardState = computerBoardState.Clone();
                 opponentResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(opponentResponse);
                 int opponentResponseScore = ScoreBoard(opponentResponseBoardState);
-                if (LogEachExpertTurn && LogEachLegalMoveResponse) 
+                if (LogEachExpertTurn && LogEachExpertLegalMoveResponse) 
                     Debug.Print("    - Opponent response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", 
                             opponentResponse, opponentResponseScore, opponentResponseBoardState);
 
@@ -345,7 +345,7 @@ namespace Othello
                     responseScore = ScoreBoard(responseBoardState);
                 }
                 // Log each legalMove response
-                if (LogEachExpertTurn && LogEachLegalMoveResponse) 
+                if (LogEachExpertTurn && LogEachExpertLegalMoveResponse) 
                     Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", 
                             response, responseScore, responseBoardState);
 
