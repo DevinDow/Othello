@@ -24,8 +24,8 @@ namespace Othello
         public static bool LogEachUltimateTurn = true;
         public static bool LogEachUltimateLegalMoveResponse = true;
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 7;
-        private const int ULTIMATE_TURNS_DEPTH = 3;
+        private const int EXPERT_TURNS_DEPTH = 5;
+        private const int ULTIMATE_TURNS_DEPTH = 5;
 
         public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -423,6 +423,9 @@ namespace Othello
 
             if (myTurn) // find recursive Score for each legalMove
             {
+                int maxRecursiveScore = -int.MaxValue;
+                Coord maxRecursiveResponse = new Coord();
+                BoardState maxRecursiveResponseBoardState = null;
                 foreach (Coord legalMove in legalMoves)
                 {
                     BoardState legalMoveBoardState = boardState.Clone();
@@ -451,8 +454,14 @@ namespace Othello
                         Debug.Print("- Computer LegalMove: {0}={1}->{2} recusiveScore={3:+#;-#;+0}\nlegalMoveBoardState:{4}",
                                 turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore, legalMoveBoardState);
 
-                    return recusiveScore;
+                    if (recusiveScore > maxRecursiveScore) // is this ultimately the best resulting recusiveScore to bubble-up?
+                    {
+                        maxRecursiveScore = recusiveScore;
+                        maxRecursiveResponse = legalMove;
+                        maxRecursiveResponseBoardState = legalMoveBoardState;
+                    }
                 }
+                return maxRecursiveScore; // ultimately bubble-up the maxRecursiveScore until we figure out which first Move results in the best eventual Board Score
             }
 
             // find best Opponent Response
