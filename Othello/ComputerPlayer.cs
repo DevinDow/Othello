@@ -19,12 +19,12 @@ namespace Othello
 		public BoardState BoardState;
 		public LevelEnum Level;
         public static bool LogDecisions = true;
-        public static bool LogEachExpertTurn = true;
+        public static bool LogEachExpertTurn = false;
         public static bool LogEachExpertLegalMoveResponse = false;
-        public static bool LogEachUltimateTurn = true;
-        public static bool LogEachUltimateLegalMoveResponse = true;
+        public static bool LogEachUltimateTurn = false;
+        public static bool LogEachUltimateLegalMoveResponse = false;
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 5;
+        private const int EXPERT_TURNS_DEPTH = 7;
         private const int ULTIMATE_TURNS_DEPTH = 5;
 
         public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
@@ -421,6 +421,8 @@ namespace Othello
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int nextTurn = turn + 1;
             List<Coord> legalMoves = boardState.LegalMoves();
+            if (legalMoves.Count == 0)
+                return ScoreEndOfGame(boardState);
 
             if (myTurn) // find recursive Score for each legalMove
             {
@@ -435,7 +437,7 @@ namespace Othello
                     int recusiveScore;
                     if (legalMoveBoardState.endOfGame) // return ScoreEndOfGame()
                         recusiveScore = ScoreEndOfGame(legalMoveBoardState);
-                    else if (turn == ULTIMATE_TURNS_DEPTH) // return ScoreBoard()
+                    else if (turn >= ULTIMATE_TURNS_DEPTH) // return ScoreBoard()
                         recusiveScore = ScoreBoard(legalMoveBoardState);
                     else // recurse
                     {
@@ -446,8 +448,10 @@ namespace Othello
                         if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                             nextTurn++; // depth should go down to same Player to compare equally
 
-                        // recurse to return resulting minMaxScore after nextTurn
-                        recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
+                        if (nextTurn > ULTIMATE_TURNS_DEPTH)
+                            recusiveScore = ScoreBoard(legalMoveBoardState);
+                        else // recurse to return resulting minMaxScore after nextTurn
+                            recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
                     }
 
                     // Log each legalMove
@@ -498,7 +502,10 @@ namespace Othello
                 Debug.Print("- Opponent's best Response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                         turn, boardState.WhitesTurn ? 'W' : 'B', minResponse, minScore, minResponseBoardState);
 
-            if (turn == ULTIMATE_TURNS_DEPTH)
+            if (minResponseBoardState.endOfGame)
+                return minScore;
+
+            if (turn >= ULTIMATE_TURNS_DEPTH)
                 return minScore;
 
             if (minResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
