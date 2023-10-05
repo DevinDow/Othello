@@ -11,52 +11,41 @@ namespace UnitTests
     {
         private const int RUNS = 21; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
 
-        [TestMethod]
-        public void BegVsInt()
-        {
-            int begWins, intWins;
-            WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, out begWins, out intWins);
-            Assert.IsTrue(intWins > begWins);
-        }
 
         [TestMethod]
         public void IntVsBeg()
         {
-            int intWins, begWins;
-            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, out intWins, out begWins);
-            Assert.IsTrue(intWins > begWins);
+            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, true);
+        }
+
+        [TestMethod]
+        public void BegVsInt()
+        {
+            WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, false);
         }
 
         [TestMethod]
         public void AdvVsInt()
         {
-            int advWins, intWins;
-            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, out advWins, out intWins);
-            Assert.IsTrue(advWins > intWins);
+            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, true);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
-            int intWins, advWins;
-            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, out intWins, out advWins);
-            Assert.IsTrue(advWins > intWins);
+            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, false);
         }
 
         [TestMethod]
         public void ExpVsAdv()
         {
-            int expWins, advWins;
-            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, out expWins, out advWins);
-            Assert.IsTrue(expWins > advWins);
+            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, true);
         }
 
         [TestMethod]
         public void AdvVsExp()
         {
-            int advWins, expWins;
-            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, out advWins, out expWins);
-            Assert.IsTrue(expWins > advWins);
+            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, false);
         }
 
         /// <summary>
@@ -64,9 +53,8 @@ namespace UnitTests
         /// </summary>
         /// <param name="whiteLevel">Level for White</param>
         /// <param name="blackLevel">Level for Black</param>
-        /// <param name="whiteWins">returns how many times White won</param>
-        /// <param name="blackWins">returns how many times Black won</param>
-        public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, out int whiteWins, out int blackWins)
+        /// <param name="whiteShouldWin">whitch Color to Assert Win-Count for</param>
+        public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, bool whiteShouldWin)
         {
             // don't Log Decisions for Computer vs Computer, but reset it when done
             bool prevLogDecisions = ComputerPlayer.LogDecisions;
@@ -75,7 +63,8 @@ namespace UnitTests
             Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
             SortedDictionary<int, int> results = new SortedDictionary<int, int>(); // sort results by Pieces diff
-            whiteWins = blackWins = 0;
+            int whiteWins = 0;
+            int blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
@@ -110,6 +99,11 @@ namespace UnitTests
 
             // reset Log Decisions for other Tests
             ComputerPlayer.LogDecisions = prevLogDecisions;
+
+            if (whiteShouldWin)
+                Assert.IsTrue(whiteWins > blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", whiteLevel, whiteWins, blackLevel, blackWins);
+            else
+                Assert.IsTrue(blackWins > whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", blackLevel, blackWins, whiteLevel, whiteWins);
         }
 
         private void AddResult(SortedDictionary<int, int> results, BoardState boardState)
