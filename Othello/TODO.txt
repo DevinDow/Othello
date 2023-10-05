@@ -2,9 +2,10 @@
 ----
 - Ultimate Level
 	should recurse for all Computer choices and return final Score, but should only recurse for Opponent's best Score because we don't want to choose based on Opponent making a bad Choice
+	- AdvVsExp broke
 
 - new Weighted Scores
-	- Expert/Ultimate changed answers
+	- Expert/Ultimate changed answers in TestLevels_Adv & _Exp
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
 

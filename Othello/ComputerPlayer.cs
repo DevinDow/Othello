@@ -262,15 +262,16 @@ namespace Othello
             int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
+            bool loggingEachTurn = (Level == LevelEnum.Expert && LogEachExpertTurn) || (Level == LevelEnum.Ultimate && LogEachUltimateTurn);
             foreach (Coord computerChoice in legalComputerMoves)
             {
-                if (LogDecisions) // re-Log initial BoardState before each legal Move
+                if (loggingEachTurn) // re-Log initial BoardState before each legal Move
                     Debug.Print("initial BoardState:{0}", BoardState);
 
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogDecisions) // Log computerBoardState & computerChoiceScore for computerChoice
+                if (loggingEachTurn) // Log computerBoardState & computerChoiceScore for computerChoice
                     Debug.Print(" - Computer choice: 1={0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
