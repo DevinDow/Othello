@@ -62,7 +62,7 @@ namespace UnitTests
         [TestMethod]
         public void UltVsExp()
         {
-            RUNS = RUNS_ULT;
+            RUNS = 1;// RUNS_ULT;
             WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
         }
 

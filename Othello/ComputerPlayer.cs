@@ -24,8 +24,8 @@ namespace Othello
         public static bool LogEachUltimateTurn = false;
         public static bool LogEachUltimateLegalMoveResponse = false;
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 7;
-        private const int ULTIMATE_TURNS_DEPTH = 5;
+        private const int EXPERT_TURNS_DEPTH = 9; // AdvVsExp wins @ 9, loses @ 7 & 11
+        private const int ULTIMATE_TURNS_DEPTH = 7; // 5vs9=>3sec, 6vs9=>5sec(loses), 7vs9=>17sec
 
         public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
