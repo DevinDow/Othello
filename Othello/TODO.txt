@@ -2,6 +2,7 @@
 ----
 - Ultimate Level
 	- AdvVsExp Loses @ EXPERT_TURNS_DEPTH 7 & 11 but Wins @ 9 (changing TURNS_DEPTH also had bad results before ultimate Branch)
+		- Black has higher Score but White has more Pieces
 	- Ultimate can revert to Expert recusion after x Turns if it's too slow
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
