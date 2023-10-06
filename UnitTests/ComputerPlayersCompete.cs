@@ -166,7 +166,16 @@ namespace UnitTests
                 }
 
                 if (boardState.endOfGame)
+                {
+                    // log BoardState after endOfGame
+                    if (ComputerPlayer.LogDecisions)
+                    {
+                        Debug.Print(boardState.ToString());
+                        Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
+                    }
+
                     return boardState;
+                }
             }
         }
     }
