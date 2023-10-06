@@ -42,7 +42,7 @@ namespace Othello
             if (LogDecisions)
             {
                 int initialScore = ScoreBoard(BoardState);
-                Debug.Print("{0} {1}\ninitial BoardState:{2}\ninitial Score={3:+#;-#;+0}", 
+                Debug.Print("\n{0} {1}\ninitial BoardState:{2}\ninitial Score={3:+#;-#;+0}", 
                         Level, AmIWhite ? "W" : "B", BoardState, initialScore);
             }
 
