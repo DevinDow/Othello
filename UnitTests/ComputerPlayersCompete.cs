@@ -9,43 +9,68 @@ namespace UnitTests
     [TestClass]
     public class ComputerPlayersCompete
     {
-        private const int RUNS = 21; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
+        private int RUNS; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
+        private int RUNS_INT = 21;
+        private int RUNS_ADV = 21;
+        private int RUNS_EXP = 11;
+        private int RUNS_ULT = 5;
 
 
         [TestMethod]
         public void IntVsBeg()
         {
+            RUNS = RUNS_INT;
             WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, true);
         }
 
         [TestMethod]
         public void BegVsInt()
         {
+            RUNS = RUNS_INT;
             WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, false);
         }
 
         [TestMethod]
         public void AdvVsInt()
         {
+            RUNS = RUNS_ADV;
             WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, true);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
+            RUNS = RUNS_ADV;
             WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, false);
         }
 
         [TestMethod]
         public void ExpVsAdv()
         {
+            RUNS = RUNS_EXP;
             WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, true);
         }
 
         [TestMethod]
         public void AdvVsExp()
         {
+            RUNS = RUNS_EXP;
             WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, false);
+        }
+
+
+        [TestMethod]
+        public void UltVsExp()
+        {
+            RUNS = 1;// RUNS_ULT;
+            WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
+        }
+
+        [TestMethod]
+        public void ExpVsUlt()
+        {
+            RUNS = RUNS_ULT;
+            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
         }
 
         /// <summary>

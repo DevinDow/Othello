@@ -1,10 +1,8 @@
 ﻿TODO
 ----
-- new Weighted Scores
-	- Expert changed answers
-
 - Ultimate Level
-	should recurse for all Computer choices and return final Score, but should only recurse for Opponent's best Score because we don't want to choose based on Opponent making a bad Choice
+	- AdvVsExp Loses @ EXPERT_TURNS_DEPTH 7 & 11 but Wins @ 9 (changing TURNS_DEPTH also had bad results before ultimate Branch)
+	- Ultimate can revert to Expert recusion after x Turns if it's too slow
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
 

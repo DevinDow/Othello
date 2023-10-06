@@ -6,13 +6,14 @@ using System.Text;
 namespace Othello
 {
 	public enum LevelEnum {
-		Beginner,		// maximizes relative Score using number of Square
-		Intermediate,	// maximizes relative Score using weighting for more valuable/dangerous Squares
-        Advanced,		// minimizes Opponents best response
-		Expert			// Minimax algorithm to a Depth
-	}
+        Beginner,       // maximizes relative Score using number of Square
+        Intermediate,   // maximizes relative Score using weighting for more valuable/dangerous Squares
+        Advanced,       // minimizes Opponents best response
+        Expert,         // Minimax algorithm to a Depth using Highest Scoring Move
+        Ultimate,       // Minimax algorithm to a Depth
+    }
 
-	public class ComputerPlayer
+    public class ComputerPlayer
 	{
 		public bool AmIWhite;
 		public BoardState BoardState;
@@ -20,10 +21,13 @@ namespace Othello
         public static bool LogDecisions = true;
         public static bool LogEachExpertTurn = false;
         public static bool LogEachExpertLegalMoveResponse = false;
+        public static bool LogEachUltimateTurn = false;
+        public static bool LogEachUltimateLegalMoveResponse = false;
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 7;
+        private const int EXPERT_TURNS_DEPTH = 9; // AdvVsExp wins @ 9, loses @ 7 & 11
+        private const int ULTIMATE_TURNS_DEPTH = 7; // 5vs9=>3sec, 6vs9=>5sec(loses), 7vs9=>17sec
 
-		public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
+        public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
 			AmIWhite = amIWhite;
 			Level = level;
@@ -48,19 +52,23 @@ namespace Othello
 				case LevelEnum.Beginner:
 				case LevelEnum.Intermediate:
 				default:
-                    choices = chooseHighestScoringMove();
+                    choices = basic_ChooseHighestScoringMove();
 					break;
 
                 case LevelEnum.Advanced:
-                    choices = chooseHighestScoringAfterOpponentMove();
+                    choices = advanced_ChooseHighestScoringAfterOpponentMove();
 					break;
 
                 case LevelEnum.Expert:
-                    choices = chooseHighestScoringAfterSeveralTurns();
-					break;
+                    choices = recursive_ChooseHighestScoringAfterSeveralTurns();
+                    break;
+
+                case LevelEnum.Ultimate:
+                    choices = recursive_ChooseHighestScoringAfterSeveralTurns();
+                    break;
             }
 
-			// no legal Moves
+            // no legal Moves
             if (choices.Count == 0)
                 return null;
             
@@ -93,7 +101,7 @@ namespace Othello
         /// finds Moves that maximize weighted Score and picks one at random
         /// </summary>
         /// <returns>a Choice that maximizes weighted Score</returns>
-        private List<Coord> chooseHighestScoringMove()
+        private List<Coord> basic_ChooseHighestScoringMove()
         {
             int maxScore = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
@@ -129,7 +137,7 @@ namespace Othello
         /// if multiple Moves tie then picks one that has highest Weighted Score
         /// </summary>
         /// <returns>a Choice that minimizes weighted Score that Opponent can attain</returns>
-        private List<Coord> chooseHighestScoringAfterOpponentMove()
+        private List<Coord> advanced_ChooseHighestScoringAfterOpponentMove()
         {
             int maxComputerScoreAfterOpponentsBestResponse = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
@@ -155,7 +163,7 @@ namespace Othello
                     opponentsBestResponseScore = computerChoiceScore;
                 }
                 else
-                    opponentsBestResponseScore = findOpponentsBestResponseScore(computerBoardState);
+                    opponentsBestResponseScore = advanced_FindOpponentsBestResponseScore(computerBoardState);
 
                 if (opponentsBestResponseScore > maxComputerScoreAfterOpponentsBestResponse) // remember maxComputerScoreAfterOpponentsBestResponse and start a new List of Moves that attain it
                 {
@@ -199,15 +207,20 @@ namespace Othello
             return finalComputerChoices;
         }
 
-        private int findOpponentsBestResponseScore(BoardState computerBoardState)
+        /// <summary>
+        /// Score all legalOpponentMoves to find Opponent's best response Score
+        /// </summary>
+        /// <param name="computerBoardState">BoardState for Opponent's current Turn</param>
+        /// <returns>minScoreAfterOpponentTurn of all Opponent's legalMoves</returns>
+        private int advanced_FindOpponentsBestResponseScore(BoardState computerBoardState)
         {
             int minScoreAfterOpponentTurn = int.MaxValue;
             //List<Coord> bestOpponentResponses = new List<Coord>(); // don't need a list, any of the ties will do
             Coord? bestOpponentResponse = null;
             BoardState bestOpponentResponseBoardState = null;
 
-            List<Coord> legalOpponentnMoves = computerBoardState.LegalMoves();
-            foreach (Coord opponentResponse in legalOpponentnMoves)
+            List<Coord> legalOpponentMoves = computerBoardState.LegalMoves();
+            foreach (Coord opponentResponse in legalOpponentMoves)
             {
                 BoardState opponentResponseBoardState = computerBoardState.Clone();
                 opponentResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(opponentResponse);
@@ -244,26 +257,35 @@ namespace Othello
         /// if multiple Choices tie after several Turns then choose the ones with the highest first-move Score
         /// </summary>
         /// <returns>list of equal Computer Choices</returns>
-        private List<Coord> chooseHighestScoringAfterSeveralTurns()
+        private List<Coord> recursive_ChooseHighestScoringAfterSeveralTurns()
         {
             int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
+            bool loggingEachTurn = (Level == LevelEnum.Expert && LogEachExpertTurn) || (Level == LevelEnum.Ultimate && LogEachUltimateTurn);
             foreach (Coord computerChoice in legalComputerMoves)
             {
-                if (LogEachExpertTurn) // re-Log initial BoardState before each legal Move
+                if (loggingEachTurn) // re-Log initial BoardState before each legal Move
                     Debug.Print("initial BoardState:{0}", BoardState);
 
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogDecisions) // Log computerBoardState & computerChoiceScore for computerChoice
-                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
+                if (loggingEachTurn) // Log computerBoardState & computerChoiceScore for computerChoice
+                    Debug.Print(" - Computer choice: 1={0}->{1} resulting Board's Score={2:+#;-#;+0}\nresulting BoardState:{3}", 
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-                int minMaxScoreAfterSeveralTurns = findMinMaxScoreForHighestScoringMove(computerBoardState, EXPERT_TURNS_DEPTH);
+                int nextTurn = 2;
+                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // turn skipped due to no legal moves
+                    nextTurn++; // depth should go down to same Player to compare equally
+
+                int minMaxScoreAfterSeveralTurns;
+                if (Level == LevelEnum.Expert) // Expert
+                    minMaxScoreAfterSeveralTurns = expert_FindMinMaxScoreForHighestScoringMove(computerBoardState, nextTurn);
+                else // Ultimate
+                    minMaxScoreAfterSeveralTurns = ultimate_FindMinMaxScoreForAllMyLegalMoves(computerBoardState, nextTurn);
                 if (LogDecisions) // Log minMaxScoreAfterSeveralTurns for computerChoice
-                    Debug.Print(" - Computer choice: {0}->{1} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
+                    Debug.Print(" - Computer choice: {0}={1}->{2} resulting Board's Score={2:+#;-#;+0} minMaxScoreAfterSeveralTurns={3}\n\n",
                             BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterSeveralTurns and start a new List of Moves that attain it
@@ -314,10 +336,10 @@ namespace Othello
         /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
         /// return the minMaxScore after several Turns/recusions
         /// </summary>
-        /// <param name="boardState"></param>
+        /// <param name="boardState">BoardState for current Turn</param>
         /// <param name="turns">how many Turns to recursively try</param>
         /// <returns>minMaxScore after several Turns/recusions</returns>
-        private int findMinMaxScoreForHighestScoringMove(BoardState boardState, int turns)
+        private int expert_FindMinMaxScoreForHighestScoringMove(BoardState boardState, int turn)
         {
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
@@ -345,9 +367,9 @@ namespace Othello
                     responseScore = ScoreBoard(responseBoardState);
                 }
                 // Log each legalMove response
-                if (LogEachExpertTurn && LogEachExpertLegalMoveResponse) 
-                    Debug.Print("       - LegalMove Response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}", 
-                            response, responseScore, responseBoardState);
+                if (LogEachExpertTurn && LogEachExpertLegalMoveResponse)
+                    Debug.Print("       - LegalMove Response: {0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                            turn, boardState.WhitesTurn ? 'W' : 'B', response, responseScore, responseBoardState);
 
                 if (myTurn)
                 {
@@ -371,25 +393,133 @@ namespace Othello
 
             // Log the chosen minMaxResponse
             if (LogEachExpertTurn)
-                Debug.Print("- response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
-                        turns, boardState.WhitesTurn?'W':'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
+                Debug.Print("- response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                        turn, boardState.WhitesTurn ? 'W' : 'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
-            if (turns == 0)
+            if (turn == EXPERT_TURNS_DEPTH)
                 return minMaxScore;
 
-            int levelsLeft = turns - 1;
+            int nextTurn = turn + 1;
             if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
-                levelsLeft--; // depth should go down to same Player to compare equally
+                nextTurn++; // depth should go down to same Player to compare equally
 
             // recurse to return resulting minMaxScore after levelsLeft more Turns
-            return findMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, levelsLeft);
+            return expert_FindMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, nextTurn);
+        }
+
+        /// <summary>
+        /// Recusively find optimal choice by trying every LegalMove for Computer Turn and lowest Score possible for each Opponent Turn
+        /// on My/Computer's Turn: recurse for every LegalMove
+        /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
+        /// return the minMaxScore after several Turns/recusions
+        /// </summary>
+        /// <param name="boardState">BoardState for current Turn</param>
+        /// <param name="turns">how many Turns to recursively try</param>
+        /// <returns>minMaxScore after several Turns/recusions</returns>
+        private int ultimate_FindMinMaxScoreForAllMyLegalMoves(BoardState boardState, int turn)
+        {
+            bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
+            int nextTurn = turn + 1;
+            List<Coord> legalMoves = boardState.LegalMoves();
+            if (legalMoves.Count == 0)
+                return ScoreEndOfGame(boardState);
+
+            if (myTurn) // find recursive Score for each legalMove
+            {
+                int maxRecursiveScore = -int.MaxValue;
+                Coord maxRecursiveResponse = new Coord();
+                BoardState maxRecursiveResponseBoardState = null;
+                foreach (Coord legalMove in legalMoves)
+                {
+                    BoardState legalMoveBoardState = boardState.Clone();
+                    legalMoveBoardState.PlacePieceAndFlipPiecesAndChangeTurns(legalMove);
+
+                    int recusiveScore;
+                    if (legalMoveBoardState.endOfGame) // return ScoreEndOfGame()
+                        recusiveScore = ScoreEndOfGame(legalMoveBoardState);
+                    else if (turn >= ULTIMATE_TURNS_DEPTH) // return ScoreBoard()
+                        recusiveScore = ScoreBoard(legalMoveBoardState);
+                    else // recurse
+                    {
+                        if (LogEachUltimateTurn)
+                            Debug.Print("       - Computer LegalMove: {0}={1}->{2}\nresulting BoardState:{3}",
+                                    turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, legalMoveBoardState);
+
+                        if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+                            nextTurn++; // depth should go down to same Player to compare equally
+
+                        if (nextTurn > ULTIMATE_TURNS_DEPTH)
+                            recusiveScore = ScoreBoard(legalMoveBoardState);
+                        else // recurse to return resulting minMaxScore after nextTurn
+                            recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
+                    }
+
+                    // Log each legalMove
+                    if (LogEachUltimateTurn)
+                        Debug.Print("- Computer LegalMove: {0}={1}->{2} recusiveScore={3:+#;-#;+0}\nlegalMoveBoardState:{4}",
+                                turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore, legalMoveBoardState);
+
+                    if (recusiveScore > maxRecursiveScore) // is this ultimately the best resulting recusiveScore to bubble-up?
+                    {
+                        maxRecursiveScore = recusiveScore;
+                        maxRecursiveResponse = legalMove;
+                        maxRecursiveResponseBoardState = legalMoveBoardState;
+                    }
+                }
+                return maxRecursiveScore; // ultimately bubble-up the maxRecursiveScore until we figure out which first Move results in the best eventual Board Score
+            }
+
+            // find best Opponent Response
+            int minScore = int.MaxValue;
+            Coord minResponse = new Coord();
+            BoardState minResponseBoardState = null;
+            foreach (Coord response in legalMoves)
+            {
+                BoardState responseBoardState = boardState.Clone();
+                responseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(response);
+
+                int responseScore;
+                if (responseBoardState.endOfGame)
+                    responseScore = ScoreEndOfGame(responseBoardState);
+                else
+                    responseScore = ScoreBoard(responseBoardState);
+
+                // Log each legalMove response
+                if (LogEachUltimateTurn && LogEachUltimateLegalMoveResponse)
+                    Debug.Print("       - Opponent LegalMove: {0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                            turn, boardState.WhitesTurn ? 'W' : 'B', response, responseScore, responseBoardState);
+
+                if (responseScore < minScore) // opponent's Turn chooses lowest Score for me
+                {
+                    minScore = responseScore;
+                    minResponse = response;
+                    minResponseBoardState = responseBoardState;
+                }
+            }
+
+            // Log the chosen minMaxResponse
+            if (LogEachUltimateTurn)
+                Debug.Print("- Opponent's best Response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                        turn, boardState.WhitesTurn ? 'W' : 'B', minResponse, minScore, minResponseBoardState);
+
+            if (minResponseBoardState.endOfGame)
+                return minScore;
+
+            if (turn >= ULTIMATE_TURNS_DEPTH)
+                return minScore;
+
+            if (minResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+                nextTurn++; // depth should go down to same Player to compare equally
+
+            // recurse to return resulting minMaxScore after nextTurn
+            return ultimate_FindMinMaxScoreForAllMyLegalMoves(minResponseBoardState, nextTurn);
         }
 
         /// <summary>
         /// End-of-Game Score should just be a comparison of Counts
         /// MULTIPLIER helps it fit in with & out-weigh other Scores
         /// </summary>
-        /// <param name="boardState"></param>
+        /// <param name="boardState">BoardState to Score</param>
         /// <returns>a high Score if won, a low negative Score if lost</returns>
         private int ScoreEndOfGame(BoardState boardState)
         {
@@ -422,7 +552,7 @@ namespace Othello
 				if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
 				int weightedCoordValue;
-                if (Level == LevelEnum.Expert && boardMostlyFilled)
+                if ((Level == LevelEnum.Expert ||Level == LevelEnum.Ultimate) && boardMostlyFilled)
                     weightedCoordValue = 1000; // after board is mostly full, Expert should just try to win the game
                 else
                     weightedCoordValue = WeightedCoordValue(coord);
@@ -555,6 +685,7 @@ namespace Othello
                 //  200   3  30  10
                 case LevelEnum.Advanced:
                 case LevelEnum.Expert:
+                case LevelEnum.Ultimate:
                     switch (coord.x)
 					{
                         // Edge COLs

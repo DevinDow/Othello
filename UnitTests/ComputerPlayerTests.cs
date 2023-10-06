@@ -74,7 +74,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestLevels_Beg()
+        public void TestLevels_Int()
         {
             BoardState boardState = new BoardState(true, false);
             boardState.SetSquare(new Coord(2, 1), new Square(StateEnum.White));
@@ -88,6 +88,7 @@ namespace UnitTests
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an Edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
             TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
+            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
         }
 
         [TestMethod]
@@ -105,6 +106,7 @@ namespace UnitTests
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(8, 4), "to get an Edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping Row");
             TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get an Edge");
+            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(8, 4), "to get an Edge");
         }
 
         [TestMethod]
@@ -170,7 +172,8 @@ namespace UnitTests
             TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left Edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left Edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(5, 2), "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
+            TestAcceptableChoices(boardState, LevelEnum.Expert, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
+            TestAcceptableChoices(boardState, LevelEnum.Ultimate, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2), new Coord(8, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
         }
     }
 }

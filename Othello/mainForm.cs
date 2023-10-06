@@ -26,6 +26,7 @@ namespace Othello
 		private System.Windows.Forms.MenuItem undoItem;
         private MenuItem advancedItem;
         private MenuItem expertItem;
+        private MenuItem ultimateItem;
         private IContainer components;
 
         public MainForm()
@@ -72,6 +73,7 @@ namespace Othello
             this.advancedItem = new System.Windows.Forms.MenuItem();
             this.expertItem = new System.Windows.Forms.MenuItem();
             this.undoItem = new System.Windows.Forms.MenuItem();
+            this.ultimateItem = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarTurn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarBlackScore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarWhiteScore)).BeginInit();
@@ -79,7 +81,7 @@ namespace Othello
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 302);
+            this.statusBar.Location = new System.Drawing.Point(0, 282);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusBarTurn,
@@ -139,7 +141,8 @@ namespace Othello
             this.beginnerItem,
             this.intermediateItem,
             this.advancedItem,
-            this.expertItem});
+            this.expertItem,
+            this.ultimateItem});
             this.menuItem1.Text = "&Opponent";
             // 
             // humanPlayerItem
@@ -179,10 +182,16 @@ namespace Othello
             this.undoItem.Text = "&Undo";
             this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
             // 
+            // ultimateItem
+            // 
+            this.ultimateItem.Index = 5;
+            this.ultimateItem.Text = "&Ultimate Algorithm";
+            this.ultimateItem.Click += new System.EventHandler(this.ultimateItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(424, 324);
+            this.ClientSize = new System.Drawing.Size(424, 304);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;
@@ -243,6 +252,7 @@ namespace Othello
 			intermediateItem.Checked = false;
             advancedItem.Checked = false;
             expertItem.Checked = false;
+            ultimateItem.Checked = false;
 
             board.ExecuteComputerPlayerTurn();
 		}
@@ -257,6 +267,7 @@ namespace Othello
 			intermediateItem.Checked = true;
             advancedItem.Checked = false;
             expertItem.Checked = false;
+            ultimateItem.Checked = false;
 
             board.ExecuteComputerPlayerTurn();
 		}
@@ -271,6 +282,7 @@ namespace Othello
             intermediateItem.Checked = false;
             advancedItem.Checked = true;
             expertItem.Checked = false;
+            ultimateItem.Checked = false;
 
             board.ExecuteComputerPlayerTurn();
         }
@@ -285,6 +297,22 @@ namespace Othello
             intermediateItem.Checked = false;
             advancedItem.Checked = false;
             expertItem.Checked = true;
+            ultimateItem.Checked = false;
+
+            board.ExecuteComputerPlayerTurn();
+        }
+
+        private void ultimateItem_Click(object sender, EventArgs e)
+        {
+            board.ComputerPlayer = new ComputerPlayer(LevelEnum.Ultimate);
+            board.ComputerPlayer.BoardState = board.boardState;
+
+            humanPlayerItem.Checked = false;
+            beginnerItem.Checked = false;
+            intermediateItem.Checked = false;
+            advancedItem.Checked = false;
+            expertItem.Checked = false;
+            ultimateItem.Checked = true;
 
             board.ExecuteComputerPlayerTurn();
         }
