@@ -25,8 +25,9 @@ namespace Othello
         public static bool LogEachUltimateTurn = false;
         public static bool LogEachUltimateLegalMoveResponse = false;
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 9; // AdvVsExp wins @ 9, loses @ 7 & 11
-        private const int ULTIMATE_TURNS_DEPTH = 7; // 5vs9=>3sec, 6vs9=>5sec(loses), 7vs9=>17sec
+        private const int EXPERT_TURNS_DEPTH = 11;
+        private const int ULTIMATE_TURNS_DEPTH = 11;
+        private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 5; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
         public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{
@@ -411,7 +412,7 @@ namespace Othello
                 Debug.Print("- Expert response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                         turn, boardState.WhitesTurn ? 'W' : 'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
-            if (turn == EXPERT_TURNS_DEPTH)
+            if (turn >= EXPERT_TURNS_DEPTH)
                 return minMaxScore;
 
             int nextTurn = turn + 1;
@@ -442,8 +443,8 @@ namespace Othello
             if (myTurn) // find recursive Score for each legalMove
             {
                 int maxRecursiveScore = -int.MaxValue;
-                Coord maxRecursiveResponse = new Coord();
-                BoardState maxRecursiveResponseBoardState = null;
+                Coord maxRecursiveResponse;
+                BoardState maxRecursiveResponseBoardState;
                 foreach (Coord legalMove in legalMoves)
                 {
                     BoardState legalMoveBoardState = boardState.Clone();
@@ -466,7 +467,12 @@ namespace Othello
                         if (nextTurn > ULTIMATE_TURNS_DEPTH)
                             recusiveScore = ScoreBoard(legalMoveBoardState);
                         else // recurse to return resulting minMaxScore after nextTurn
-                            recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
+                        {
+                            if (nextTurn < ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT)
+                                recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
+                            else
+                                recusiveScore = expert_FindMinMaxScoreForHighestScoringMove(legalMoveBoardState, nextTurn);
+                        }
                     }
 
                     // Log each legalMove
@@ -527,7 +533,10 @@ namespace Othello
                 nextTurn++; // depth should go down to same Player to compare equally
 
             // recurse to return resulting minMaxScore after nextTurn
-            return ultimate_FindMinMaxScoreForAllMyLegalMoves(minResponseBoardState, nextTurn);
+            if (nextTurn < ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT)
+                return ultimate_FindMinMaxScoreForAllMyLegalMoves(minResponseBoardState, nextTurn);
+            else
+                return expert_FindMinMaxScoreForHighestScoringMove(minResponseBoardState, nextTurn);
         }
 
         /// <summary>

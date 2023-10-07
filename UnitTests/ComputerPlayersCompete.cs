@@ -13,7 +13,7 @@ namespace UnitTests
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
         private int RUNS_EXP = 11;
-        private int RUNS_ULT = 5;
+        private int RUNS_ULT = 3;
 
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace UnitTests
         [TestMethod]
         public void UltVsExp()
         {
-            RUNS = 1;// RUNS_ULT;
+            RUNS = RUNS_ULT;
             WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
         }
 
@@ -122,7 +122,7 @@ namespace UnitTests
             }
             Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
 
-            // reset Log Decisions for other Tests
+            // reset LogDecisions for other Tests
             ComputerPlayer.LogDecisions = prevLogDecisions;
 
             if (whiteShouldWin)
