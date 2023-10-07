@@ -81,9 +81,9 @@ namespace UnitTests
         /// <param name="whiteShouldWin">whitch Color to Assert Win-Count for</param>
         public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, bool whiteShouldWin)
         {
-            // don't Log Decisions for Computer vs Computer, but reset it when done
-            bool prevLogDecisions = ComputerPlayer.LogDecisions;
-            ComputerPlayer.LogDecisions = false; // don't log every Decision, esp. Expert going DEPTH Responses for every Legal Move available
+            // turn off LogDecisions for Computer vs Computer when doing multiple Runs so the Scores can be easily seen
+            bool prevLogDecisions = ComputerPlayer.LogDecisions; // cache to reset LogDecisions for other Tests
+            ComputerPlayer.LogDecisions = false; // comment this out to see Decisions for Computer vs Computer
 
             Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
@@ -165,11 +165,13 @@ namespace UnitTests
                     //Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
                 }
 
+                // break when End Of Game
                 if (boardState.endOfGame)
                 {
                     // log BoardState after endOfGame
                     if (ComputerPlayer.LogDecisions)
                     {
+                        Debug.Print("\n");
                         Debug.Print(boardState.ToString());
                         Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
                     }

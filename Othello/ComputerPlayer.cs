@@ -205,6 +205,10 @@ namespace Othello
                 }
             }
 
+            if (LogDecisions)
+                Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxAdvancedScoreAfterOpponentsBestResponse={2}",
+                        finalComputerChoices.Count, maxComputerScore, maxAdvancedScoreAfterOpponentsBestResponse);
+
             return finalComputerChoices;
         }
 
@@ -260,15 +264,18 @@ namespace Othello
         /// <returns>list of equal Computer Choices</returns>
         private List<Coord> recursive_ChooseHighestScoringAfterSeveralTurns()
         {
+            bool loggingEachTurn = (Level == LevelEnum.Expert && LogEachExpertTurn) || (Level == LevelEnum.Ultimate && LogEachUltimateTurn);
             int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
             List<Coord> bestComputerChoices = new List<Coord>();
+
+            // try every Legal Move
             List<Coord> legalComputerMoves = BoardState.LegalMoves();
-            bool loggingEachTurn = (Level == LevelEnum.Expert && LogEachExpertTurn) || (Level == LevelEnum.Ultimate && LogEachUltimateTurn);
             foreach (Coord computerChoice in legalComputerMoves)
             {
                 if (loggingEachTurn) // re-Log initial BoardState before each legal Move
                     Debug.Print("initial BoardState:{0}", BoardState);
 
+                // Turn Depth = 1
                 BoardState computerBoardState = BoardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
@@ -276,10 +283,12 @@ namespace Othello
                     Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
                             Level, BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
+                // next Turn Depth = 2 (unless Turn Skipped due to no leagl Moves)
                 int nextTurn = 2;
-                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // turn skipped due to no legal moves
+                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Turn Skipped due to no legal moves
                     nextTurn++; // depth should go down to same Player to compare equally
 
+                // find minMaxScoreAfterSeveralTurns by starting recursion
                 int minMaxScoreAfterSeveralTurns;
                 if (Level == LevelEnum.Expert) // Expert
                     minMaxScoreAfterSeveralTurns = expert_FindMinMaxScoreForHighestScoringMove(computerBoardState, nextTurn);
@@ -289,6 +298,7 @@ namespace Othello
                     Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
                             Level, BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
+                // remember the list of bestComputerChoices that attain maxComputerScoreAfterSeveralTurns
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterSeveralTurns and start a new List of Moves that attain it
                 {
                     maxComputerScoreAfterSeveralTurns = minMaxScoreAfterSeveralTurns;
@@ -327,6 +337,10 @@ namespace Othello
                     finalComputerChoices.Add(computerChoice);
                 }
             }
+
+            if (LogDecisions)
+                Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxComputerScoreAfterSeveralTurns={2}",
+                        finalComputerChoices.Count, maxComputerScore, maxComputerScoreAfterSeveralTurns);
 
             return finalComputerChoices;
         }
@@ -543,7 +557,7 @@ namespace Othello
         /// <returns>weighted Score of boardState</returns>
         private int ScoreBoard(BoardState boardState)
 		{
-            const int numEmptyToConsiderBoardMostlyFilled = 3;
+            const int numEmptyToConsiderBoardMostlyFilled = 8;
             bool boardMostlyFilled = BoardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
 
             int score = 0;
@@ -553,8 +567,8 @@ namespace Othello
 				if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
 				int weightedCoordValue;
-                if ((Level == LevelEnum.Expert ||Level == LevelEnum.Ultimate) && boardMostlyFilled)
-                    weightedCoordValue = 1000; // after board is mostly full, Expert should just try to win the game
+                if (boardMostlyFilled)
+                    weightedCoordValue = 100; // after board is mostly full, Expert should just try to win the game
                 else
                     weightedCoordValue = WeightedCoordValue(coord);
 
