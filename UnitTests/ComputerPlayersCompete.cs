@@ -13,7 +13,7 @@ namespace UnitTests
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
         private int RUNS_EXP = 11;
-        private int RUNS_ULT = 3;
+        private int RUNS_ULT = 1;
 
 
         [TestMethod]
@@ -87,14 +87,19 @@ namespace UnitTests
 
             Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
 
-            SortedDictionary<int, int> results = new SortedDictionary<int, int>(); // sort results by Pieces diff
+            // track Wins by each Color and also track wonByResults to log more useful information
+            SortedDictionary<int, int> wonByResults = new SortedDictionary<int, int>(); // sort results by Pieces diff
             int whiteWins = 0;
             int blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
                 BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
-                AddResult(results, boardState);
-                //Debug.Print(boardState.ToString()); // log final BoardState
+                AddResult(wonByResults, boardState);
+                
+                // log the final boardState when a single run
+                if (RUNS == 1)
+                    Debug.Print(boardState.ToString()); // log final BoardState
+
                 if (boardState.WhiteCount > boardState.BlackCount)
                 {
                     //Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
@@ -110,15 +115,16 @@ namespace UnitTests
                     //Debug.Print("TIE {0}-{1}", boardState.WhiteCount, boardState.BlackCount);
                 }
             }
-            // print results
-            foreach (int diff in results.Keys)
+
+            // log wonByResults
+            foreach (int diff in wonByResults.Keys)
             {
                 if (diff > 0)
-                    Debug.Print("{0} won by {1} pieces {2} time(s)", whiteLevel, diff, results[diff]);
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", whiteLevel, diff, wonByResults[diff]);
                 else if (diff == 0)
-                    Debug.Print("Tied {0} time(s)", results[diff]);
+                    Debug.Print("Tied {0} time(s)", wonByResults[diff]);
                 else
-                    Debug.Print("{0} won by {1} pieces {2} time(s)", blackLevel, -diff, results[diff]);
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", blackLevel, -diff, wonByResults[diff]);
             }
             Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
 
