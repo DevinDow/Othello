@@ -368,6 +368,7 @@ namespace Othello
                 return ScoreEndOfGame(boardState);
             }
 
+            // find best/worst Score for every leagalMove response
             foreach (Coord response in legalMoves)
             {
                 BoardState responseBoardState = boardState.Clone();
