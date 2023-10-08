@@ -27,7 +27,7 @@ namespace Othello
         private Random random = new Random();
         private const int EXPERT_TURNS_DEPTH = 11;
         private const int ULTIMATE_TURNS_DEPTH = 11;
-        private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 5; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
+        private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
         public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
 		{

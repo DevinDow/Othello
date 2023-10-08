@@ -106,7 +106,8 @@ namespace UnitTests
             TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(8, 4), "to get an Edge");
             TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping Row");
             TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get an Edge");
-            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");
+            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(8, 4), "to get an Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");
         }
 
         [TestMethod]
