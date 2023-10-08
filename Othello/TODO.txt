@@ -1,5 +1,7 @@
 ﻿TODO
 ----
+- can Expert & Ultimate use Advanced for Opponent instead of just BoardScore?
+
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins
