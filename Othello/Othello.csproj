@@ -88,6 +88,8 @@
     <Compile Include="ComputerPlayer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ComputerPlayer_Basic.cs" />
+    <Compile Include="ComputerPlayer_Beginner.cs" />
     <Compile Include="Coord.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
@@ -102,7 +104,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <None Include="Board.cd" />
+    <None Include="ComputerPlayer.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

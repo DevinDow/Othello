@@ -55,7 +55,7 @@ namespace Othello
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				Coord? choice = ComputerPlayer.ChooseNextMove();
+				Coord? choice = ComputerPlayer.ChooseNextMove(boardState);
                 if (choice != null)
 	                MakeMove(choice.Value);
 			}

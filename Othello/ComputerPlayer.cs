@@ -5,19 +5,11 @@ using System.Text;
 
 namespace Othello
 {
-	public enum LevelEnum {
-        Beginner,       // maximizes relative Score using number of Square
-        Intermediate,   // maximizes relative Score using weighting for more valuable/dangerous Squares
-        Advanced,       // minimizes Opponents best response
-        Expert,         // Minimax algorithm to a Depth using Highest Scoring Move
-        Ultimate,       // Minimax algorithm to a Depth
-    }
-
-    public class ComputerPlayer
+    public abstract class ComputerPlayer
 	{
 		public bool AmIWhite;
+        public string LevelName;
 		public BoardState BoardState;
-		public LevelEnum Level;
         public static bool LogDecisions = true;
         public static bool LogEachAdvancedTurn = false;
         public static bool LogEachExpertTurn = false;
@@ -29,25 +21,24 @@ namespace Othello
         //private const int ULTIMATE_TURNS_DEPTH = 11;
         private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
-        public ComputerPlayer(LevelEnum level = LevelEnum.Beginner, bool amIWhite = true)
+        public ComputerPlayer(bool amIWhite = true)
 		{
 			AmIWhite = amIWhite;
-			Level = level;
 		}
 
 		/// <summary>
 		/// returns ComputerPlayer's choice for next move
 		/// </summary>
-		public Coord? ChooseNextMove()
+		public Coord? ChooseNextMove(BoardState boardState)
 		{
             if (LogDecisions)
             {
-                int initialScore = ScoreBoard(BoardState);
+                int initialScore = ScoreBoard(boardState);
                 Debug.Print("\n{0} {1}\ninitial BoardState:{2}\ninitial Score={3:+#;-#;+0}", 
-                        Level, AmIWhite ? "W" : "B", BoardState, initialScore);
+                        LevelName, AmIWhite ? "W" : "B", boardState, initialScore);
             }
 
-            List<Coord> choices = new List<Coord>();
+            List<Coord> choices = findBestChoices(boardState);
 
             switch (Level)
 			{
@@ -79,13 +70,13 @@ namespace Othello
 			{
 				Coord choice = choices[0];
                 if (LogDecisions)
-                    Debug.Print("{0} chose {1}->{2}", Level, BoardState.WhitesTurn ? 'W' : 'B', choice);
+                    Debug.Print("{0} chose {1}->{2}", LevelName, boardState.WhitesTurn ? 'W' : 'B', choice);
                 return choice;
 			}
 
 			// multiple equally best Moves
 			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat("Equal Choices: {0}->", BoardState.WhitesTurn ? 'W' : 'B');
+			sb.AppendFormat("Equal Choices: {0}->", boardState.WhitesTurn ? 'W' : 'B');
 			foreach (Coord choice in choices)
 				sb.Append(choice + " ");
             if (LogDecisions)
@@ -95,44 +86,13 @@ namespace Othello
             int randomIndex = random.Next(choices.Count);
 			Coord randomChoice = choices[randomIndex];
             if (LogDecisions)
-                Debug.Print("{0} chose {1}->{2}", Level, BoardState.WhitesTurn ? 'W' : 'B', randomChoice);
+                Debug.Print("{0} chose {1}->{2}", LevelName, boardState.WhitesTurn ? 'W' : 'B', randomChoice);
             return randomChoice;
         }
 
-        /// <summary>
-        /// finds Moves that maximize weighted Score and picks one at random
-        /// </summary>
-        /// <returns>a Choice that maximizes weighted Score</returns>
-        private List<Coord> basic_ChooseHighestScoringMove()
-        {
-            int maxScore = -int.MaxValue;
-            List<Coord> bestComputerChoices = new List<Coord>();
+        protected abstract List<Coord> findBestChoices(BoardState boardState);
 
-            // loop through all of Computer's Legal Moves
-            List<Coord> legalMoves = BoardState.LegalMoves();
-			foreach (Coord computerChoice in legalMoves)
-			{
-				BoardState computerBoardState = BoardState.Clone();
-				computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
-                int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogDecisions)
-				    Debug.Print("Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
-                            BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
-				if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
-				{
-					maxScore = computerChoiceScore;
-					bestComputerChoices = new List<Coord>();
-				}
-
-				if (computerChoiceScore >= maxScore) // add choice to maxScoringChoices
-				{
-					bestComputerChoices.Add(computerChoice);
-				}
-			}
-
-            return bestComputerChoices;
-        }
 
         /// <summary>
         /// finds Moves that minimize best weighted Score that Opponent can attain
@@ -568,7 +528,7 @@ namespace Othello
         /// </summary>
         /// <param name="boardState">BoardState to caluclate Score for</param>
         /// <returns>weighted Score of boardState</returns>
-        private int ScoreBoard(BoardState boardState)
+        protected int ScoreBoard(BoardState boardState)
 		{
             const int numEmptyToConsiderBoardMostlyFilled = 8;
             bool boardMostlyFilled = BoardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
@@ -620,10 +580,8 @@ namespace Othello
         /// </summary>
         /// <param name="coord">Coord to get weighted Score of</param>
         /// <returns>weighted Score of coord</returns>
-        private int WeightedCoordValue(Coord coord)
-		{
-            // Beginner Level scores each square as 1, so it's just trying to fliup the most Pieces.
-
+        protected abstract int WeightedCoordValue(Coord coord); 
+        /*
             // Higher Levels value Coords differently
             // Corners are highest, then Ends.
             // Coords before Corners & Ends are devalued since they lead to Opponent getting Corners & Ends.
@@ -779,6 +737,6 @@ namespace Othello
 							}
 					}
 			}
-		}
+		}*/
     }
 }
