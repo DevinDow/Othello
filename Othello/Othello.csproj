@@ -89,6 +89,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ComputerPlayer_Basic.cs" />
+    <Compile Include="ComputerPlayer_Intermediate.cs" />
     <Compile Include="ComputerPlayer_Beginner.cs" />
     <Compile Include="Coord.cs" />
     <Compile Include="mainForm.cs">

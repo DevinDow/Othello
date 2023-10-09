@@ -6,7 +6,7 @@ namespace Othello
 {
     internal class ComputerPlayer_Beginner : ComputerPlayer_Basic
     {
-        ComputerPlayer_Beginner(bool amIWhite) : base(amIWhite) 
+        public ComputerPlayer_Beginner(bool amIWhite = true) : base(amIWhite) 
         {
             LevelName = "Beginner";
         }

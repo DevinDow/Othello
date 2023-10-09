@@ -21,7 +21,7 @@ namespace Othello
         //private const int ULTIMATE_TURNS_DEPTH = 11;
         private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
-        public ComputerPlayer(bool amIWhite = true)
+        public ComputerPlayer(bool amIWhite)
 		{
 			AmIWhite = amIWhite;
 		}
@@ -40,7 +40,7 @@ namespace Othello
 
             List<Coord> choices = findBestChoices(boardState);
 
-            switch (Level)
+            /*switch (Level)
 			{
 				case LevelEnum.Beginner:
 				case LevelEnum.Intermediate:
@@ -59,7 +59,7 @@ namespace Othello
                 case LevelEnum.Ultimate:
                     choices = recurseToChooseHighestScoringAfterSeveralTurns();
                     break;
-            }
+            }*/
 
             // no legal Moves
             if (choices.Count == 0)
@@ -216,7 +216,7 @@ namespace Othello
 
             return minScoreAfterOpponentTurn;
         }
-
+        /*
         /// <summary>
         /// loop through all of Computer's Legal Moves
         /// collect the ones that maximize Score after several Turns
@@ -415,7 +415,7 @@ namespace Othello
                     if (legalMoveBoardState.endOfGame) // return ScoreEndOfGame()
                         recusiveScore = ScoreEndOfGame(legalMoveBoardState);
                     /*else if (turn >= ULTIMATE_TURNS_DEPTH) // return ScoreBoard()
-                        recusiveScore = ScoreBoard(legalMoveBoardState);*/
+                        recusiveScore = ScoreBoard(legalMoveBoardState);*
                     else // recurse
                     {
                         if (LogEachUltimateTurn)
@@ -427,7 +427,7 @@ namespace Othello
 
                         /*if (nextTurn > ULTIMATE_TURNS_DEPTH)
                             recusiveScore = ScoreBoard(legalMoveBoardState);
-                        else // recurse to return resulting minMaxScore after nextTurn*/
+                        else // recurse to return resulting minMaxScore after nextTurn*
                         {
                             if (nextTurn < ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT)
                                 recusiveScore = ultimate_FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
@@ -490,7 +490,7 @@ namespace Othello
                     return minRecursiveScore;
 
                 /*if (turn >= ULTIMATE_TURNS_DEPTH)
-                    return minScore;*/
+                    return minScore;*
 
                 if (minRecursiveResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                     nextTurn++; // depth should go down to same Player to compare equally
@@ -502,7 +502,7 @@ namespace Othello
                     return expert_FindMinMaxScoreForHighestScoringMove(minRecursiveResponseBoardState, nextTurn);
             }
         }
-
+*/
         /// <summary>
         /// End-of-Game Score should just be a comparison of Counts
         /// MULTIPLIER helps it fit in with & out-weigh other Scores
@@ -591,80 +591,6 @@ namespace Othello
             // Advanced & Expert perform worse when Negatives throw a wrench in comparing BoardStates, esp near the end of the Game.
             switch (Level)
 			{
-                case LevelEnum.Beginner:
-                default:
-					return 1; // All Coords
-
-                // 50 -5 20 20
-                // -5 -9 -2 -2
-                // 20 -2  4  2
-                // 20 -2  2  1
-                case LevelEnum.Intermediate:
-                    switch (coord.x)
-                    {
-                        // Edge COLs
-                        case 1:
-                        case 8:
-                            switch (coord.y)
-                            {
-                                case 1:
-                                case 8:
-                                    return 50; // Corner
-                                case 2:
-                                case 7:
-                                    return -5; // leads to Corner
-                                default:
-                                    return 20; // Edge
-                            }
-                        // COL before Edge
-                        case 2:
-                        case 7:
-                            switch (coord.y)
-                            {
-                                case 1:
-                                case 8:
-                                    return -5; // leads to Corner
-                                case 2:
-                                case 7:
-                                    return -9; // leads to Corner
-                                default:
-                                    return -2; // leads to Edge
-                            }
-                        // COL before COL before Edge
-                        case 3:
-                        case 6:
-                            switch (coord.y)
-                            {
-                                case 1:
-                                case 8:
-                                    return 20; // Edge
-                                case 2:
-                                case 7:
-                                    return -2; // leads to Edge
-                                case 3:
-                                case 6:
-                                    return 4; // leads to Opponent getting devalued Coord near Corner
-                                default:
-                                    return 2; // leads to Opponent getting devalued Coord near Edge
-                            }
-                        // middle COLs
-                        default:
-                            switch (coord.y)
-                            {
-                                case 1:
-                                case 8:
-                                    return 10; // Edge
-                                case 2:
-                                case 7:
-                                    return -2; // leads to Edge
-                                case 3:
-                                case 6:
-                                    return 2; // leads to Opponent getting devalued Coord near Edge
-                                default:
-                                    return 1; // Middles
-                            }
-                    }
-
                 // 2000   2 200 200
                 //    2   1   3   3
                 //  200   3  50  30

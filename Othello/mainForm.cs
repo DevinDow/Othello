@@ -244,7 +244,7 @@ namespace Othello
 
 		private void beginerItem_Click(object sender, System.EventArgs e)
 		{
-			board.ComputerPlayer = new ComputerPlayer(LevelEnum.Beginner);
+			board.ComputerPlayer = new ComputerPlayer_Beginner();
 			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;
@@ -259,7 +259,7 @@ namespace Othello
 
 		private void intermediateItem_Click(object sender, System.EventArgs e)
 		{
-			board.ComputerPlayer = new ComputerPlayer(LevelEnum.Intermediate);
+			board.ComputerPlayer = new ComputerPlayer_Intermediate();
 			board.ComputerPlayer.BoardState = board.boardState;
 
 			humanPlayerItem.Checked = false;

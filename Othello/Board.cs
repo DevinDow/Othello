@@ -216,8 +216,7 @@ namespace Othello
 			// if ComputerPlayer's Turn
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
-				ComputerPlayer.BoardState = boardState;
-				Coord? choice = ComputerPlayer.ChooseNextMove();
+				Coord? choice = ComputerPlayer.ChooseNextMove(boardState);
 				if (choice != null)
 					MakeMove(choice.Value);
 			}
