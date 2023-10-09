@@ -5,6 +5,10 @@
 	- can they use Advanced for Opponent instead of just BoardScore?
 	- can Unbeatble do true minMax of all paths for both Computer & Opponent?
 
+- Architecture
+	- document different ComputerPlayer Levels
+	- should I make each ComputerPlayer Level a derived Class from ComputerPlayer?
+
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
 - should ComputerVsComputer Tests compare total Pieces instead of Wins
