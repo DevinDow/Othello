@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Othello
 {
-    internal abstract class ComputerPlayer_Basic : ComputerPlayer
+    public abstract class ComputerPlayer_Basic : ComputerPlayer
     {
         protected ComputerPlayer_Basic(bool amIWhite) : base(amIWhite) { }
 
@@ -19,15 +19,15 @@ namespace Othello
             List<Coord> bestComputerChoices = new List<Coord>();
 
             // loop through all of Computer's Legal Moves
-            List<Coord> legalMoves = BoardState.LegalMoves();
+            List<Coord> legalMoves = boardState.LegalMoves();
             foreach (Coord computerChoice in legalMoves)
             {
-                BoardState computerBoardState = BoardState.Clone();
+                BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogDecisions)
                     Debug.Print("Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
-                            BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
+                            boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
                 {

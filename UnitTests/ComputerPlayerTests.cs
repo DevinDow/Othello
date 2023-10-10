@@ -17,16 +17,12 @@ namespace UnitTests
         /// <param name="level"></param>
         /// <param name="expected"></param>
         /// <param name="reasoning">text explaining why it should make this choice</param>
-        private void TestExpectedChoice(BoardState boardState, LevelEnum level, Coord expected, string reasoning)
+        private void TestExpectedChoice(BoardState boardState, ComputerPlayer computerPlayer, Coord expected, string reasoning)
         {
-            ComputerPlayer computerPlayer = new ComputerPlayer(level, true);
-            computerPlayer.BoardState = boardState;
-            Coord? chose;
-
-            Debug.Print("\n** {0} chooses {1} {2} **", computerPlayer.Level, expected, reasoning);
-            chose = computerPlayer.ChooseNextMove();
-            Assert.AreEqual(expected, chose.Value, string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.Level, chose.Value, expected, reasoning));
-            Debug.Print("{0} SUCCESSFULLY choose {1} {2}", computerPlayer.Level, expected, reasoning);
+            Debug.Print("\n** {0} chooses {1} {2} **", computerPlayer.LevelName, expected, reasoning);
+            Coord? chose = computerPlayer.ChooseNextMove(boardState);
+            Assert.AreEqual(expected, chose.Value, string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.LevelName, chose.Value, expected, reasoning));
+            Debug.Print("{0} SUCCESSFULLY choose {1} {2}", computerPlayer.LevelName, expected, reasoning);
         }
 
         /// <summary>
@@ -36,20 +32,16 @@ namespace UnitTests
         /// <param name="level"></param>
         /// <param name="acceptableChoices"></param>
         /// <param name="reasoning">text explaining why it should make this choice</param>
-        private void TestAcceptableChoices(BoardState boardState, LevelEnum level, List<Coord> acceptableChoices, string reasoning)
+        private void TestAcceptableChoices(BoardState boardState, ComputerPlayer computerPlayer, List<Coord> acceptableChoices, string reasoning)
         {
-            ComputerPlayer computerPlayer = new ComputerPlayer(level, true);
-            computerPlayer.BoardState = boardState;
-            Coord? chose;
-
             StringBuilder acceptableChoicesString = new StringBuilder();
             foreach (Coord coord in acceptableChoices)
                 acceptableChoicesString.Append(coord.ToString());
 
-            Debug.Print("\n** {0} chooses from {1} {2} **", computerPlayer.Level, acceptableChoicesString, reasoning);
-            chose = computerPlayer.ChooseNextMove();
-            Assert.IsTrue(acceptableChoices.Contains(chose.Value), string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.Level, chose.Value, acceptableChoicesString, reasoning));
-            Debug.Print("{0} SUCCESSFULLY chose from {1} {2}", computerPlayer.Level, acceptableChoicesString, reasoning);
+            Debug.Print("\n** {0} chooses from {1} {2} **", computerPlayer.LevelName, acceptableChoicesString, reasoning);
+            Coord? chose = computerPlayer.ChooseNextMove(boardState);
+            Assert.IsTrue(acceptableChoices.Contains(chose.Value), string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.LevelName, chose.Value, acceptableChoicesString, reasoning));
+            Debug.Print("{0} SUCCESSFULLY chose from {1} {2}", computerPlayer.LevelName, acceptableChoicesString, reasoning);
         }
 
 
@@ -57,8 +49,6 @@ namespace UnitTests
         public void TestFirstMove()
         {
             BoardState boardState = new BoardState();
-            ComputerPlayer computerPlayer = new ComputerPlayer(LevelEnum.Beginner, false);
-            computerPlayer.BoardState = boardState;
             List<Coord> acceptableChoices = new List<Coord>
             {
                 new Coord(3, 5),
@@ -67,10 +57,10 @@ namespace UnitTests
                 new Coord(6, 4),
             };
 
-            TestAcceptableChoices(boardState, LevelEnum.Beginner, acceptableChoices, string.Empty);
-            TestAcceptableChoices(boardState, LevelEnum.Intermediate, acceptableChoices, string.Empty);
-            TestAcceptableChoices(boardState, LevelEnum.Advanced, acceptableChoices, string.Empty);
-            TestAcceptableChoices(boardState, LevelEnum.Expert, acceptableChoices, string.Empty);
+            TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(false), acceptableChoices, string.Empty);
+            TestAcceptableChoices(boardState, new ComputerPlayer_Intermediate(false), acceptableChoices, string.Empty);
+            //TestAcceptableChoices(boardState, LevelEnum.Advanced, acceptableChoices, string.Empty);
+            //TestAcceptableChoices(boardState, LevelEnum.Expert, acceptableChoices, string.Empty);
         }
 
         [TestMethod]
@@ -84,11 +74,11 @@ namespace UnitTests
             boardState.SetSquare(new Coord(3, 4), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.White));
 
-            TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(2, 5), "to flip 3");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 4), "to flip 2 and get an Edge");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
-            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
+            TestExpectedChoice(boardState, new ComputerPlayer_Beginner(true), new Coord(2, 5), "to flip 3");
+            TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(1, 4), "to flip 2 and get an Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(1, 4), "to flip 2 and get an Edge while preventing Human from getting Edge");
         }
 
         [TestMethod]
@@ -102,11 +92,11 @@ namespace UnitTests
             boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.Black));
 
-            TestExpectedChoice(boardState, LevelEnum.Beginner, new Coord(3, 4), "to flip 2");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(8, 4), "to get an Edge");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping Row");
-            TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get an Edge");
-            TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(8, 4), "to get an Edge");
+            TestExpectedChoice(boardState, new ComputerPlayer_Beginner(true), new Coord(3, 4), "to flip 2");
+            TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(8, 4), "to get an Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(6, 6), "to avoid Human reflipping Row");
+            //TestExpectedChoice(boardState, LevelEnum.Expert, new Coord(8, 4), "to get an Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(8, 4), "to get an Edge");
             //TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");
         }
 
@@ -170,11 +160,11 @@ namespace UnitTests
             boardState.SetSquare(new Coord(8, 7), new Square(StateEnum.Black));
             boardState.SetSquare(new Coord(8, 8), new Square(StateEnum.Black));
 
-            TestAcceptableChoices(boardState, LevelEnum.Beginner, new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
-            TestExpectedChoice(boardState, LevelEnum.Intermediate, new Coord(1, 1), "to flip left Edge");
-            TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left Edge");
-            TestAcceptableChoices(boardState, LevelEnum.Expert, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
-            TestAcceptableChoices(boardState, LevelEnum.Ultimate, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2), new Coord(8, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
+            TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(true), new List<Coord> { new Coord(1, 1), new Coord(3, 2) }, "to flip 5 in 2 ways");
+            TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(1, 1), "to flip left Edge");
+            //TestExpectedChoice(boardState, LevelEnum.Advanced, new Coord(1, 1), "because it's valuable to flip left Edge");
+            //TestAcceptableChoices(boardState, LevelEnum.Expert, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
+            //TestAcceptableChoices(boardState, LevelEnum.Ultimate, new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2), new Coord(8, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
         }
     }
 }

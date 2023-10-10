@@ -9,7 +9,6 @@ namespace Othello
 	{
 		public bool AmIWhite;
         public string LevelName;
-		public BoardState BoardState;
         public static bool LogDecisions = true;
         public static bool LogEachAdvancedTurn = false;
         public static bool LogEachExpertTurn = false;
@@ -93,7 +92,7 @@ namespace Othello
         protected abstract List<Coord> findBestChoices(BoardState boardState);
 
 
-
+        /*
         /// <summary>
         /// finds Moves that minimize best weighted Score that Opponent can attain
         /// if multiple Moves tie then picks one that has highest Weighted Score
@@ -106,10 +105,10 @@ namespace Othello
 
             // loop through all of Computer's Legal Moves
             // collect the ones that don't let the Opponent score well
-            List<Coord> legalComputerMoves = BoardState.LegalMoves();
+            List<Coord> legalComputerMoves = boardState.LegalMoves();
             foreach (Coord computerChoice in legalComputerMoves)
             {
-                BoardState computerBoardState = BoardState.Clone();
+                BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogEachAdvancedTurn)
@@ -117,7 +116,7 @@ namespace Othello
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int opponentsBestResponseScore;
-                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Opponent's Turn skipped
+                if (computerBoardState.WhitesTurn == boardState.WhitesTurn) // Opponent's Turn skipped
                 {
                     if (LogEachAdvancedTurn)
                         Debug.Print("    - Advanced Opponent response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
@@ -149,7 +148,7 @@ namespace Othello
             List<Coord> finalComputerChoices = new List<Coord>();
             foreach (Coord computerChoice in bestAdvancedChoices)
             {
-                BoardState computerBoardState = BoardState.Clone();
+                BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogEachAdvancedTurn)
@@ -207,7 +206,7 @@ namespace Othello
                 {
                     if (!bestOpponentResponses.Contains(opponentResponse))
                         bestOpponentResponses.Add(opponentResponse);
-                }*/
+                }*
             }
 
             if (LogEachAdvancedTurn)
@@ -531,7 +530,7 @@ namespace Othello
         protected int ScoreBoard(BoardState boardState)
 		{
             const int numEmptyToConsiderBoardMostlyFilled = 8;
-            bool boardMostlyFilled = BoardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
+            bool boardMostlyFilled = boardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
 
             int score = 0;
             foreach (Coord coord in boardState)
@@ -580,89 +579,82 @@ namespace Othello
         /// </summary>
         /// <param name="coord">Coord to get weighted Score of</param>
         /// <returns>weighted Score of coord</returns>
-        protected abstract int WeightedCoordValue(Coord coord); 
-        /*
+        protected virtual int WeightedCoordValue(Coord coord)
+        {
             // Higher Levels value Coords differently
             // Corners are highest, then Ends.
             // Coords before Corners & Ends are devalued since they lead to Opponent getting Corners & Ends.
             // And Coords before those are valuable since they lead to Opponent getting those devalued Coords.
 
-            // Intermediate performs better with Negatives helping make better decisions.
             // Advanced & Expert perform worse when Negatives throw a wrench in comparing BoardStates, esp near the end of the Game.
-            switch (Level)
-			{
-                // 2000   2 200 200
-                //    2   1   3   3
-                //  200   3  50  30
-                //  200   3  30  10
-                case LevelEnum.Advanced:
-                case LevelEnum.Expert:
-                case LevelEnum.Ultimate:
-                    switch (coord.x)
-					{
-                        // Edge COLs
-						case 1:
-						case 8:
-							switch (coord.y)
-							{
-								case 1:
-								case 8:
-									return 2000; // Corner
-								case 2:
-								case 7:
-									return 2; // leads to Corner
-								default:
-									return 200; // Edge
-							}
-                        // COL before Edge
-						case 2:
-						case 7:
-							switch (coord.y)
-							{
-								case 1:
-								case 8:
-                                    return 2; // leads to Corner
-                                case 2:
-                                case 7:
-                                    return 1; // leads to Corner
-								default:
-									return 3; // leads to Edge
-							}
-                        // COL before COL before Edge
-						case 3:
-						case 6:
-							switch (coord.y)
-							{
-								case 1:
-								case 8:
-									return 200; // Edge
-								case 2:
-								case 7:
-									return 3; // leads to Edge
-                                case 3:
-                                case 6:
-                                    return 50; // leads to Opponent getting devalued Coord near Corner
-                                default:
-									return 30; // leads to Opponent getting devalued Coord near Edge
-                            }
-                        // middle COLs
-						default:
-							switch (coord.y)
-							{
-								case 1:
-								case 8:
-									return 200; // Edge
-								case 2:
-								case 7:
-									return 3; // leads to Edge
-								case 3:
-								case 6:
-									return 30; // leads to Opponent getting devalued Coord near Edge
-                                default:
-									return 10; // Middles
-							}
-					}
-			}
-		}*/
+            // 2000   2 200 200
+            //    2   1   3   3
+            //  200   3  50  30
+            //  200   3  30  10
+            switch (coord.x)
+            {
+                // Edge COLs
+                case 1:
+                case 8:
+                    switch (coord.y)
+                    {
+                        case 1:
+                        case 8:
+                            return 2000; // Corner
+                        case 2:
+                        case 7:
+                            return 2; // leads to Corner
+                        default:
+                            return 200; // Edge
+                    }
+                // COL before Edge
+                case 2:
+                case 7:
+                    switch (coord.y)
+                    {
+                        case 1:
+                        case 8:
+                            return 2; // leads to Corner
+                        case 2:
+                        case 7:
+                            return 1; // leads to Corner
+                        default:
+                            return 3; // leads to Edge
+                    }
+                // COL before COL before Edge
+                case 3:
+                case 6:
+                    switch (coord.y)
+                    {
+                        case 1:
+                        case 8:
+                            return 200; // Edge
+                        case 2:
+                        case 7:
+                            return 3; // leads to Edge
+                        case 3:
+                        case 6:
+                            return 50; // leads to Opponent getting devalued Coord near Corner
+                        default:
+                            return 30; // leads to Opponent getting devalued Coord near Edge
+                    }
+                // middle COLs
+                default:
+                    switch (coord.y)
+                    {
+                        case 1:
+                        case 8:
+                            return 200; // Edge
+                        case 2:
+                        case 7:
+                            return 3; // leads to Edge
+                        case 3:
+                        case 6:
+                            return 30; // leads to Opponent getting devalued Coord near Edge
+                        default:
+                            return 10; // Middles
+                    }
+            }
+        }
     }
 }

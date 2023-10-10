@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Othello
 {
-    internal class ComputerPlayer_Beginner : ComputerPlayer_Basic
+    public class ComputerPlayer_Beginner : ComputerPlayer_Basic
     {
         public ComputerPlayer_Beginner(bool amIWhite = true) : base(amIWhite) 
         {

@@ -20,16 +20,16 @@ namespace UnitTests
         public void IntVsBeg()
         {
             RUNS = RUNS_INT;
-            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Beginner, true);
+            WhiteVsBlackRuns(new ComputerPlayer_Intermediate(true), new ComputerPlayer_Beginner(false), true);
         }
 
         [TestMethod]
         public void BegVsInt()
         {
             RUNS = RUNS_INT;
-            WhiteVsBlackRuns(LevelEnum.Beginner, LevelEnum.Intermediate, false);
+            WhiteVsBlackRuns(new ComputerPlayer_Beginner(true), new ComputerPlayer_Intermediate(false), false);
         }
-
+        /*
         [TestMethod]
         public void AdvVsInt()
         {
@@ -43,7 +43,7 @@ namespace UnitTests
             RUNS = RUNS_ADV;
             WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, false);
         }
-
+        
         [TestMethod]
         public void ExpVsAdv()
         {
@@ -72,20 +72,20 @@ namespace UnitTests
             RUNS = RUNS_ULT;
             WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
         }
-
+        */
         /// <summary>
         /// run multiple Games of whiteLevel vs blackLevel to tally how many times each wins
         /// </summary>
-        /// <param name="whiteLevel">Level for White</param>
-        /// <param name="blackLevel">Level for Black</param>
+        /// <param name="white">Level for White</param>
+        /// <param name="black">Level for Black</param>
         /// <param name="whiteShouldWin">whitch Color to Assert Win-Count for</param>
-        public void WhiteVsBlackRuns(LevelEnum whiteLevel, LevelEnum blackLevel, bool whiteShouldWin)
+        public void WhiteVsBlackRuns(ComputerPlayer white, ComputerPlayer black, bool whiteShouldWin)
         {
             // turn off LogDecisions for Computer vs Computer when doing multiple Runs so the Scores can be easily seen
             bool prevLogDecisions = ComputerPlayer.LogDecisions; // cache to reset LogDecisions for other Tests
             ComputerPlayer.LogDecisions = false; // comment this out to see Decisions for Computer vs Computer
 
-            Debug.Print("White={0} Black={1}", whiteLevel, blackLevel);
+            Debug.Print("White={0} Black={1}", white.LevelName, black.LevelName);
 
             // track Wins by each Color and also track wonByResults to log more useful information
             SortedDictionary<int, int> wonByResults = new SortedDictionary<int, int>(); // sort results by Pieces diff
@@ -93,7 +93,7 @@ namespace UnitTests
             int blackWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
-                BoardState boardState = ComputerVsComputer(whiteLevel, blackLevel);
+                BoardState boardState = ComputerVsComputer(white, black);
                 AddResult(wonByResults, boardState);
                 
                 // log the final boardState when a single run
@@ -120,21 +120,21 @@ namespace UnitTests
             foreach (int diff in wonByResults.Keys)
             {
                 if (diff > 0)
-                    Debug.Print("{0} won by {1} pieces {2} time(s)", whiteLevel, diff, wonByResults[diff]);
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", white.LevelName, diff, wonByResults[diff]);
                 else if (diff == 0)
                     Debug.Print("Tied {0} time(s)", wonByResults[diff]);
                 else
-                    Debug.Print("{0} won by {1} pieces {2} time(s)", blackLevel, -diff, wonByResults[diff]);
+                    Debug.Print("{0} won by {1} pieces {2} time(s)", black.LevelName, -diff, wonByResults[diff]);
             }
-            Debug.Print("{0} {1} - {2} {3}", whiteLevel, whiteWins, blackLevel, blackWins);
+            Debug.Print("{0} {1} - {2} {3}", white.LevelName, whiteWins, black.LevelName, blackWins);
 
             // reset LogDecisions for other Tests
             ComputerPlayer.LogDecisions = prevLogDecisions;
 
             if (whiteShouldWin)
-                Assert.IsTrue(whiteWins > blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", whiteLevel, whiteWins, blackLevel, blackWins);
+                Assert.IsTrue(whiteWins > blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", white.LevelName, whiteWins, black.LevelName, blackWins);
             else
-                Assert.IsTrue(blackWins > whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", blackLevel, blackWins, whiteLevel, whiteWins);
+                Assert.IsTrue(blackWins > whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", black.LevelName, blackWins, white.LevelName, whiteWins);
         }
 
         private void AddResult(SortedDictionary<int, int> results, BoardState boardState)
@@ -152,18 +152,15 @@ namespace UnitTests
         /// <param name="whiteLevel">Level for White</param>
         /// <param name="blackLevel">Level for Black</param>
         /// <returns>BoardState after end of Game</returns>
-        public BoardState ComputerVsComputer(LevelEnum whiteLevel, LevelEnum blackLevel)
+        public BoardState ComputerVsComputer(ComputerPlayer white, ComputerPlayer black)
         {
             BoardState boardState = new BoardState();
-            ComputerPlayer white = new ComputerPlayer(whiteLevel, true);
-            ComputerPlayer black = new ComputerPlayer(blackLevel, false);
 
             while (true) // repeat currentPlayer making a Move until endOfGame
             {
                 // which Player's turn is it (boardState.WhitesTurn knows if a Player is skipped due to no Legal Moves)
                 ComputerPlayer currentPlayer = boardState.WhitesTurn ? white : black;
-                currentPlayer.BoardState = boardState;
-                Coord? choice = currentPlayer.ChooseNextMove();
+                Coord? choice = currentPlayer.ChooseNextMove(boardState);
                 if (choice != null)
                 {
                     boardState.PlacePieceAndFlipPiecesAndChangeTurns(choice.Value);
