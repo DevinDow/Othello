@@ -88,6 +88,7 @@
     <Compile Include="ComputerPlayer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ComputerPlayer_AdvancedWeighting.cs" />
     <Compile Include="ComputerPlayer_Basic.cs" />
     <Compile Include="ComputerPlayer_Advanced.cs" />
     <Compile Include="ComputerPlayer_Intermediate.cs" />

@@ -3,19 +3,19 @@
   <Class Name="Othello.ComputerPlayer">
     <Position X="0.5" Y="0.5" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>AAABgAAAAACAAAAAgQSEBBAAAACBAAAIAEQAAACAAAA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAAAQCAABAAAACBAAAIAEQAAACAAAA=</HashCode>
       <FileName>ComputerPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer_Basic">
-    <Position X="1.25" Y="5.25" Width="2.25" />
+    <Position X="1.25" Y="4.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ComputerPlayer_Basic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer_Intermediate">
-    <Position X="4.25" Y="7.75" Width="2.25" />
+    <Position X="4.25" Y="6.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Intermediate.cs</FileName>
@@ -23,18 +23,25 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer_Advanced">
-    <Position X="6" Y="5.25" Width="2" />
+    <Position X="7.25" Y="6" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>ABAIQAAAAAAAAAAEgAAACAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ComputerPlayer_Advanced.cs</FileName>
       <NewMemberFileName>ComputerPlayer_Beginner.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer_Beginner">
-    <Position X="2" Y="7.75" Width="2" />
+    <Position X="2" Y="6.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Beginner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Othello.ComputerPlayer_AdvancedWeighting">
+    <Position X="6.75" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ComputerPlayer_AdvancedWeighting.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
