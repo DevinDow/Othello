@@ -7,6 +7,8 @@ namespace Othello
 {
     public abstract class ComputerPlayer_Basic : ComputerPlayer
     {
+        public static bool LogBasicOptions = false;
+
         protected ComputerPlayer_Basic(bool amIWhite) : base(amIWhite) { }
 
         /// <summary>
@@ -25,9 +27,9 @@ namespace Othello
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogDecisions)
-                    Debug.Print("Computer choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
-                            boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
+                if (LogBasicOptions)
+                    Debug.Print("{0} choice: {1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                            LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 if (computerChoiceScore > maxScore) // remember maxScore and start a new List of Moves that attain it
                 {
