@@ -53,6 +53,11 @@ namespace Othello
 
 
         // Constructor
+        /// <summary>
+        /// Constructs a BoardState
+        /// </summary>
+        /// <param name="whitesTurn">in Othello, Black moves first</param>
+        /// <param name="addInitialPieces">should the initial four Pieces be added?</param>
         public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
         {
             skippedTurn = endOfGame = false;

@@ -14,13 +14,6 @@
       <FileName>Square.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer">
-    <Position X="8" Y="0.5" Width="3.75" />
-    <TypeIdentifier>
-      <HashCode>AAgBgAAAAACAgAAAgQSEBFAABAGBAAAJAIQAAAAAAAg=</HashCode>
-      <FileName>ComputerPlayer.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Othello.BoardState">
     <Position X="3" Y="0.5" Width="2.5" />
     <TypeIdentifier>
@@ -31,7 +24,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Othello.Animation">
-    <Position X="12.5" Y="0.5" Width="2.25" />
+    <Position X="7.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAQAAAAACAhCBAAAAAAAAAQQAAAAAAAAAAAAAQAAAIA=</HashCode>
       <FileName>Animation.cs</FileName>
@@ -42,13 +35,6 @@
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAAAAAAKAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Square.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="Othello.LevelEnum">
-    <Position X="8" Y="6.25" Width="1.25" />
-    <TypeIdentifier>
-      <HashCode>AACEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAACAAQ=</HashCode>
-      <FileName>ComputerPlayer.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

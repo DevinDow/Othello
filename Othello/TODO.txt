@@ -1,13 +1,8 @@
 ﻿TODO
 ----
-- Expert & Ultimate just use BoardScore for Opponent
-	- maybe Advanced & they can use Intermediate Scoring to do better
-	- can they use Advanced for Opponent instead of just BoardScore?
-	- can Unbeatble do true minMax of all paths for both Computer & Opponent?
-
-- Architecture
-	- document different ComputerPlayer Levels
-	- should I make each ComputerPlayer Level a derived Class from ComputerPlayer?
+- analyze Ultimate's choices
+	- TestLevels_Exp
+	- playing against
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
