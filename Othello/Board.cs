@@ -117,7 +117,7 @@ namespace Othello
 			}
 		}
 
-		public void Click(System.Windows.Forms.MouseEventArgs e)
+		public void Click(MouseEventArgs e)
 		{
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 				return;
@@ -134,7 +134,7 @@ namespace Othello
 
 			if (!boardState.IsLegalMove(choice))
 			{
-				System.Windows.Forms.MessageBox.Show("Illegal Move");
+				MessageBox.Show("Illegal Move");
 				return;
 			}
 
@@ -176,18 +176,18 @@ namespace Othello
 			if (boardState.endOfGame)
 			{
 				if (boardState.BlackCount > boardState.WhiteCount)
-					System.Windows.Forms.MessageBox.Show(string.Format("Black Wins {0}-{1}", boardState.BlackCount, boardState.WhiteCount));
+					MessageBox.Show(string.Format("Black Wins {0}-{1}", boardState.BlackCount, boardState.WhiteCount));
 				else if (boardState.WhiteCount > boardState.BlackCount)
-					System.Windows.Forms.MessageBox.Show(string.Format("White Wins {0}-{1}", boardState.WhiteCount, boardState.BlackCount));
+					MessageBox.Show(string.Format("White Wins {0}-{1}", boardState.WhiteCount, boardState.BlackCount));
 				else
-					System.Windows.Forms.MessageBox.Show("Tie");
+					MessageBox.Show("Tie");
 				return;
 			}
 
 			// report skipped Turn
 			if (boardState.skippedTurn)
 			{
-				System.Windows.Forms.MessageBox.Show(string.Format("No legal moves available...  Skipping {0}'s turn", boardState.WhitesTurn ? "Black" : "White"), "Skipping Turn");
+				MessageBox.Show(string.Format("No legal moves available...  Skipping {0}'s turn", boardState.WhitesTurn ? "Black" : "White"), "Skipping Turn");
 
 				// if ComputerPlayer's Turn
 				if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
