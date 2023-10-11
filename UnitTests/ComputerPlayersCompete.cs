@@ -29,21 +29,21 @@ namespace UnitTests
             RUNS = RUNS_INT;
             WhiteVsBlackRuns(new ComputerPlayer_Beginner(true), new ComputerPlayer_Intermediate(false), false);
         }
-        /*
+        
         [TestMethod]
         public void AdvVsInt()
         {
             RUNS = RUNS_ADV;
-            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Intermediate, true);
+            WhiteVsBlackRuns(new ComputerPlayer_Advanced(true), new ComputerPlayer_Intermediate(false), true);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
             RUNS = RUNS_ADV;
-            WhiteVsBlackRuns(LevelEnum.Intermediate, LevelEnum.Advanced, false);
+            WhiteVsBlackRuns(new ComputerPlayer_Intermediate(true), new ComputerPlayer_Advanced(false), false);
         }
-        
+/*        
         [TestMethod]
         public void ExpVsAdv()
         {

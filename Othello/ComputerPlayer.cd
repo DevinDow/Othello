@@ -15,15 +15,23 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.ComputerPlayer_Intermediate">
-    <Position X="4.25" Y="7" Width="2.25" />
+    <Position X="4.25" Y="7.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Intermediate.cs</FileName>
       <NewMemberFileName>ComputerPlayer_Beginner.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Othello.ComputerPlayer_Advanced">
+    <Position X="6" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>ComputerPlayer_Advanced.cs</FileName>
+      <NewMemberFileName>ComputerPlayer_Beginner.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="Othello.ComputerPlayer_Beginner">
-    <Position X="2" Y="7" Width="2" />
+    <Position X="2" Y="7.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Beginner.cs</FileName>
