@@ -6,11 +6,11 @@ namespace Othello
 {
     public class ComputerPlayer_Advanced : ComputerPlayer_AdvancedWeighting
     {
-        public static bool LogAdvancedDecisions = false;
         public static bool LogEachAdvancedOption = false;
-        public static bool LogAdvancedChoice = false;
         public static bool LogEachOpponentOption = false;
         public static bool LogOpponentChoice = false;
+        public static bool LogAdvancedChoice = false;
+        public static bool LogAdvancedChoiceOptions = false;
 
         public ComputerPlayer_Advanced(bool amIWhite = true) : base(amIWhite)
         {
@@ -36,14 +36,15 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogEachAdvancedOption)
-                    Debug.Print(" - Advanced choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
+                    Debug.Print(" - Advanced option: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
+                // find opponentsBestResponseScore
                 int opponentsBestResponseScore;
                 if (computerBoardState.WhitesTurn == boardState.WhitesTurn) // Opponent's Turn skipped
                 {
                     if (LogEachOpponentOption)
-                        Debug.Print("    - Advanced Opponent response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
+                        Debug.Print("    - Advanced Opponent response option: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
                                 computerChoiceScore, computerBoardState);
                     opponentsBestResponseScore = computerChoiceScore;
                 }
@@ -63,7 +64,7 @@ namespace Othello
                 }
             }
 
-            if (LogAdvancedChoice)
+            if (LogAdvancedChoice && bestAdvancedChoices.Count > 1)
                 Debug.Print("** bestAdvancedChoices count={0}, maxAdvancedScoreAfterOpponentsBestResponse={1:+#;-#;+0}.  Choose the highest scoring Move.",
                         bestAdvancedChoices.Count, maxAdvancedScoreAfterOpponentsBestResponse);
 
@@ -75,7 +76,7 @@ namespace Othello
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogAdvancedChoice)
+                if (LogAdvancedChoiceOptions && bestAdvancedChoices.Count > 1)
                     Debug.Print("Top Advanced choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
@@ -89,7 +90,7 @@ namespace Othello
                 }
             }
 
-            if (LogAdvancedChoice)
+            if (LogAdvancedChoice && finalComputerChoices.Count > 1)
                 Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxAdvancedScoreAfterOpponentsBestResponse={2:+#;-#;+0}",
                         finalComputerChoices.Count, maxComputerScore, maxAdvancedScoreAfterOpponentsBestResponse);
 
@@ -114,8 +115,8 @@ namespace Othello
                 BoardState opponentResponseBoardState = computerBoardState.Clone();
                 opponentResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(opponentResponse);
                 int opponentResponseScore = ScoreBoard(opponentResponseBoardState);
-                if (LogEachAdvancedOption)
-                    Debug.Print("    - Advanced Opponent response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}",
+                if (LogEachOpponentOption)
+                    Debug.Print("    - Advanced Opponent response option: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}",
                             opponentResponse, opponentResponseScore, opponentResponseBoardState);
 
                 if (opponentResponseScore < minScoreAfterOpponentTurn) // remember minScoreAfterOpponentTurn and start a new List of Moves that attain it
