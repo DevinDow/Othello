@@ -10,11 +10,10 @@ namespace Othello
 		public bool AmIWhite;
         public string LevelName;
         public static bool LogDecisions = true;
-        public static bool LogEachAdvancedTurn = false;
-        public static bool LogEachExpertTurn = false;
+        /*public static bool LogEachExpertTurn = false;
         public static bool LogEachExpertLegalMoveResponse = false;
         public static bool LogEachUltimateTurn = false;
-        public static bool LogEachUltimateLegalMoveResponse = false;
+        public static bool LogEachUltimateLegalMoveResponse = false;*/
         private Random random = new Random();
         private const int EXPERT_TURNS_DEPTH = 11;
         //private const int ULTIMATE_TURNS_DEPTH = 11;
@@ -38,20 +37,6 @@ namespace Othello
             }
 
             List<Coord> choices = findBestChoices(boardState);
-
-            /*
-                case LevelEnum.Advanced:
-                    choices = advanced_ChooseHighestScoringAfterOpponentMove();
-					break;
-
-                case LevelEnum.Expert:
-                    choices = recurseToChooseHighestScoringAfterSeveralTurns();
-                    break;
-
-                case LevelEnum.Ultimate:
-                    choices = recurseToChooseHighestScoringAfterSeveralTurns();
-                    break;
-            }*/
 
             // no legal Moves
             if (choices.Count == 0)
@@ -398,7 +383,7 @@ namespace Othello
         /// </summary>
         /// <param name="boardState">BoardState to caluclate Score for</param>
         /// <returns>weighted Score of boardState</returns>
-        protected int ScoreBoard(BoardState boardState)
+        internal int ScoreBoard(BoardState boardState)
 		{
             const int numEmptyToConsiderBoardMostlyFilled = 8;
             bool boardMostlyFilled = boardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;

@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Othello
 {
     public class ComputerPlayer_Advanced : ComputerPlayer
     {
-        public ComputerPlayer_Advanced(bool amIWhite = true) : base(amIWhite) 
+        public static bool LogAdvancedDecisions = false;
+        public static bool LogEachAdvancedOption = false;
+        public static bool LogAdvancedChoice = false;
+        public static bool LogEachOpponentOption = false;
+        public static bool LogOpponentChoice = false;
+
+        public ComputerPlayer_Advanced(bool amIWhite = true) : base(amIWhite)
         {
             LevelName = "Advanced";
         }
@@ -30,14 +35,14 @@ namespace Othello
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogEachAdvancedTurn)
+                if (LogEachAdvancedOption)
                     Debug.Print(" - Advanced choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 int opponentsBestResponseScore;
                 if (computerBoardState.WhitesTurn == boardState.WhitesTurn) // Opponent's Turn skipped
                 {
-                    if (LogEachAdvancedTurn)
+                    if (LogEachOpponentOption)
                         Debug.Print("    - Advanced Opponent response: SKIPPED resulting Score={0:+#;-#;+0}\nresulting BoardState:{1}",
                                 computerChoiceScore, computerBoardState);
                     opponentsBestResponseScore = computerChoiceScore;
@@ -58,7 +63,7 @@ namespace Othello
                 }
             }
 
-            if (LogEachAdvancedTurn)
+            if (LogAdvancedChoice)
                 Debug.Print("** bestAdvancedChoices count={0}, maxAdvancedScoreAfterOpponentsBestResponse={1:+#;-#;+0}.  Choose the highest scoring Move.",
                         bestAdvancedChoices.Count, maxAdvancedScoreAfterOpponentsBestResponse);
 
@@ -70,7 +75,7 @@ namespace Othello
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogEachAdvancedTurn)
+                if (LogAdvancedChoice)
                     Debug.Print("Top Advanced choice: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                             computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
                 if (computerChoiceScore > maxComputerScore)
@@ -84,8 +89,8 @@ namespace Othello
                 }
             }
 
-            if (LogDecisions)
-                Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxAdvancedScoreAfterOpponentsBestResponse={2}",
+            if (LogAdvancedChoice)
+                Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxAdvancedScoreAfterOpponentsBestResponse={2:+#;-#;+0}",
                         finalComputerChoices.Count, maxComputerScore, maxAdvancedScoreAfterOpponentsBestResponse);
 
             return finalComputerChoices;
@@ -109,7 +114,7 @@ namespace Othello
                 BoardState opponentResponseBoardState = computerBoardState.Clone();
                 opponentResponseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(opponentResponse);
                 int opponentResponseScore = ScoreBoard(opponentResponseBoardState);
-                if (LogEachAdvancedTurn)
+                if (LogEachAdvancedOption)
                     Debug.Print("    - Advanced Opponent response: {0} resulting Score={1:+#;-#;+0}\nresulting BoardState:{2}",
                             opponentResponse, opponentResponseScore, opponentResponseBoardState);
 
@@ -128,7 +133,7 @@ namespace Othello
                 }*/
             }
 
-            if (LogEachAdvancedTurn)
+            if (LogOpponentChoice)
                 Debug.Print("    - best Advanced Opponent response: {0}->{1} resulting Score={2:+#;-#;+0}\nresulting BoardState:{3}",
                         computerBoardState.WhitesTurn ? 'W' : 'B', bestOpponentResponse, minScoreAfterOpponentTurn, bestOpponentResponseBoardState);
 
