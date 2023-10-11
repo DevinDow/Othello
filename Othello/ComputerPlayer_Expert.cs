@@ -16,6 +16,11 @@ namespace Othello
             LevelName = "Expert";
         }
 
+        override protected int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn)
+        {
+            return FindMinMaxScoreForHighestScoringMove(boardState, turn);
+        }
+
         /// <summary>
         /// Recusively find optimal choice by finding highest/lowest Score possible on each Turn
         /// on My/Computer's Turn: maximize my Score
@@ -25,7 +30,7 @@ namespace Othello
         /// <param name="boardState">BoardState for current Turn</param>
         /// <param name="turns">how many Turns to recursively try</param>
         /// <returns>minMaxScore after several Turns/recusions</returns>
-        override protected int FindMinMaxScoreForHighestScoringMove(BoardState boardState, int turn)
+        protected int FindMinMaxScoreForHighestScoringMove(BoardState boardState, int turn)
         {
             bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
             int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;

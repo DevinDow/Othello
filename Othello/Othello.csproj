@@ -91,6 +91,7 @@
     <Compile Include="ComputerPlayer_AdvancedWeighting.cs" />
     <Compile Include="ComputerPlayer_Basic.cs" />
     <Compile Include="ComputerPlayer_Advanced.cs" />
+    <Compile Include="ComputerPlayer_Ultimate.cs" />
     <Compile Include="ComputerPlayer_Expert.cs" />
     <Compile Include="ComputerPlayer_Intermediate.cs" />
     <Compile Include="ComputerPlayer_Beginner.cs" />

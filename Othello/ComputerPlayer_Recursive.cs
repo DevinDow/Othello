@@ -11,7 +11,7 @@ namespace Othello
 
         protected ComputerPlayer_Recursive(bool amIWhite) : base(amIWhite) { }
 
-        protected abstract int FindMinMaxScoreForHighestScoringMove(BoardState boardState, int turn);
+        protected abstract int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn);
 
         /// <summary>
         /// loop through all of Computer's Legal Moves
@@ -45,7 +45,7 @@ namespace Othello
                     nextTurn++; // depth should go down to same Player to compare equally
 
                 // find minMaxScoreAfterSeveralTurns by starting recursion
-                int minMaxScoreAfterSeveralTurns = FindMinMaxScoreForHighestScoringMove(computerBoardState, nextTurn);
+                int minMaxScoreAfterSeveralTurns = FindMinMaxScoreAfterSeveralTurns(computerBoardState, nextTurn);
                 if (LogEachRecursiveTurn) // Log minMaxScoreAfterSeveralTurns for computerChoice
                     Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
                             LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);

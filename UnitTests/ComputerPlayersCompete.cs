@@ -13,7 +13,7 @@ namespace UnitTests
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
         private int RUNS_EXP = 11;
-        private int RUNS_ULT = 1;
+        private int RUNS_ULT = 3;
 
 
         [TestMethod]
@@ -58,21 +58,19 @@ namespace UnitTests
             BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true), false);
         }
 
-        /*
         [TestMethod]
         public void UltVsExp()
         {
             RUNS = RUNS_ULT;
-            BlackVsWhiteRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
+            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Expert(true), true);
         }
 
         [TestMethod]
         public void ExpVsUlt()
         {
             RUNS = RUNS_ULT;
-            BlackVsWhiteRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Ultimate(true), false);
         }
-        */
 
         /// <summary>
         /// run multiple Games of black vs white to tally how many times each wins

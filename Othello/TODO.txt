@@ -1,6 +1,8 @@
 ﻿TODO
 ----
-- ComputerPlayer_Expert & ComputerPlayer_Ultimate derived from ComputerPlayer_recursive
+- analyze Ultimate's choices
+	- TestLevels_Exp
+	- playing against
 
 - Skipping Turn still triggers FlipTimer, and it's confusing
 
