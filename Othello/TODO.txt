@@ -1,12 +1,10 @@
 ﻿TODO
 ----
+- clicking during Animation stopped Animation
+
 - analyze Ultimate's choices
 	- TestLevels_Exp
 	- playing against
-
-- Skipping Turn still triggers FlipTimer, and it's confusing
-
-- should ComputerVsComputer Tests compare total Pieces instead of Wins
 
 - submenus under Level to choose Black or White
 - UNDOS: previousState can be a stack

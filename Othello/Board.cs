@@ -187,17 +187,23 @@ namespace Othello
 			// report skipped Turn
 			if (boardState.skippedTurn)
 			{
-				System.Windows.Forms.MessageBox.Show("No legal moves available...  Skipping turn");
-			}
+				System.Windows.Forms.MessageBox.Show(string.Format("No legal moves available...  Skipping {0}'s turn", boardState.WhitesTurn ? "Black" : "White"), "Skipping Turn");
 
-			// if ComputerPlayer's Turn
-			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
-			{
-                // delay ComputerPlayer's turn until flipping animation finishes
-                computerTurnDelayTimer = new Timer();
-				computerTurnDelayTimer.Interval = Animation.flipDelay * (180 / Animation.flipDegrees + 4); // Delay a little longer than Flipping Animation takes
-				computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurnTimer);
-				computerTurnDelayTimer.Start();
+				// if ComputerPlayer's Turn
+				if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
+					ExecuteComputerPlayerTurn(); // do it now after modal MessageBox has been OKed
+			}
+            else // no modal MessageBox, so delay ComputerPlayer's turn until flipping animation finishes 
+            {
+				// if ComputerPlayer's Turn
+				if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
+				{
+					// delay ComputerPlayer's turn until flipping animation finishes
+					computerTurnDelayTimer = new Timer();
+					computerTurnDelayTimer.Interval = Animation.flipDelay * (180 / Animation.flipDegrees + 4); // Delay a little longer than Flipping Animation takes
+					computerTurnDelayTimer.Tick += new EventHandler(OnComputersTurnTimer);
+					computerTurnDelayTimer.Start();
+				}
 			}
 		}
 
