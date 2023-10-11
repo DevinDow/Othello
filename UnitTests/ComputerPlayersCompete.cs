@@ -20,30 +20,31 @@ namespace UnitTests
         public void IntVsBeg()
         {
             RUNS = RUNS_INT;
-            WhiteVsBlackRuns(new ComputerPlayer_Intermediate(true), new ComputerPlayer_Beginner(false), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Beginner(true), true);
         }
 
         [TestMethod]
         public void BegVsInt()
         {
             RUNS = RUNS_INT;
-            WhiteVsBlackRuns(new ComputerPlayer_Beginner(true), new ComputerPlayer_Intermediate(false), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Beginner(false), new ComputerPlayer_Intermediate(true), false);
         }
         
         [TestMethod]
         public void AdvVsInt()
         {
             RUNS = RUNS_ADV;
-            WhiteVsBlackRuns(new ComputerPlayer_Advanced(true), new ComputerPlayer_Intermediate(false), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Intermediate(true), true);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
             RUNS = RUNS_ADV;
-            WhiteVsBlackRuns(new ComputerPlayer_Intermediate(true), new ComputerPlayer_Advanced(false), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Advanced(true), false);
         }
-/*        
+
+        /*        
         [TestMethod]
         public void ExpVsAdv()
         {
@@ -73,42 +74,43 @@ namespace UnitTests
             WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
         }
         */
+        
         /// <summary>
-        /// run multiple Games of whiteLevel vs blackLevel to tally how many times each wins
+        /// run multiple Games of black vs white to tally how many times each wins
         /// </summary>
-        /// <param name="white">Level for White</param>
-        /// <param name="black">Level for Black</param>
-        /// <param name="whiteShouldWin">whitch Color to Assert Win-Count for</param>
-        public void WhiteVsBlackRuns(ComputerPlayer white, ComputerPlayer black, bool whiteShouldWin)
+        /// <param name="black"></param>
+        /// <param name="white"></param>
+        /// <param name="blackShouldWin">whitch Color to Assert Win-Count for</param>
+        public void BlackVsWhiteRuns(ComputerPlayer black, ComputerPlayer white, bool blackShouldWin)
         {
             // turn off LogDecisions for Computer vs Computer when doing multiple Runs so the Scores can be easily seen
             bool prevLogDecisions = ComputerPlayer.LogDecisions; // cache to reset LogDecisions for other Tests
             ComputerPlayer.LogDecisions = false; // comment this out to see Decisions for Computer vs Computer
 
-            Debug.Print("White={0} Black={1}", white.LevelName, black.LevelName);
+            Debug.Print("Black={0} White={1}", black.LevelName, white.LevelName);
 
             // track Wins by each Color and also track wonByResults to log more useful information
             SortedDictionary<int, int> wonByResults = new SortedDictionary<int, int>(); // sort results by Pieces diff
-            int whiteWins = 0;
             int blackWins = 0;
+            int whiteWins = 0;
             for (int i = 0; i < RUNS; i++)
             {
-                BoardState boardState = ComputerVsComputer(white, black);
+                BoardState boardState = ComputerVsComputer(black, white);
                 AddResult(wonByResults, boardState);
                 
                 // log the final boardState when a single run
                 if (RUNS == 1)
                     Debug.Print(boardState.ToString()); // log final BoardState
 
-                if (boardState.WhiteCount > boardState.BlackCount)
-                {
-                    //Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
-                    whiteWins++;
-                }
-                else if (boardState.BlackCount > boardState.WhiteCount)
+                if (boardState.BlackCount > boardState.WhiteCount)
                 {
                     //Debug.Print("{0} wins {1}-{2}", blackLevel, boardState.BlackCount, boardState.WhiteCount);
                     blackWins++;
+                }
+                else if (boardState.WhiteCount > boardState.BlackCount)
+                {
+                    //Debug.Print("{0} wins {1}-{2}", whiteLevel, boardState.WhiteCount, boardState.BlackCount);
+                    whiteWins++;
                 }
                 else
                 {
@@ -131,10 +133,10 @@ namespace UnitTests
             // reset LogDecisions for other Tests
             ComputerPlayer.LogDecisions = prevLogDecisions;
 
-            if (whiteShouldWin)
-                Assert.IsTrue(whiteWins > blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", white.LevelName, whiteWins, black.LevelName, blackWins);
-            else
+            if (blackShouldWin)
                 Assert.IsTrue(blackWins > whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", black.LevelName, blackWins, white.LevelName, whiteWins);
+            else
+                Assert.IsTrue(whiteWins > blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", white.LevelName, whiteWins, black.LevelName, blackWins);
         }
 
         private void AddResult(SortedDictionary<int, int> results, BoardState boardState)
@@ -149,10 +151,10 @@ namespace UnitTests
         /// <summary>
         /// run a Game of whiteLevel vs blackLevel
         /// </summary>
-        /// <param name="whiteLevel">Level for White</param>
-        /// <param name="blackLevel">Level for Black</param>
+        /// <param name="black">Level for Black</param>
+        /// <param name="white">Level for White</param>
         /// <returns>BoardState after end of Game</returns>
-        public BoardState ComputerVsComputer(ComputerPlayer white, ComputerPlayer black)
+        public BoardState ComputerVsComputer(ComputerPlayer black, ComputerPlayer white)
         {
             BoardState boardState = new BoardState();
 
@@ -165,7 +167,7 @@ namespace UnitTests
                 {
                     boardState.PlacePieceAndFlipPiecesAndChangeTurns(choice.Value);
                     //Debug.Print(boardState.ToString()); // log BoardState after every Move
-                    //Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
+                    //Debug.Print("Black={0} White={1}", boardState.BlackCount, boardState.WhiteCount);
                 }
 
                 // break when End Of Game
@@ -176,7 +178,7 @@ namespace UnitTests
                     {
                         Debug.Print("\n");
                         Debug.Print(boardState.ToString());
-                        Debug.Print("White={0} Black={1}", boardState.WhiteCount, boardState.BlackCount);
+                        Debug.Print("Black={0} White={1}", boardState.BlackCount, boardState.WhiteCount);
                     }
 
                     return boardState;
