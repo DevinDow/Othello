@@ -91,8 +91,10 @@
     <Compile Include="ComputerPlayer_AdvancedWeighting.cs" />
     <Compile Include="ComputerPlayer_Basic.cs" />
     <Compile Include="ComputerPlayer_Advanced.cs" />
+    <Compile Include="ComputerPlayer_Expert.cs" />
     <Compile Include="ComputerPlayer_Intermediate.cs" />
     <Compile Include="ComputerPlayer_Beginner.cs" />
+    <Compile Include="ComputerPlayer_Recursive.cs" />
     <Compile Include="Coord.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>

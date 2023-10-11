@@ -44,37 +44,36 @@ namespace UnitTests
             BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Advanced(true), false);
         }
 
-        /*        
         [TestMethod]
         public void ExpVsAdv()
         {
             RUNS = RUNS_EXP;
-            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Advanced, true);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Advanced(true), true);
         }
 
         [TestMethod]
         public void AdvVsExp()
         {
             RUNS = RUNS_EXP;
-            WhiteVsBlackRuns(LevelEnum.Advanced, LevelEnum.Expert, false);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true), false);
         }
 
-
+        /*
         [TestMethod]
         public void UltVsExp()
         {
             RUNS = RUNS_ULT;
-            WhiteVsBlackRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
+            BlackVsWhiteRuns(LevelEnum.Ultimate, LevelEnum.Expert, true);
         }
 
         [TestMethod]
         public void ExpVsUlt()
         {
             RUNS = RUNS_ULT;
-            WhiteVsBlackRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
+            BlackVsWhiteRuns(LevelEnum.Expert, LevelEnum.Ultimate, false);
         }
         */
-        
+
         /// <summary>
         /// run multiple Games of black vs white to tally how many times each wins
         /// </summary>

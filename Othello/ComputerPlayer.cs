@@ -10,12 +10,10 @@ namespace Othello
 		public bool AmIWhite;
         public string LevelName;
         public static bool LogDecisions = true;
-        /*public static bool LogEachExpertTurn = false;
-        public static bool LogEachExpertLegalMoveResponse = false;
+        /*
         public static bool LogEachUltimateTurn = false;
         public static bool LogEachUltimateLegalMoveResponse = false;*/
         private Random random = new Random();
-        private const int EXPERT_TURNS_DEPTH = 11;
         //private const int ULTIMATE_TURNS_DEPTH = 11;
         private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
@@ -72,172 +70,7 @@ namespace Othello
 
         /*
         /*
-        /// <summary>
-        /// loop through all of Computer's Legal Moves
-        /// collect the ones that maximize Score after several Turns
-        /// if multiple Choices tie after several Turns then choose the ones with the highest first-move Score
-        /// </summary>
-        /// <returns>list of equal Computer Choices</returns>
-        private List<Coord> recurseToChooseHighestScoringAfterSeveralTurns()
-        {
-            bool loggingEachTurn = (Level == LevelEnum.Expert && LogEachExpertTurn) || (Level == LevelEnum.Ultimate && LogEachUltimateTurn);
-            int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
-            List<Coord> bestComputerChoices = new List<Coord>();
 
-            // try every Legal Move
-            List<Coord> legalComputerMoves = BoardState.LegalMoves();
-            foreach (Coord computerChoice in legalComputerMoves)
-            {
-                if (loggingEachTurn) // re-Log initial BoardState before each legal Move
-                    Debug.Print("initial BoardState:{0}", BoardState);
-
-                // Turn Depth = 1
-                BoardState computerBoardState = BoardState.Clone();
-                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
-                int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (loggingEachTurn) // Log computerBoardState & computerChoiceScore for computerChoice
-                    Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0}\nresulting BoardState:{4}", 
-                            Level, BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
-
-                // next Turn Depth = 2 (unless Turn Skipped due to no leagl Moves)
-                int nextTurn = 2;
-                if (computerBoardState.WhitesTurn == BoardState.WhitesTurn) // Turn Skipped due to no legal moves
-                    nextTurn++; // depth should go down to same Player to compare equally
-
-                // find minMaxScoreAfterSeveralTurns by starting recursion
-                int minMaxScoreAfterSeveralTurns;
-                if (Level == LevelEnum.Expert) // Expert
-                    minMaxScoreAfterSeveralTurns = expert_FindMinMaxScoreForHighestScoringMove(computerBoardState, nextTurn);
-                else // Ultimate
-                    minMaxScoreAfterSeveralTurns = ultimate_FindMinMaxScoreForAllMyLegalMoves(computerBoardState, nextTurn);
-                if (loggingEachTurn) // Log minMaxScoreAfterSeveralTurns for computerChoice
-                    Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
-                            Level, BoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
-
-                // remember the list of bestComputerChoices that attain maxComputerScoreAfterSeveralTurns
-                if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterSeveralTurns and start a new List of Moves that attain it
-                {
-                    maxComputerScoreAfterSeveralTurns = minMaxScoreAfterSeveralTurns;
-                    bestComputerChoices = new List<Coord>();
-                }
-
-                if (minMaxScoreAfterSeveralTurns >= maxComputerScoreAfterSeveralTurns) // add choice to bestComputerChoices
-                {
-                    if (!bestComputerChoices.Contains(computerChoice))
-                        bestComputerChoices.Add(computerChoice);
-                }
-            }
-
-            if (loggingEachTurn)
-                Debug.Print("** {0} bestComputerChoices count={1}, maxComputerScoreAfterSeveralTurns={2:+#;-#;+0}.  Choose the highest scoring Move.", 
-                        Level, bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
-
-            // find finalComputerChoices from equal bestComputerChoices based on the one with best computerChoiceScore
-            int maxComputerScore = -int.MaxValue;
-            List<Coord> finalComputerChoices = new List<Coord>();
-            foreach (Coord computerChoice in bestComputerChoices)
-            {
-                BoardState computerBoardState = BoardState.Clone();
-                computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
-                int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (loggingEachTurn)
-                    Debug.Print("{0} Top Computer choice: {1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            Level, computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
-                if (computerChoiceScore > maxComputerScore)
-                {
-                    maxComputerScore = computerChoiceScore;
-                    finalComputerChoices = new List<Coord>();
-                }
-                if (computerChoiceScore >= maxComputerScore)
-                {
-                    finalComputerChoices.Add(computerChoice);
-                }
-            }
-
-            if (LogDecisions)
-                Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxComputerScoreAfterSeveralTurns={2}",
-                        finalComputerChoices.Count, maxComputerScore, maxComputerScoreAfterSeveralTurns);
-
-            return finalComputerChoices;
-        }
-
-        /// <summary>
-        /// Recusively find optimal choice by finding highest/lowest Score possible on each Turn
-        /// on My/Computer's Turn: maximize my Score
-        /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
-        /// return the minMaxScore after several Turns/recusions
-        /// </summary>
-        /// <param name="boardState">BoardState for current Turn</param>
-        /// <param name="turns">how many Turns to recursively try</param>
-        /// <returns>minMaxScore after several Turns/recusions</returns>
-        private int expert_FindMinMaxScoreForHighestScoringMove(BoardState boardState, int turn)
-        {
-            bool myTurn = boardState.WhitesTurn ^ !AmIWhite;
-            int minMaxScore = myTurn ? -int.MaxValue : int.MaxValue;
-            Coord minMaxResponse = new Coord();
-            BoardState minMaxResponseBoardState = null;
-
-            List<Coord> legalMoves = boardState.LegalMoves();
-            if (legalMoves.Count == 0) // game over
-            {
-                return ScoreEndOfGame(boardState);
-            }
-
-            // find best/worst Score for every leagalMove response
-            foreach (Coord response in legalMoves)
-            {
-                BoardState responseBoardState = boardState.Clone();
-                responseBoardState.PlacePieceAndFlipPiecesAndChangeTurns(response);
-
-                int responseScore;
-                if (responseBoardState.endOfGame)
-                {
-                    responseScore = ScoreEndOfGame(responseBoardState);
-                }
-                else
-                {
-                    responseScore = ScoreBoard(responseBoardState);
-                }
-                // Log each legalMove response
-                if (LogEachExpertTurn && LogEachExpertLegalMoveResponse)
-                    Debug.Print("       - Expert LegalMove Response: {0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            turn, boardState.WhitesTurn ? 'W' : 'B', response, responseScore, responseBoardState);
-
-                if (myTurn)
-                {
-                    if (responseScore > minMaxScore) // my Turn goes for highest Score for me
-                    {
-                        minMaxScore = responseScore;
-                        minMaxResponse = response;
-                        minMaxResponseBoardState = responseBoardState;
-                    }
-                }
-                else
-                {
-                    if (responseScore < minMaxScore) // opponent's Turn chooses lowest Score for me
-                    {
-                        minMaxScore = responseScore;
-                        minMaxResponse = response;
-                        minMaxResponseBoardState = responseBoardState;
-                    }
-                }
-            }
-
-            // Log the chosen minMaxResponse
-            if (LogEachExpertTurn)
-                Debug.Print("- Expert response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                        turn, boardState.WhitesTurn ? 'W' : 'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
-
-            if (turn >= EXPERT_TURNS_DEPTH)
-                return minMaxScore;
-
-            int nextTurn = turn + 1;
-            if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
-                nextTurn++; // depth should go down to same Player to compare equally
-
-            // recurse to return resulting minMaxScore after levelsLeft more Turns
-            return expert_FindMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, nextTurn);
-        }
 
         /// <summary>
         /// Recusively find optimal choice by trying every LegalMove for Computer Turn and lowest Score possible for each Opponent Turn
@@ -358,23 +191,6 @@ namespace Othello
             }
         }
 
-        /// <summary>
-        /// End-of-Game Score should just be a comparison of Counts
-        /// MULTIPLIER helps it fit in with & out-weigh other Scores
-        /// </summary>
-        /// <param name="boardState">the BoardState to calculate Score for</param>
-        /// <returns>a high Score if won, a low negative Score if lost</returns>
-        private int ScoreEndOfGame(BoardState boardState)
-        {
-            int endOfGameScore;
-            const int MULTIPLIER = 10000;
-            if (AmIWhite)
-                endOfGameScore = MULTIPLIER * (boardState.WhiteCount - boardState.BlackCount);
-            else
-                endOfGameScore = MULTIPLIER * (boardState.BlackCount - boardState.WhiteCount);
-
-            return endOfGameScore;
-        }
         */
 
         /// <summary>
