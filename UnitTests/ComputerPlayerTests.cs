@@ -51,10 +51,10 @@ namespace UnitTests
             BoardState boardState = new BoardState();
             List<Coord> acceptableChoices = new List<Coord>
             {
-                new Coord(3, 5),
-                new Coord(4, 6),
                 new Coord(5, 3),
                 new Coord(6, 4),
+                new Coord(3, 5),
+                new Coord(4, 6),
             };
 
             TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(false), acceptableChoices, string.Empty);
