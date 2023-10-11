@@ -57,9 +57,7 @@ namespace Othello
 
             // draw flippingPieceBitmap at each coordToFlip
             foreach (Coord coordToFlip in coordsToFlip)
-			{
 				boardGraphics.DrawImage(flippingPieceBitmap, (coordToFlip.x - 1) * Board.squareDimension - Board.squareDimension / 2, (coordToFlip.y - 1) * Board.squareDimension - Board.squareDimension / 2); // draw bitmap at upper-left of square
-			}
         }
 
 		/// <summary>

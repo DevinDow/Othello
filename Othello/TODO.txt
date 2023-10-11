@@ -1,7 +1,5 @@
 ﻿TODO
 ----
-- clicking during Animation stopped Animation
-
 - analyze Ultimate's choices
 	- TestLevels_Exp
 	- playing against

@@ -99,25 +99,31 @@ namespace Othello
 				g.DrawLine(pen, leftMarginDimension, y, leftMarginDimension + sideDimension, y); 
 			}
 
-			SetupGraphics(g);
-			for (int y=1; y<=8; y++) // start at top row
-			{
-				GraphicsState graphicsState = g.Save();
-
-				for (int x=1; x<=8; x++) // start at left column
-				{
-					Square square = boardState.GetSquare(new Coord(x, y));
-					square.Draw(g);
-					g.TranslateTransform(squareDimension, 0, MatrixOrder.Append); // next column
-				}
-
-				g.Restore(graphicsState);
-
-				g.TranslateTransform(0, squareDimension, MatrixOrder.Append); // next row
-			}
+			RedrawSquares();
 		}
 
-		public void Click(MouseEventArgs e)
+		public void RedrawSquares()
+		{
+            Graphics g = MainForm.instance.CreateGraphics();
+            SetupGraphics(g);
+            for (int y = 1; y <= 8; y++) // start at top row
+            {
+                GraphicsState graphicsState = g.Save();
+
+                for (int x = 1; x <= 8; x++) // start at left column
+                {
+                    Square square = boardState.GetSquare(new Coord(x, y));
+                    square.Draw(g);
+                    g.TranslateTransform(squareDimension, 0, MatrixOrder.Append); // next column
+                }
+
+                g.Restore(graphicsState);
+
+                g.TranslateTransform(0, squareDimension, MatrixOrder.Append); // next row
+            }
+        }
+
+        public void Click(MouseEventArgs e)
 		{
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 				return;
@@ -152,17 +158,20 @@ namespace Othello
 		/// <param name="coord">where current Player is placing a Piece</param>
 		public void MakeMove(Coord coord)
 		{
+			// redraw Board to remove any Legal Moves & partially flipped Pieces
+            Animation.cancelFlipping = true;
 			ClearLegalMoves();
+			RedrawSquares();
 
-			// update boardState with Move and flipped Pieces
-			StateEnum colorToFlipTo = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
+            // update boardState with Move and flipped Pieces
+            StateEnum colorToFlipTo = boardState.WhitesTurn ? StateEnum.White : StateEnum.Black;
 			boardState.PlacePieceAndFlipPiecesAndChangeTurns(coord);
 			UpdateStatus();
 
-			// draw the placed Piece
+            // draw the placed Piece
 			Graphics g = MainForm.instance.CreateGraphics();
 			SetupGraphics(g);
-			g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
+            g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
 			Square square = boardState.GetSquare(coord);
 			square.Draw(g);
 
@@ -268,8 +277,8 @@ namespace Othello
         /// </summary>
         private void ClearLegalMoves()
 		{
-			Graphics g = MainForm.instance.CreateGraphics();
-			SetupGraphics(g);
+			/*Graphics g = MainForm.instance.CreateGraphics();
+			SetupGraphics(g);*/
 
             foreach (Coord coord in boardState)
 			{ 
@@ -278,10 +287,10 @@ namespace Othello
 				{
 					square.State = StateEnum.Empty;
 
-					GraphicsState graphicsState = g.Save();
+					/*GraphicsState graphicsState = g.Save();
 					g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
 					square.Draw(g);
-					g.Restore(graphicsState);
+					g.Restore(graphicsState);*/
 				}
 			}
         }
