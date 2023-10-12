@@ -11,6 +11,12 @@ namespace Othello
 
         protected ComputerPlayer_Recursive(bool amIWhite) : base(amIWhite) { }
 
+        /// <summary>
+        /// does all the recusion of several Turns to return a Score for this BoardState's outlook
+        /// </summary>
+        /// <param name="boardState">the BoardState to find a Score for</param>
+        /// <param name="turn">which recursive Turn Depth</param>
+        /// <returns>Score after recursing several Turns</returns>
         protected abstract int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn);
 
         /// <summary>
