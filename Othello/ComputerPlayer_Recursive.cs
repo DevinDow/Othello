@@ -60,8 +60,8 @@ namespace Othello
                 int minMaxScoreAfterSeveralTurns = FindMinMaxScoreAfterSeveralTurns(computerBoardState, nextTurn);
                 if (LogEachRecursiveTurn) // Log computerChoice's minMaxScoreAfterSeveralTurns
                     Debug.Print(" - {0} choice: #1=" + 
-                            LogChoice(boardState.WhitesTurn, computerChoice, computerChoiceScore) + 
-                            " minMaxScoreAfterSeveralTurns={1}\n\n",
+                            LogChoice(boardState.WhitesTurn, computerChoice, computerChoiceScore) +
+                            " minMaxScoreAfterSeveralTurns={1:+#;-#;+0}\n\n",
                             LevelName, minMaxScoreAfterSeveralTurns);
 
                 // remember the list of bestComputerChoices that attain maxComputerScoreAfterSeveralTurns
@@ -144,7 +144,7 @@ namespace Othello
         protected string LogChoice(bool whitesTurn, Coord coord, int score, BoardState boardState = null)
         {
             // W->(1,1) resulting Score=+100
-            string s = string.Format("{0}->{1} resulting Score={2:+#;-#;+0}", 
+            string s = string.Format("{0}->{1} Score={2:+#;-#;+0}", 
                     whitesTurn ? 'W' : 'B', coord, score);
 
             // resulting BoardState: Turn=B

@@ -9,6 +9,7 @@ namespace Othello
         private const int EXPERT_TURNS_DEPTH = 11;
 
         public static bool LogEachExpertTurn = false;
+        public static bool LogEachExpertTurnBoardState = false;
         public static bool LogEachExpertLegalMoveResponse = false;
         
         public ComputerPlayer_Expert(bool amIWhite) : base(amIWhite)
@@ -61,7 +62,7 @@ namespace Othello
                 // Log each legalMove response
                 if (LogEachExpertTurn && LogEachExpertLegalMoveResponse)
                     Debug.Print("       - Expert LegalMove Response: #{0}=" +
-                            LogChoice(boardState.WhitesTurn, response, responseScore, responseBoardState),
+                            LogChoice(boardState.WhitesTurn, response, responseScore, LogEachExpertTurnBoardState ? responseBoardState : null),
                             turn);
 
                 if (myTurn)
@@ -87,7 +88,7 @@ namespace Othello
             // Log the chosen minMaxResponse
             if (LogEachExpertTurn)
                 Debug.Print("- Expert response #{0}=" + 
-                        LogChoice(boardState.WhitesTurn, minMaxResponse, minMaxScore, minMaxResponseBoardState),
+                        LogChoice(boardState.WhitesTurn, minMaxResponse, minMaxScore, LogEachExpertTurnBoardState ? minMaxResponseBoardState : null),
                         turn);
 
             if (turn >= EXPERT_TURNS_DEPTH)

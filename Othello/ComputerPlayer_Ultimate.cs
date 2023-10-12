@@ -10,6 +10,7 @@ namespace Othello
         private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
         public static bool LogEachUltimateTurn = false;
+        public static bool LogEachUltimateTurnBoardState = false;
         public static bool LogEachUltimateLegalMoveResponse = false;
         
         public ComputerPlayer_Ultimate(bool amIWhite) : base(amIWhite)
@@ -27,6 +28,7 @@ namespace Othello
         /// on My/Computer's Turn: recurse for every LegalMove
         /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
         /// return the minMaxScore after several Turns/recusions
+        /// reverts to using FindMinMaxScoreForHighestScoringMove() after ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT Turns
         /// </summary>
         /// <param name="boardState">BoardState for current Turn</param>
         /// <param name="turns">how many Turns to recursively try</param>
@@ -57,8 +59,9 @@ namespace Othello
                     else // recurse
                     {
                         if (LogEachUltimateTurn)
-                            Debug.Print("       - Ultimate LegalMove: #{0}={1}->{2}\nresulting BoardState:{3}",
-                                    turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, legalMoveBoardState);
+                            Debug.Print("       - Ultimate LegalMove: #{0}=" +
+                                    LogChoice(boardState.WhitesTurn, legalMove, ScoreBoard(legalMoveBoardState), LogEachUltimateTurnBoardState ? legalMoveBoardState : null),
+                                    turn);
 
                         if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                         {
@@ -80,8 +83,10 @@ namespace Othello
 
                     // Log each legalMove's recursiveScore
                     if (LogEachUltimateTurn)
-                        Debug.Print("- Ultimate LegalMove: #{0}={1}->{2} recusiveScore={3:+#;-#;+0}",
-                                turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore);
+                        Debug.Print("- Ultimate LegalMove: #{0}=" +
+                                LogChoice(boardState.WhitesTurn, legalMove, ScoreBoard(legalMoveBoardState)) +
+                                " recusiveScore={1:+#;-#;+0}",
+                                turn, recusiveScore);
 
                     if (recusiveScore > maxRecursiveScore) // is this ultimately the best resulting recusiveScore to bubble-up?
                     {
@@ -112,8 +117,9 @@ namespace Othello
 
                     // Log each legalMove response
                     if (LogEachUltimateTurn && LogEachUltimateLegalMoveResponse)
-                        Debug.Print("       - Ultimate Opponent LegalMove: #{0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                                turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, responseScore, legalMoveBoardState);
+                        Debug.Print("       - Ultimate Opponent LegalMove: #{0}=" +
+                                LogChoice(boardState.WhitesTurn, legalMove, responseScore, LogEachUltimateTurnBoardState ? legalMoveBoardState : null),
+                                turn);
 
                     if (responseScore < minRecursiveScore) // opponent's Turn chooses lowest Score for me
                     {
@@ -125,8 +131,9 @@ namespace Othello
 
                 // Log the chosen minMaxResponse
                 if (LogEachUltimateTurn)
-                    Debug.Print("- Ultimate Opponent's best Response #{0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            turn, boardState.WhitesTurn ? 'W' : 'B', minRecursiveResponse, minRecursiveScore, minRecursiveResponseBoardState);
+                    Debug.Print("- Ultimate Opponent's best Response #{0}=" + 
+                            LogChoice(boardState.WhitesTurn, minRecursiveResponse, minRecursiveScore, LogEachUltimateTurnBoardState ? minRecursiveResponseBoardState : null),
+                            turn);
 
                 if (minRecursiveResponseBoardState.endOfGame)
                     return minRecursiveScore;
