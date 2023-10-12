@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Othello
 {
-	public enum StateEnum {Empty, Black, White, LegalMove};
+	public enum StateEnum { Empty, Black, White };
 
 	/// <summary>
 	/// represents a Square that has a State and can Draw itself & animate Flipping itself
@@ -43,13 +43,6 @@ namespace Othello
 				{
 					Brush brush = new SolidBrush(Color.White);
 					g.FillEllipse(brush, -pieceRadius, -pieceRadius, 2*pieceRadius, 2*pieceRadius); 
-					break;
-				}
-				case StateEnum.LegalMove:
-				{
-					Brush brush = new SolidBrush(Color.Red);
-					int legalMoveRadius = (int)Math.Round(0.2 * Board.squareDimension);
-					g.FillEllipse(brush, -legalMoveRadius, -legalMoveRadius, 2*legalMoveRadius, 2*legalMoveRadius); 
 					break;
 				}
 			}

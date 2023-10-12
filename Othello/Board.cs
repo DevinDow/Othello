@@ -51,7 +51,7 @@ namespace Othello
 		public void NewGame()
 		{
 			ClearBoard();
-			UpdateStatus();
+            UpdateStatus();
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
 			{
@@ -160,7 +160,6 @@ namespace Othello
 		{
 			// redraw Board to remove any Legal Moves & partially flipped Pieces
             Animation.cancelFlipping = true;
-			ClearLegalMoves();
 			RedrawSquares();
 
             // update boardState with Move and flipped Pieces
@@ -242,56 +241,28 @@ namespace Othello
         /// </summary>
         private void UpdateStatus()
 		{
-			if (boardState.WhitesTurn)
-                MainForm.instance.statusBarTurn.Text = "White's Turn";
-			else
-                MainForm.instance.statusBarTurn.Text = "Black's Turn";
-
+			MainForm.instance.statusBarTurn.Text = string.Format("{0}'s Turn", boardState.WhitesTurn ? "White" : "Black");
             MainForm.instance.statusBarBlackScore.Text = string.Format("Black={0}", boardState.BlackCount);
             MainForm.instance.statusBarWhiteScore.Text = string.Format("White={0}", boardState.WhiteCount); 
 		}
-		
+
         /// <summary>
-        /// loops all Squares setting State to LegalMove if IsLegalMove() and redrawing Square
+        /// loops all LegalMoves to draw a symbol
         /// </summary>
         public void ShowLegalMoves()
 		{
             Graphics g = MainForm.instance.CreateGraphics();
             SetupGraphics(g);
+            Brush brush = new SolidBrush(Color.Red);
+            int legalMoveRadius = (int)Math.Round(0.2 * squareDimension);
 
-			List<Coord> legalMoves = boardState.LegalMoves();
+            List<Coord> legalMoves = boardState.LegalMoves();
 			foreach (Coord coord in legalMoves)
 			{
-				Square square = boardState.GetSquare(coord);
-				square.State = StateEnum.LegalMove;
-
 				GraphicsState graphicsState = g.Save();
 				g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append); // -1 for 0-based
-				square.Draw(g);
-				g.Restore(graphicsState);
-			}
-        }
-
-        /// <summary>
-        /// loops all Squares setting LegalMove State to Empty and redrawing Square
-        /// </summary>
-        private void ClearLegalMoves()
-		{
-			/*Graphics g = MainForm.instance.CreateGraphics();
-			SetupGraphics(g);*/
-
-            foreach (Coord coord in boardState)
-			{ 
-				Square square = boardState.GetSquare(coord);
-				if (square.State == StateEnum.LegalMove)
-				{
-					square.State = StateEnum.Empty;
-
-					/*GraphicsState graphicsState = g.Save();
-					g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
-					square.Draw(g);
-					g.Restore(graphicsState);*/
-				}
+                g.FillEllipse(brush, -legalMoveRadius, -legalMoveRadius, 2 * legalMoveRadius, 2 * legalMoveRadius);
+                g.Restore(graphicsState);
 			}
         }
 	}
