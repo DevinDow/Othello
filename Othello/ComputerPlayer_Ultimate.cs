@@ -59,7 +59,7 @@ namespace Othello
                         recusiveScore = ScoreBoard(legalMoveBoardState);*/
                     else // recurse
                     {
-                        if (LogEachUltimateOption)
+                        if (LogEachUltimateTurn && LogEachUltimateOption)
                             Debug.Print("       - Ultimate LegalMove: #{0}=" +
                                     LogChoice(boardState.WhitesTurn, legalMove, ScoreBoard(legalMoveBoardState), LogEachUltimateTurnBoardState ? legalMoveBoardState : null),
                                     turn);
