@@ -9,7 +9,7 @@ namespace UnitTests
     [TestClass]
     public class ComputerPlayersCompete
     {
-        private int RUNS; // number of times to play each other so that Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
+        // number of times to play each other so that the Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
         private int RUNS_EXP = 11;
@@ -19,57 +19,49 @@ namespace UnitTests
         [TestMethod]
         public void IntVsBeg()
         {
-            RUNS = RUNS_INT;
-            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Beginner(true), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Beginner(true), true, RUNS_INT);
         }
 
         [TestMethod]
         public void BegVsInt()
         {
-            RUNS = RUNS_INT;
-            BlackVsWhiteRuns(new ComputerPlayer_Beginner(false), new ComputerPlayer_Intermediate(true), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Beginner(false), new ComputerPlayer_Intermediate(true), false, RUNS_INT);
         }
         
         [TestMethod]
         public void AdvVsInt()
         {
-            RUNS = RUNS_ADV;
-            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Intermediate(true), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Intermediate(true), true, RUNS_ADV);
         }
 
         [TestMethod]
         public void IntVsAdv()
         {
-            RUNS = RUNS_ADV;
-            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Advanced(true), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Intermediate(false), new ComputerPlayer_Advanced(true), false, RUNS_ADV);
         }
 
         [TestMethod]
         public void ExpVsAdv()
         {
-            RUNS = RUNS_EXP;
-            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Advanced(true), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Advanced(true), true, RUNS_EXP);
         }
 
         [TestMethod]
         public void AdvVsExp()
         {
-            RUNS = RUNS_EXP;
-            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true), false, RUNS_EXP);
         }
 
         [TestMethod]
         public void UltVsExp()
         {
-            RUNS = RUNS_ULT;
-            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Expert(true), true);
+            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Expert(true), true, RUNS_ULT);
         }
 
         [TestMethod]
         public void ExpVsUlt()
         {
-            RUNS = RUNS_ULT;
-            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Ultimate(true), false);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Ultimate(true), false, RUNS_ULT);
         }
 
         /// <summary>
@@ -78,7 +70,7 @@ namespace UnitTests
         /// <param name="black"></param>
         /// <param name="white"></param>
         /// <param name="blackShouldWin">whitch Color to Assert Win-Count for</param>
-        public void BlackVsWhiteRuns(ComputerPlayer black, ComputerPlayer white, bool blackShouldWin)
+        public void BlackVsWhiteRuns(ComputerPlayer black, ComputerPlayer white, bool blackShouldWin, int runs)
         {
             // turn off LogDecisions for Computer vs Computer when doing multiple Runs so the Scores can be easily seen
             bool prevLogDecisions = ComputerPlayer.LogDecisions; // cache to reset LogDecisions for other Tests
@@ -90,13 +82,13 @@ namespace UnitTests
             SortedDictionary<int, int> wonByResults = new SortedDictionary<int, int>(); // sort results by Pieces diff
             int blackWins = 0;
             int whiteWins = 0;
-            for (int i = 0; i < RUNS; i++)
+            for (int i = 0; i < runs; i++)
             {
                 BoardState boardState = ComputerVsComputer(black, white);
                 AddResult(wonByResults, boardState);
                 
                 // log the final boardState when a single run
-                if (RUNS == 1)
+                if (runs == 1)
                     Debug.Print(boardState.ToString()); // log final BoardState
 
                 if (boardState.BlackCount > boardState.WhiteCount)
