@@ -62,8 +62,8 @@ namespace Othello
 
                         if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                         {
-                            Debug.Print("- {0} Turn #{1} SKIPPED",
-                                    boardState.WhitesTurn ? 'W' : 'B', nextTurn);
+                            if (LogEachUltimateTurn)
+                                Debug.Print("- SKIPPED Turn #{0}={1}", nextTurn, boardState.WhitesTurn ? 'W' : 'B');
                             nextTurn++; // depth should go down to same Player to compare equally
                         }
 
@@ -78,10 +78,10 @@ namespace Othello
                         }
                     }
 
-                    // Log each legalMove
+                    // Log each legalMove's recursiveScore
                     if (LogEachUltimateTurn)
-                        Debug.Print("- Ultimate LegalMove: #{0}={1}->{2} recusiveScore={3:+#;-#;+0}\nlegalMoveBoardState:{4}",
-                                turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore, legalMoveBoardState);
+                        Debug.Print("- Ultimate LegalMove: #{0}={1}->{2} recusiveScore={3:+#;-#;+0}",
+                                turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore);
 
                     if (recusiveScore > maxRecursiveScore) // is this ultimately the best resulting recusiveScore to bubble-up?
                     {
@@ -136,8 +136,8 @@ namespace Othello
 
                 if (minRecursiveResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
                 {
-                    Debug.Print("- SKIPPED Turn #{0}={1}",
-                            nextTurn, boardState.WhitesTurn ? 'W' : 'B');
+                    if (LogEachUltimateTurn)
+                        Debug.Print("- SKIPPED Turn #{0}={1}", nextTurn, boardState.WhitesTurn ? 'W' : 'B');
                     nextTurn++; // depth should go down to same Player to compare equally
                 }
 

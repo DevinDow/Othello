@@ -94,8 +94,8 @@ namespace Othello
             int nextTurn = turn + 1;
             if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
             {
-                Debug.Print("- SKIPPED Turn #{0}={1}",
-                        nextTurn, boardState.WhitesTurn ? 'W' : 'B');
+                if (LogEachExpertTurn)
+                    Debug.Print("- SKIPPED Turn #{0}={1}", nextTurn, boardState.WhitesTurn ? 'W' : 'B');
                 nextTurn++; // depth should go down to same Player to compare equally
             }
 
