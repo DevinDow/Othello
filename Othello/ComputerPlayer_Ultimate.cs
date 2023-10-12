@@ -61,7 +61,11 @@ namespace Othello
                                     turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, legalMoveBoardState);
 
                         if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+                        {
+                            Debug.Print("- {0} Turn #{1} SKIPPED",
+                                    boardState.WhitesTurn ? 'W' : 'B', nextTurn);
                             nextTurn++; // depth should go down to same Player to compare equally
+                        }
 
                         /*if (nextTurn > ULTIMATE_TURNS_DEPTH)
                             recusiveScore = ScoreBoard(legalMoveBoardState);
