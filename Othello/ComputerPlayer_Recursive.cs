@@ -44,7 +44,8 @@ namespace Othello
                 if (computerBoardState.WhitesTurn == boardState.WhitesTurn) // Turn Skipped due to no legal moves
                 {
                     if (LogEachRecursiveTurn)
-                        Debug.Print("- {0} Turn #2 SKIPPED", boardState.WhitesTurn ? 'W' : 'B');
+                        Debug.Print("- SKIPPED Turn #2={0}",
+                                boardState.WhitesTurn ? 'W' : 'B');
                     nextTurn++; // depth should go down to same Player to compare equally
                 }
 
