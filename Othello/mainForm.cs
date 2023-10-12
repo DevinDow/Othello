@@ -72,8 +72,8 @@ namespace Othello
             this.intermediateItem = new System.Windows.Forms.MenuItem();
             this.advancedItem = new System.Windows.Forms.MenuItem();
             this.expertItem = new System.Windows.Forms.MenuItem();
-            this.undoItem = new System.Windows.Forms.MenuItem();
             this.ultimateItem = new System.Windows.Forms.MenuItem();
+            this.undoItem = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarTurn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarBlackScore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarWhiteScore)).BeginInit();
@@ -81,7 +81,7 @@ namespace Othello
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 282);
+            this.statusBar.Location = new System.Drawing.Point(0, 262);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusBarTurn,
@@ -176,22 +176,23 @@ namespace Othello
             this.expertItem.Text = "&Expert Algorithm";
             this.expertItem.Click += new System.EventHandler(this.expertItem_Click);
             // 
-            // undoItem
-            // 
-            this.undoItem.Index = 3;
-            this.undoItem.Text = "&Undo";
-            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
-            // 
             // ultimateItem
             // 
             this.ultimateItem.Index = 5;
             this.ultimateItem.Text = "&Ultimate Algorithm";
             this.ultimateItem.Click += new System.EventHandler(this.ultimateItem_Click);
             // 
+            // undoItem
+            // 
+            this.undoItem.Index = 3;
+            this.undoItem.Shortcut = System.Windows.Forms.Shortcut.CtrlZ;
+            this.undoItem.Text = "&Undo";
+            this.undoItem.Click += new System.EventHandler(this.undoItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(424, 304);
+            this.ClientSize = new System.Drawing.Size(424, 284);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;

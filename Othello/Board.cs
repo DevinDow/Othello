@@ -9,8 +9,8 @@ namespace Othello
 	public class Board
 	{
 		// Fields
-		public BoardState boardState;
-		private BoardState previousState;
+		public BoardState boardState = new BoardState();
+		private Stack<BoardState> previousStates = new Stack<BoardState>();
 		private static int leftMarginDimension, topMarginDimension, sideDimension;
 		public static int squareDimension;
 
@@ -21,36 +21,29 @@ namespace Othello
 		// Constructor
 		public Board()
 		{
-			ClearBoard();
 			UpdateStatus();
 		}
 
 
 		// Methods
-		public void ClearBoard()
-		{
-			boardState = new BoardState();
-			previousState = null;
-		}
-
 		public void Undo()
 		{
-			if (previousState == null)
+			if (previousStates.Count == 0)
 				return;
 
 			if (computerTurnDelayTimer != null)
 				computerTurnDelayTimer.Stop();
 			Animation.cancelFlipping = true;
 
-			boardState = previousState;
-			previousState = null;
+			boardState = previousStates.Pop();
 
 			UpdateStatus();
 		}
 
 		public void NewGame()
 		{
-			ClearBoard();
+            boardState = new BoardState();
+            previousStates = new Stack<BoardState>();
             UpdateStatus();
 
 			if (ComputerPlayer != null && (ComputerPlayer.AmIWhite ^ !boardState.WhitesTurn))
@@ -144,7 +137,7 @@ namespace Othello
 				return;
 			}
 
-			previousState = boardState;
+			previousStates.Push(boardState);
 			boardState = boardState.Clone();
 
 			MakeMove(choice);

@@ -1,10 +1,11 @@
 ﻿TODO
 ----
+Release
+
 - analyze Ultimate's choices
 	- TestLevels_Exp
 	- playing against
 
 - submenus under Level to choose Black or White
-- UNDOS: previousState can be a stack
 
 - show Legal Moves can show number of pieces flipped by Move
