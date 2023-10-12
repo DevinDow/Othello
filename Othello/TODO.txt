@@ -1,5 +1,7 @@
 ﻿TODO
 ----
+LogChoice() in Expert & Ultimate
+
 Release
 
 - submenus under Level to choose Black or White

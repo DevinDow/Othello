@@ -60,8 +60,9 @@ namespace Othello
                 }
                 // Log each legalMove response
                 if (LogEachExpertTurn && LogEachExpertLegalMoveResponse)
-                    Debug.Print("       - Expert LegalMove Response: #{0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            turn, boardState.WhitesTurn ? 'W' : 'B', response, responseScore, responseBoardState);
+                    Debug.Print("       - Expert LegalMove Response: #{0}=" +
+                            LogChoice(boardState.WhitesTurn, response, responseScore, responseBoardState),
+                            turn);
 
                 if (myTurn)
                 {
@@ -85,8 +86,9 @@ namespace Othello
 
             // Log the chosen minMaxResponse
             if (LogEachExpertTurn)
-                Debug.Print("- Expert response #{0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                        turn, boardState.WhitesTurn ? 'W' : 'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
+                Debug.Print("- Expert response #{0}=" + 
+                        LogChoice(boardState.WhitesTurn, minMaxResponse, minMaxScore, minMaxResponseBoardState),
+                        turn);
 
             if (turn >= EXPERT_TURNS_DEPTH)
                 return minMaxScore;
