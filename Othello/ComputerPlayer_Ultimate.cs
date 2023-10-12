@@ -7,16 +7,18 @@ namespace Othello
     public class ComputerPlayer_Ultimate : ComputerPlayer_Expert
     {
         //private const int ULTIMATE_TURNS_DEPTH = 11;
-        private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
+        private int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
         public static bool LogEachUltimateTurn = false;
         public static bool LogEachUltimateTurnBoardState = false;
         public static bool LogEachUltimateLegalMoveResponse = false;
         public static bool LogEachUltimateOption = false;
 
-        public ComputerPlayer_Ultimate(bool amIWhite) : base(amIWhite)
+        public ComputerPlayer_Ultimate(bool amIWhite, int depthForEveryMove = 6, int depthForBestMove = 11) : base(amIWhite)
         {
             LevelName = "Ultimate";
+            ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = depthForEveryMove;
+            EXPERT_TURNS_DEPTH = depthForBestMove;
         }
 
         override protected int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn)

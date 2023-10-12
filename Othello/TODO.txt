@@ -3,6 +3,8 @@
 Advanced should beat Intermediate more
 	- use Intermediate scoring?
 
+Tests for Expert/Ultimate Depth
+
 Release
 
 - submenus under Level to choose Black or White

@@ -6,15 +6,16 @@ namespace Othello
 {
     public class ComputerPlayer_Expert : ComputerPlayer_Recursive
     {
-        private const int EXPERT_TURNS_DEPTH = 11;
+        protected int EXPERT_TURNS_DEPTH = 11;
 
         public static bool LogEachExpertTurn = false;
         public static bool LogEachExpertTurnBoardState = false;
         public static bool LogEachExpertLegalMoveResponse = false;
         
-        public ComputerPlayer_Expert(bool amIWhite) : base(amIWhite)
+        public ComputerPlayer_Expert(bool amIWhite, int depth = 11) : base(amIWhite)
         {
             LevelName = "Expert";
+            EXPERT_TURNS_DEPTH = depth;
         }
 
         override protected int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn)
