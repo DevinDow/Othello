@@ -6,7 +6,7 @@ namespace Othello
 {
     public class ComputerPlayer_Ultimate : ComputerPlayer_Expert
     {
-        private const int ULTIMATE_TURNS_DEPTH = 11;
+        //private const int ULTIMATE_TURNS_DEPTH = 11;
         private const int ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = 6; // Ultimate recurses for every Legal Move, but that is excessively slow and less critical at deeper Depths
 
         public static bool LogEachUltimateTurn = false;
@@ -19,11 +19,11 @@ namespace Othello
 
         override protected int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn)
         {
-            return FindMinMaxScoreForHighestScoringMove(boardState, turn);
+            return FindMinMaxScoreForAllMyLegalMoves(boardState, turn);
         }
 
         /// <summary>
-        /// Recusively find optimal choice by trying every LegalMove for Computer Turn and lowest Score possible for each Opponent Turn
+        /// Recusively find optimal choice by trying every LegalMove for Computer Turn and worst Score possible for each Opponent Turn
         /// on My/Computer's Turn: recurse for every LegalMove
         /// on Opponent's Turn: assume Opponent will choose lowest Score for Me/Computer
         /// return the minMaxScore after several Turns/recusions
@@ -68,9 +68,9 @@ namespace Othello
                         else // recurse to return resulting minMaxScore after nextTurn*/
                         {
                             if (nextTurn < ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT)
-                                recusiveScore = FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn);
+                                recusiveScore = FindMinMaxScoreForAllMyLegalMoves(legalMoveBoardState, nextTurn); // Ultimate
                             else
-                                recusiveScore = FindMinMaxScoreForHighestScoringMove(legalMoveBoardState, nextTurn);
+                                recusiveScore = FindMinMaxScoreForHighestScoringMove(legalMoveBoardState, nextTurn); // Expert
                         }
                     }
 

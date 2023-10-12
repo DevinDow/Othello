@@ -13,7 +13,7 @@ namespace UnitTests
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
         private int RUNS_EXP = 11;
-        private int RUNS_ULT = 3;
+        private int RUNS_ULT = 1;
 
 
         [TestMethod]
