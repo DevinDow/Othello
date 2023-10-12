@@ -36,18 +36,22 @@ namespace Othello
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
                 if (LogEachRecursiveTurn) // Log computerBoardState & computerChoiceScore for computerChoice
-                    Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                    Debug.Print(" - {0} choice: #1={1}->{2} resulting Board's Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                             LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
 
                 // next Turn Depth = 2 (unless Turn Skipped due to no leagl Moves)
                 int nextTurn = 2;
                 if (computerBoardState.WhitesTurn == boardState.WhitesTurn) // Turn Skipped due to no legal moves
+                {
+                    if (LogEachRecursiveTurn)
+                        Debug.Print("- {0} Turn #2 SKIPPED", boardState.WhitesTurn ? 'W' : 'B');
                     nextTurn++; // depth should go down to same Player to compare equally
+                }
 
                 // find minMaxScoreAfterSeveralTurns by starting recursion
                 int minMaxScoreAfterSeveralTurns = FindMinMaxScoreAfterSeveralTurns(computerBoardState, nextTurn);
                 if (LogEachRecursiveTurn) // Log minMaxScoreAfterSeveralTurns for computerChoice
-                    Debug.Print(" - {0} choice: 1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
+                    Debug.Print(" - {0} choice: #1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
                             LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
 
                 // remember the list of bestComputerChoices that attain maxComputerScoreAfterSeveralTurns

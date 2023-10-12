@@ -57,7 +57,7 @@ namespace Othello
                     else // recurse
                     {
                         if (LogEachUltimateTurn)
-                            Debug.Print("       - Ultimate LegalMove: {0}={1}->{2}\nresulting BoardState:{3}",
+                            Debug.Print("       - Ultimate LegalMove: #{0}={1}->{2}\nresulting BoardState:{3}",
                                     turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, legalMoveBoardState);
 
                         if (legalMoveBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
@@ -76,7 +76,7 @@ namespace Othello
 
                     // Log each legalMove
                     if (LogEachUltimateTurn)
-                        Debug.Print("- Ultimate LegalMove: {0}={1}->{2} recusiveScore={3:+#;-#;+0}\nlegalMoveBoardState:{4}",
+                        Debug.Print("- Ultimate LegalMove: #{0}={1}->{2} recusiveScore={3:+#;-#;+0}\nlegalMoveBoardState:{4}",
                                 turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, recusiveScore, legalMoveBoardState);
 
                     if (recusiveScore > maxRecursiveScore) // is this ultimately the best resulting recusiveScore to bubble-up?
@@ -108,7 +108,7 @@ namespace Othello
 
                     // Log each legalMove response
                     if (LogEachUltimateTurn && LogEachUltimateLegalMoveResponse)
-                        Debug.Print("       - Ultimate Opponent LegalMove: {0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                        Debug.Print("       - Ultimate Opponent LegalMove: #{0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                                 turn, boardState.WhitesTurn ? 'W' : 'B', legalMove, responseScore, legalMoveBoardState);
 
                     if (responseScore < minRecursiveScore) // opponent's Turn chooses lowest Score for me
@@ -121,7 +121,7 @@ namespace Othello
 
                 // Log the chosen minMaxResponse
                 if (LogEachUltimateTurn)
-                    Debug.Print("- Ultimate Opponent's best Response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                    Debug.Print("- Ultimate Opponent's best Response #{0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                             turn, boardState.WhitesTurn ? 'W' : 'B', minRecursiveResponse, minRecursiveScore, minRecursiveResponseBoardState);
 
                 if (minRecursiveResponseBoardState.endOfGame)
@@ -131,7 +131,11 @@ namespace Othello
                     return minScore;*/
 
                 if (minRecursiveResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+                {
+                    Debug.Print("- {0} Turn #{1} SKIPPED",
+                            boardState.WhitesTurn ? 'W' : 'B', nextTurn);
                     nextTurn++; // depth should go down to same Player to compare equally
+                }
 
                 // recurse to return resulting minMaxScore after nextTurn
                 if (nextTurn < ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT)

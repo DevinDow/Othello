@@ -60,7 +60,7 @@ namespace Othello
                 }
                 // Log each legalMove response
                 if (LogEachExpertTurn && LogEachExpertLegalMoveResponse)
-                    Debug.Print("       - Expert LegalMove Response: {0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                    Debug.Print("       - Expert LegalMove Response: #{0}={1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                             turn, boardState.WhitesTurn ? 'W' : 'B', response, responseScore, responseBoardState);
 
                 if (myTurn)
@@ -85,7 +85,7 @@ namespace Othello
 
             // Log the chosen minMaxResponse
             if (LogEachExpertTurn)
-                Debug.Print("- Expert response {0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
+                Debug.Print("- Expert response #{0}={1}->{2}: resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
                         turn, boardState.WhitesTurn ? 'W' : 'B', minMaxResponse, minMaxScore, minMaxResponseBoardState);
 
             if (turn >= EXPERT_TURNS_DEPTH)
@@ -93,7 +93,11 @@ namespace Othello
 
             int nextTurn = turn + 1;
             if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
+            {
+                Debug.Print("- {0} Turn #{1} SKIPPED",
+                        boardState.WhitesTurn ? 'W' : 'B', nextTurn);
                 nextTurn++; // depth should go down to same Player to compare equally
+            }
 
             // recurse to return resulting minMaxScore after levelsLeft more Turns
             return FindMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, nextTurn);
