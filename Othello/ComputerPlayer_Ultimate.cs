@@ -12,7 +12,8 @@ namespace Othello
         public static bool LogEachUltimateTurn = false;
         public static bool LogEachUltimateTurnBoardState = false;
         public static bool LogEachUltimateLegalMoveResponse = false;
-        
+        public static bool LogEachUltimateOption = false;
+
         public ComputerPlayer_Ultimate(bool amIWhite) : base(amIWhite)
         {
             LevelName = "Ultimate";
@@ -58,7 +59,7 @@ namespace Othello
                         recusiveScore = ScoreBoard(legalMoveBoardState);*/
                     else // recurse
                     {
-                        if (LogEachUltimateTurn)
+                        if (LogEachUltimateOption)
                             Debug.Print("       - Ultimate LegalMove: #{0}=" +
                                     LogChoice(boardState.WhitesTurn, legalMove, ScoreBoard(legalMoveBoardState), LogEachUltimateTurnBoardState ? legalMoveBoardState : null),
                                     turn);

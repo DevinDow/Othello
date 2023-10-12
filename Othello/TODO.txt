@@ -1,6 +1,7 @@
 ﻿TODO
 ----
-LogChoice() in Expert & Ultimate
+Advanced should beat Intermediate more
+	- use Intermediate scoring?
 
 Release
 
