@@ -8,6 +8,7 @@ namespace Othello
     public abstract class ComputerPlayer_Recursive : ComputerPlayer_AdvancedWeighting
     {
         public static bool LogEachRecursiveTurn = false;
+        public static bool LogRecursiveChoiceOptions = false;
 
         protected ComputerPlayer_Recursive(bool amIWhite) : base(amIWhite) { }
 
@@ -28,7 +29,7 @@ namespace Othello
         protected override List<Coord> findBestChoices(BoardState boardState)
         {
             int maxComputerScoreAfterSeveralTurns = -int.MaxValue;
-            List<Coord> bestComputerChoices = new List<Coord>();
+            List<Coord> bestChoices = new List<Coord>();
 
             // try every Legal Move
             List<Coord> legalComputerMoves = boardState.LegalMoves();
@@ -41,9 +42,10 @@ namespace Othello
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogEachRecursiveTurn) // Log computerBoardState & computerChoiceScore for computerChoice
-                    Debug.Print(" - {0} choice: #1={1}->{2} resulting Board's Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
+                if (LogEachRecursiveTurn) // Log computerChoice with its computerChoiceScore & computerBoardState
+                    Debug.Print(" - {0} choice: #1=" + 
+                            LogChoice(boardState.WhitesTurn, computerChoice, computerChoiceScore, computerBoardState),
+                            LevelName);
 
                 // next Turn Depth = 2 (unless Turn Skipped due to no leagl Moves)
                 int nextTurn = 2;
@@ -56,39 +58,42 @@ namespace Othello
 
                 // find minMaxScoreAfterSeveralTurns by starting recursion
                 int minMaxScoreAfterSeveralTurns = FindMinMaxScoreAfterSeveralTurns(computerBoardState, nextTurn);
-                if (LogEachRecursiveTurn) // Log minMaxScoreAfterSeveralTurns for computerChoice
-                    Debug.Print(" - {0} choice: #1={1}->{2} resulting Board's Score={3:+#;-#;+0} minMaxScoreAfterSeveralTurns={4}\n\n",
-                            LevelName, boardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, minMaxScoreAfterSeveralTurns);
+                if (LogEachRecursiveTurn) // Log computerChoice's minMaxScoreAfterSeveralTurns
+                    Debug.Print(" - {0} choice: #1=" + 
+                            LogChoice(boardState.WhitesTurn, computerChoice, computerChoiceScore) + 
+                            " minMaxScoreAfterSeveralTurns={1}\n\n",
+                            LevelName, minMaxScoreAfterSeveralTurns);
 
                 // remember the list of bestComputerChoices that attain maxComputerScoreAfterSeveralTurns
                 if (minMaxScoreAfterSeveralTurns > maxComputerScoreAfterSeveralTurns) // remember maxComputerScoreAfterSeveralTurns and start a new List of Moves that attain it
                 {
                     maxComputerScoreAfterSeveralTurns = minMaxScoreAfterSeveralTurns;
-                    bestComputerChoices = new List<Coord>();
+                    bestChoices = new List<Coord>();
                 }
 
                 if (minMaxScoreAfterSeveralTurns >= maxComputerScoreAfterSeveralTurns) // add choice to bestComputerChoices
                 {
-                    if (!bestComputerChoices.Contains(computerChoice))
-                        bestComputerChoices.Add(computerChoice);
+                    if (!bestChoices.Contains(computerChoice))
+                        bestChoices.Add(computerChoice);
                 }
             }
 
-            if (LogEachRecursiveTurn)
-                Debug.Print("** {0} bestComputerChoices count={1}, maxComputerScoreAfterSeveralTurns={2:+#;-#;+0}.  Choose the highest scoring Move.",
-                        LevelName, bestComputerChoices.Count, maxComputerScoreAfterSeveralTurns);
+            if (LogRecursiveChoiceOptions)
+                Debug.Print("** {0} bestChoices count={1}, maxComputerScoreAfterSeveralTurns={2:+#;-#;+0}.  Choose the highest scoring Move.",
+                        LevelName, bestChoices.Count, maxComputerScoreAfterSeveralTurns);
 
             // find finalComputerChoices from equal bestComputerChoices based on the one with best computerChoiceScore
             int maxComputerScore = -int.MaxValue;
             List<Coord> finalComputerChoices = new List<Coord>();
-            foreach (Coord computerChoice in bestComputerChoices)
+            foreach (Coord computerChoice in bestChoices)
             {
                 BoardState computerBoardState = boardState.Clone();
                 computerBoardState.PlacePieceAndFlipPiecesAndChangeTurns(computerChoice);
                 int computerChoiceScore = ScoreBoard(computerBoardState);
-                if (LogEachRecursiveTurn)
-                    Debug.Print("{0} Top Computer choice: {1}->{2} resulting Score={3:+#;-#;+0}\nresulting BoardState:{4}",
-                            LevelName, computerBoardState.WhitesTurn ? 'W' : 'B', computerChoice, computerChoiceScore, computerBoardState);
+                if (LogRecursiveChoiceOptions)
+                    Debug.Print("{0} Top Computer choice: " +
+                            LogChoice(computerBoardState.WhitesTurn, computerChoice, computerChoiceScore), // computerBoardState),
+                            LevelName);
                 if (computerChoiceScore > maxComputerScore)
                 {
                     maxComputerScore = computerChoiceScore;
@@ -100,7 +105,7 @@ namespace Othello
                 }
             }
 
-            if (LogDecisions)
+            if (LogRecursiveChoiceOptions)
                 Debug.Print("finalComputerChoices count={0}, maxComputerScore={1} maxComputerScoreAfterSeveralTurns={2}",
                         finalComputerChoices.Count, maxComputerScore, maxComputerScoreAfterSeveralTurns);
 
@@ -123,6 +128,33 @@ namespace Othello
                 endOfGameScore = MULTIPLIER * (boardState.BlackCount - boardState.WhiteCount);
 
             return endOfGameScore;
+        }
+
+        /// <summary>
+        /// W->(1,1) resulting Score=+100
+        /// resulting BoardState:Turn=B
+        ///  W.......
+        ///  WWB.....
+        /// </summary>
+        /// <param name="whitesTurn"></param>
+        /// <param name="coord"></param>
+        /// <param name="score"></param>
+        /// <param name="boardState"></param>
+        /// <returns>formatted string</returns>
+        protected string LogChoice(bool whitesTurn, Coord coord, int score, BoardState boardState = null)
+        {
+            // W->(1,1) resulting Score=+100
+            string s = string.Format("{0}->{1} resulting Score={2:+#;-#;+0}", 
+                    whitesTurn ? 'W' : 'B', coord, score);
+
+            // resulting BoardState: Turn=B
+            //  W.......
+            //  WWB.....
+            if (boardState != null)
+                s += string.Format("\nresulting BoardState:{0}",
+                    boardState);
+
+            return s;
         }
     }
 }
