@@ -122,5 +122,10 @@ namespace Othello
         /// <param name="coord">Coord to get weighted Score of</param>
         /// <returns>weighted Score of coord</returns>
         protected abstract int WeightedCoordValue(Coord coord);
+
+        public override string ToString()
+        {
+            return string.Format("{0} = {1}", LevelName, AmIWhite ? "White" : "Black");
+        }
     }
 }

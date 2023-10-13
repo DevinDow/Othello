@@ -14,11 +14,11 @@ namespace Othello
         public static bool LogEachUltimateLegalMoveResponse = false;
         public static bool LogEachUltimateOption = false;
 
-        public ComputerPlayer_Ultimate(bool amIWhite, int depthForEveryMove = 6, int depthForBestMove = 11) : base(amIWhite)
+        public ComputerPlayer_Ultimate(bool amIWhite, int depthForEveryMove = 6, int depthForOnlyBestMove = 11) : base(amIWhite)
         {
             LevelName = "Ultimate";
             ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = depthForEveryMove;
-            EXPERT_TURNS_DEPTH = depthForBestMove;
+            EXPERT_TURNS_DEPTH = depthForOnlyBestMove;
         }
 
         override protected int FindMinMaxScoreAfterSeveralTurns(BoardState boardState, int turn)
@@ -157,6 +157,11 @@ namespace Othello
                 else
                     return FindMinMaxScoreForHighestScoringMove(minRecursiveResponseBoardState, nextTurn);
             }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(", depthForEveryMove={0}", ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT);
         }
     }
 }

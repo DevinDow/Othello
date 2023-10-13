@@ -106,5 +106,10 @@ namespace Othello
             // recurse to return resulting minMaxScore after levelsLeft more Turns
             return FindMinMaxScoreForHighestScoringMove(minMaxResponseBoardState, nextTurn);
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(" DepthForBestMove={0}", EXPERT_TURNS_DEPTH);
+        }
     }
 }
