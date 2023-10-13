@@ -48,7 +48,7 @@ namespace UnitTests
         /// L 2, 7=  0.6"
         /// L 4, 9=  4"
         /// W 6,11= 37"
-        /// W 8,13=???"
+        /// W 8,13=640"
         /// </summary>
         [TestMethod]
         public void TestUltimateDepths()
