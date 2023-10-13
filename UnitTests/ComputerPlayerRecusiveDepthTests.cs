@@ -9,10 +9,10 @@ namespace UnitTests
     public class ComputerPlayerRecusiveDepthTests
     {
         /// <summary>
-        /// Play full games vs Advanced trying all odd Expert Depths [3-29]
-        /// W  3= .2"
+        /// Expert plays full games vs Advanced trying all odd Expert Depths [3-29]
+        /// L  3= .2"
         /// W  5= .4"
-        /// W  7= .6"
+        /// L  7= .6"
         /// W  9= .7"
         /// L 11= .8"
         /// L 13= .8"
@@ -44,10 +44,10 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Play full games vs Advanced trying all odd Ultimate Depths 5+[2-8]=[7-13] reverting to Expert at -5=[2-8]
+        /// Ultimate plays full games vs Advanced trying all odd Ultimate Depths 5+[2-8]=[7-13] reverting to Expert at -5=[2-8]
         /// L 2, 7=  0.6"
-        /// L 4, 9=  4"
-        /// W 6,11= 37"
+        /// W 4, 9=  3"
+        /// W 6,11= 36"
         /// W 8,13=640"
         /// </summary>
         [TestMethod]
@@ -69,9 +69,9 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Play full games vs Advanced trying Ultimate Depth=11 reverting to Expert at [3-9]
+        /// Ultimate plays full games vs Advanced trying Ultimate Depth=11 reverting to Expert at [3-9]
         /// W 3,11=  1"
-        /// L 5,11=  7"
+        /// W 5,11=  7"
         /// W 7,11= 38"
         /// L 9,11=325" 
         /// </summary>
