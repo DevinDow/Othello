@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Othello
 {
-    public class ComputerPlayer_Advanced : ComputerPlayer_AdvancedWeighting
+    public class ComputerPlayer_Advanced : ComputerPlayer
     {
         public static bool LogEachAdvancedOption = false;
         public static bool LogEachOpponentOption = false;

@@ -97,8 +97,8 @@ namespace UnitTests
             TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(8, 4), "to get an Edge");
             TestExpectedChoice(boardState, new ComputerPlayer_Advanced(true), new Coord(6, 6), "to avoid Human reflipping Row");
             TestExpectedChoice(boardState, new ComputerPlayer_Expert(true), new Coord(8, 4), "to get an Edge");
-            TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 4), "to get an Edge");
-            /*TestExpectedChoice(boardState, LevelEnum.Ultimate, new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");*/
+            /*TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 4), "to get an Edge");*/
+            TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");
         }
 
         [TestMethod]
