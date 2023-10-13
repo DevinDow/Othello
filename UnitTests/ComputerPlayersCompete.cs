@@ -143,7 +143,7 @@ namespace UnitTests
         /// <param name="black">Level for Black</param>
         /// <param name="white">Level for White</param>
         /// <returns>BoardState after end of Game</returns>
-        public BoardState ComputerVsComputer(ComputerPlayer black, ComputerPlayer white)
+        public static BoardState ComputerVsComputer(ComputerPlayer black, ComputerPlayer white)
         {
             BoardState boardState = new BoardState();
 
