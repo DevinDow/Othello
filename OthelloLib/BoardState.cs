@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#define FAST
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,9 +22,20 @@ namespace OthelloLib
             get
             {
                 int count = 0;
+#if FAST
+                for (int y = 0; y < 8; y++) // loop rows
+                {
+                    for (int x = 0; x < 8; x++) // loop columns
+                    {
+                        if (squares[x, y].State == StateEnum.White)
+                            count++;
+                    }
+                }
+#else
                 foreach (Coord coord in this)
                     if (GetSquare(coord).State == StateEnum.White)
                         count++;
+#endif
                 return count;
             }
         }
@@ -32,9 +45,20 @@ namespace OthelloLib
             get
             {
                 int count = 0;
+#if FAST
+                for (int y = 0; y < 8; y++) // loop rows
+                {
+                    for (int x = 0; x < 8; x++) // loop columns
+                    {
+                        if (squares[x, y].State == StateEnum.Black)
+                            count++;
+                    }
+                }
+#else
                 foreach (Coord coord in this)
                     if (GetSquare(coord).State == StateEnum.Black)
                         count++;
+#endif
                 return count;
             }
         }
@@ -44,9 +68,20 @@ namespace OthelloLib
             get
             {
                 int count = 0;
+#if FAST
+                for (int y = 0; y < 8; y++) // loop rows
+                {
+                    for (int x = 0; x < 8; x++) // loop columns
+                    {
+                        if (squares[x, y].State == StateEnum.Empty)
+                            count++;
+                    }
+                }
+#else
                 foreach (Coord coord in this)
                     if (GetSquare(coord).State == StateEnum.Empty)
                         count++;
+#endif
                 return count;
             }
         }
@@ -96,18 +131,41 @@ namespace OthelloLib
         {
             List<Coord> legalMoves = new List<Coord>();
 
+#if FAST
+            for (int y = 1; y <= 8; y++) // loop rows
+            {
+                for (int x = 1; x <= 8; x++) // loop columns
+                {
+                    Coord coord = new Coord(x, y);
+                    if (IsLegalMove(coord))
+                        legalMoves.Add(coord);
+                }
+            }
+#else
             foreach (Coord coord in this)
                 if (IsLegalMove(coord))
-                {
                     legalMoves.Add(coord);
-                }
+#endif
 
             return legalMoves;
         }
 
         public bool IsLegalMoveAvailable()
         {
+#if FAST
+            for (int y = 1; y <= 8; y++) // loop rows
+            {
+                for (int x = 1; x <= 8; x++) // loop columns
+                {
+                    Coord coord = new Coord(x, y);
+                    if (IsLegalMove(coord))
+                        return true;
+                }
+            }
+            return false;
+#else
             return LegalMoves().Count > 0;
+#endif
         }
 
         public bool IsLegalMove(Coord coord)
