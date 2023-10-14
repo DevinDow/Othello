@@ -167,5 +167,85 @@ namespace UnitTests
             TestAcceptableChoices(boardState, new ComputerPlayer_Expert(true), new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
             TestAcceptableChoices(boardState, new ComputerPlayer_Ultimate(true), new List<Coord> { new Coord(1, 1), new Coord(3, 2), new Coord(4, 2), new Coord(5, 2), new Coord(6, 2), new Coord(8, 2) }, "it can save TL Corner (1,1) until later since it's not at risk of being taken and can take actions to prevent losing TR Corner");
         }
+
+        /// <summary>
+        /// this is a state I came across while playing against Ultimate
+        /// I think it should have taken the BR Corner, but it thinks it will win with another choice.  I manually beat it with its choice.
+        /// is this because of ComputerPlayer.ScoreBoard()'s boardMostlyFilled?
+        /// </summary>
+        [TestMethod]
+        public void TestLevels_Ult()
+        {
+            BoardState boardState = new BoardState(true, false);
+            // col 1
+            boardState.SetSquare(new Coord(1, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(1, 7), new Square(StateEnum.Black));
+            // col 2
+            boardState.SetSquare(new Coord(2, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(2, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(2, 8), new Square(StateEnum.Black));
+            // col 3
+            boardState.SetSquare(new Coord(3, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 2), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 3), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 5), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(3, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(3, 8), new Square(StateEnum.Black));
+            // col 4
+            boardState.SetSquare(new Coord(4, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 2), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 3), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(4, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(4, 8), new Square(StateEnum.Black));
+            // col 5
+            boardState.SetSquare(new Coord(5, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 2), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 3), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(5, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(5, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(5, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(5, 8), new Square(StateEnum.Black));
+            // col 6
+            boardState.SetSquare(new Coord(6, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 2), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 3), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 5), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(6, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 7), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(6, 8), new Square(StateEnum.Black));
+            // col 7
+            boardState.SetSquare(new Coord(7, 1), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 3), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(7, 4), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 5), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 6), new Square(StateEnum.Black));
+            boardState.SetSquare(new Coord(7, 7), new Square(StateEnum.Black));
+            // col 8
+            boardState.SetSquare(new Coord(8, 2), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(8, 3), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(8, 4), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(8, 5), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(8, 6), new Square(StateEnum.White));
+            boardState.SetSquare(new Coord(8, 7), new Square(StateEnum.White));
+
+            //TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
+            //TestAcceptableChoices(boardState, new ComputerPlayer_Intermediate(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
+            //TestAcceptableChoices(boardState, new ComputerPlayer_Advanced(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
+            TestExpectedChoice(boardState, new ComputerPlayer_Expert(true), new Coord(8, 8), "to get Corner");
+            TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 8), "to get Corner");
+        }
     }
 }
