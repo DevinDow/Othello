@@ -322,11 +322,17 @@ namespace OthelloLib
             newBoardState.squares = new Square[8, 8];
             newBoardState.WhitesTurn = WhitesTurn;
 
+#if FAST
+            for (int y = 0; y < 8; y++) // loop rows
+                for (int x = 0; x < 8; x++) // loop columns
+                    newBoardState.squares[x, y] = new Square(squares[x, y].State);
+#else
             foreach (Coord coord in this)
             {
                 Square square = GetSquare(coord);
                 newBoardState.SetSquare(coord, new Square(square.State));
             }
+#endif
 
             return newBoardState;
         }
