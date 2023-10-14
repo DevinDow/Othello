@@ -53,6 +53,18 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void UltVsAdv()
+        {
+            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Advanced(true), true, RUNS_ULT);
+        }
+
+        [TestMethod]
+        public void AdvVsUlt()
+        {
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Ultimate(true), false, RUNS_ULT);
+        }
+
+        [TestMethod]
         public void UltVsExp()
         {
             BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Expert(true), true, RUNS_ULT);
