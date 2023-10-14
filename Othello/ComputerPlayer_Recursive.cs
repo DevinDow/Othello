@@ -167,7 +167,7 @@ namespace Othello
         /// <returns>weighted Score of coord</returns>
         protected override int WeightedCoordValue(Coord coord, int emptyCount)
         {
-            const int numEmptyToConsiderBoardMostlyFilled = 8;
+            const int numEmptyToConsiderBoardMostlyFilled = 5;
             bool boardMostlyFilled = emptyCount <= numEmptyToConsiderBoardMostlyFilled;
             if (boardMostlyFilled)
                 return 100; // after board is mostly full, Expert/Ultimate should just try to win the game

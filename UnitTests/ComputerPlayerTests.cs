@@ -97,8 +97,8 @@ namespace UnitTests
             TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(8, 4), "to get an Edge");
             TestExpectedChoice(boardState, new ComputerPlayer_Advanced(true), new Coord(6, 6), "to avoid Human reflipping Row");
             TestExpectedChoice(boardState, new ComputerPlayer_Expert(true), new Coord(8, 4), "to get an Edge");
-            /*TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 4), "to get an Edge");*/
-            TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");
+            TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 4), "to get an Edge");
+            /*TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(6, 6), "because it can do better by doing (6,6) first and then doing (8,4) later");*/
         }
 
         [TestMethod]
@@ -241,9 +241,9 @@ namespace UnitTests
             boardState.SetSquare(new Coord(8, 6), new Square(StateEnum.White));
             boardState.SetSquare(new Coord(8, 7), new Square(StateEnum.White));
 
-            //TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
-            //TestAcceptableChoices(boardState, new ComputerPlayer_Intermediate(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
-            //TestAcceptableChoices(boardState, new ComputerPlayer_Advanced(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
+            TestAcceptableChoices(boardState, new ComputerPlayer_Beginner(true), new List<Coord> { new Coord(2, 7), new Coord(7, 8) }, "");
+            TestExpectedChoice(boardState, new ComputerPlayer_Intermediate(true), new Coord(8, 8), "to get Corner");
+            TestExpectedChoice(boardState, new ComputerPlayer_Advanced(true), new Coord(8, 8), "to get Corner");
             TestExpectedChoice(boardState, new ComputerPlayer_Expert(true), new Coord(8, 8), "to get Corner");
             TestExpectedChoice(boardState, new ComputerPlayer_Ultimate(true), new Coord(8, 8), "to get Corner");
         }
