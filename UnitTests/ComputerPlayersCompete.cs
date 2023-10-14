@@ -12,8 +12,8 @@ namespace UnitTests
         // number of times to play each other so that the Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
-        private int RUNS_EXP = 11;
-        private int RUNS_ULT = 2;
+        private int RUNS_EXP = 21;//11;
+        private int RUNS_ULT = 21;//2;
 
 
         [TestMethod]
@@ -43,37 +43,37 @@ namespace UnitTests
         [TestMethod]
         public void ExpVsAdv()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Advanced(true), true, RUNS_EXP);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false, 7), new ComputerPlayer_Advanced(true), true, RUNS_EXP);
         }
 
         [TestMethod]
         public void AdvVsExp()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true), false, RUNS_EXP);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Expert(true, 7), false, RUNS_EXP);
         }
 
         [TestMethod]
         public void UltVsAdv()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Advanced(true), true, RUNS_ULT);
+            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false, 5, 7), new ComputerPlayer_Advanced(true), true, RUNS_ULT);
         }
 
         [TestMethod]
         public void AdvVsUlt()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Ultimate(true), false, RUNS_ULT);
+            BlackVsWhiteRuns(new ComputerPlayer_Advanced(false), new ComputerPlayer_Ultimate(true, 5, 7), false, RUNS_ULT);
         }
 
         [TestMethod]
         public void UltVsExp()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false), new ComputerPlayer_Expert(true), true, RUNS_ULT);
+            BlackVsWhiteRuns(new ComputerPlayer_Ultimate(false, 5, 7), new ComputerPlayer_Expert(true, 7), true, RUNS_ULT);
         }
 
         [TestMethod]
         public void ExpVsUlt()
         {
-            BlackVsWhiteRuns(new ComputerPlayer_Expert(false), new ComputerPlayer_Ultimate(true), false, RUNS_ULT);
+            BlackVsWhiteRuns(new ComputerPlayer_Expert(false, 7), new ComputerPlayer_Ultimate(true, 5, 7), false, RUNS_ULT);
         }
 
         /// <summary>

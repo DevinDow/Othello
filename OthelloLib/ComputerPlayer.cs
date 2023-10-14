@@ -12,7 +12,7 @@ namespace OthelloLib
 		public bool AmIWhite;
         public string LevelName;
         public static bool LogDecisions = true;
-        private Random random = new Random();
+        protected Random random = new Random();
 
         public ComputerPlayer(bool amIWhite)
 		{

@@ -93,7 +93,7 @@ namespace OthelloLib
                         turn);
 
             if (turn >= EXPERT_TURNS_DEPTH)
-                return minMaxScore;
+                return minMaxScore + random.Next(100); // add a little randomness to prevent repeat games
 
             int nextTurn = turn + 1;
             if (minMaxResponseBoardState.WhitesTurn == boardState.WhitesTurn) // turn skipped due to no legal moves
