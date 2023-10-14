@@ -1,5 +1,7 @@
 ﻿TODO Lib
 --------
 Expert is losing to Advanced too much in AdvVsExp()
-- TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
-- Expert could use Advance algorithm for Opponent's choice
+	- TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
+	- Expert could use Advance algorithm for Opponent's choice
+
+Should ComputerPlayer be pulled out of OthelloLib to ComputerPlayerLib?
