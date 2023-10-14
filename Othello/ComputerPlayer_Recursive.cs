@@ -165,8 +165,13 @@ namespace Othello
         /// </summary>
         /// <param name="coord">Coord to get weighted Score of</param>
         /// <returns>weighted Score of coord</returns>
-        protected override int WeightedCoordValue(Coord coord)
+        protected override int WeightedCoordValue(Coord coord, int emptyCount)
         {
+            const int numEmptyToConsiderBoardMostlyFilled = 8;
+            bool boardMostlyFilled = emptyCount <= numEmptyToConsiderBoardMostlyFilled;
+            if (boardMostlyFilled)
+                return 100; // after board is mostly full, Expert/Ultimate should just try to win the game
+
             // Higher Levels value Coords differently
             // Corners are highest, then Ends.
             // Coords before Corners & Ends are devalued since they lead to Opponent getting Corners & Ends.

@@ -1,6 +1,10 @@
 ﻿TODO
 ----
+TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
+Expert could use Advance algorithm for Opponent's choice
+
 Profile Ultimate vs Advanced
+	- break out Game App vs Othello Class Library so can also make a commandline app for Computer Players to compete and be Profiled
 
 - submenus under Level to choose Black or White
 

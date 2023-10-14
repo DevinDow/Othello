@@ -71,8 +71,7 @@ namespace Othello
         /// <returns>weighted Score of boardState</returns>
         internal int ScoreBoard(BoardState boardState)
 		{
-            const int numEmptyToConsiderBoardMostlyFilled = 8;
-            bool boardMostlyFilled = boardState.EmptyCount <= numEmptyToConsiderBoardMostlyFilled;
+            int emptyCount = boardState.EmptyCount; // cache this Property instead of repeatedly recalculating
 
             int score = 0;
             foreach (Coord coord in boardState)
@@ -80,11 +79,7 @@ namespace Othello
 				Square square = boardState.GetSquare(coord);
 				if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
-				int weightedCoordValue;
-                if (boardMostlyFilled)
-                    weightedCoordValue = 100; // after board is mostly full, Expert should just try to win the game
-                else
-                    weightedCoordValue = WeightedCoordValue(coord);
+				int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
 
                 if (AmIWhite) // Computer is White
 				{
@@ -122,7 +117,7 @@ namespace Othello
         /// </summary>
         /// <param name="coord">Coord to get weighted Score of</param>
         /// <returns>weighted Score of coord</returns>
-        protected virtual int WeightedCoordValue(Coord coord)
+        protected virtual int WeightedCoordValue(Coord coord, int emptyCount)
         {
             // Intermediate/Advanced perform better with Negatives helping make better decisions.
             // 50 -5 20 20
