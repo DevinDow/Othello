@@ -22,7 +22,7 @@ namespace UnitTests
             Debug.Print("\n** {0} chooses {1} {2} **", computerPlayer.LevelName, expected, reasoning);
             Coord? chose = computerPlayer.ChooseNextMove(boardState);
             Assert.AreEqual(expected, chose.Value, string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.LevelName, chose.Value, expected, reasoning));
-            Debug.Print("{0} SUCCESSFULLY choose {1} {2}", computerPlayer.LevelName, expected, reasoning);
+            Debug.Print("{0} SUCCESSFULLY chose {1} {2}", computerPlayer.LevelName, expected, reasoning);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace UnitTests
             Debug.Print("\n** {0} chooses from {1} {2} **", computerPlayer.LevelName, acceptableChoicesString, reasoning);
             Coord? chose = computerPlayer.ChooseNextMove(boardState);
             Assert.IsTrue(acceptableChoices.Contains(chose.Value), string.Format("{0} chose {1} instead of {2} {3}", computerPlayer.LevelName, chose.Value, acceptableChoicesString, reasoning));
-            Debug.Print("{0} SUCCESSFULLY chose from {1} {2}", computerPlayer.LevelName, acceptableChoicesString, reasoning);
+            Debug.Print("{0} SUCCESSFULLY chose {1} from {2} {3}", computerPlayer.LevelName, chose, acceptableChoicesString, reasoning);
         }
 
 

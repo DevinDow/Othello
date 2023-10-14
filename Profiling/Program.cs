@@ -103,7 +103,7 @@ namespace Profiling
 
             Debug.Print("\n** {0} chooses from {1} {2} **", computerPlayer.LevelName, acceptableChoicesString, reasoning);
             Coord? chose = computerPlayer.ChooseNextMove(boardState);
-            Debug.Print("{0} chose from {1} {2}", computerPlayer.LevelName, acceptableChoicesString, reasoning);
+            Debug.Print("{0} chose {1} from {2} {3}", computerPlayer.LevelName, chose, acceptableChoicesString, reasoning);
         }
     }
 }
