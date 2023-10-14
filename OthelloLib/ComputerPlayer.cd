@@ -1,61 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Othello.ComputerPlayer">
+  <Class Name="OthelloLib.ComputerPlayer">
     <Position X="0.5" Y="0.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAQCAABAAAACAAAAIAEQAAACAAAA=</HashCode>
       <FileName>ComputerPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Basic">
+  <Class Name="OthelloLib.ComputerPlayer_Basic">
     <Position X="1.25" Y="4" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ComputerPlayer_Basic.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Intermediate">
-    <Position X="3.75" Y="7" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ComputerPlayer_Intermediate.cs</FileName>
-      <NewMemberFileName>ComputerPlayer_Beginner.cs</NewMemberFileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Othello.ComputerPlayer_Advanced">
+  <Class Name="OthelloLib.ComputerPlayer_Advanced">
     <Position X="6.25" Y="7" Width="2.5" />
     <TypeIdentifier>
       <HashCode>ABAIQAAAAAAAAAAEgAAAAAAAAAAAAAAAAAAAEACAAAA=</HashCode>
       <FileName>ComputerPlayer_Advanced.cs</FileName>
-      <NewMemberFileName>ComputerPlayer_Beginner.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Beginner">
+  <Class Name="OthelloLib.ComputerPlayer_Beginner">
     <Position X="1.5" Y="7" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Beginner.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Recursive">
+  <Class Name="OthelloLib.ComputerPlayer_Recursive">
     <Position X="9" Y="4" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAABCCABAAAAAAAAAAAAAAAAACAAAE=</HashCode>
       <FileName>ComputerPlayer_Recursive.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Expert">
+  <Class Name="OthelloLib.ComputerPlayer_Expert">
     <Position X="9" Y="7" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAACAAAAEAAQAAAAAAAABACABAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Expert.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Othello.ComputerPlayer_Ultimate">
+  <Class Name="OthelloLib.ComputerPlayer_Ultimate">
     <Position X="12.25" Y="7" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAABgAMAACAAAAAkgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ComputerPlayer_Ultimate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OthelloLib.ComputerPlayer_Intermediate">
+    <Position X="3.75" Y="7" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ComputerPlayer_Intermediate.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
