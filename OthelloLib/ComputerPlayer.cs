@@ -73,7 +73,7 @@ namespace OthelloLib
         /// <returns>weighted Score of boardState</returns>
         internal int ScoreBoard(BoardState boardState)
 		{
-            int emptyCount = boardState.EmptyCount; // cache this Property instead of repeatedly recalculating
+            int emptyCount = boardState.EmptyCount; // calculate this Property once instead of repeatedly recalculating
 
             int score = 0;
 #if FAST
@@ -86,7 +86,7 @@ namespace OthelloLib
             {
 #endif
                 Square square = boardState.GetSquare(coord);
-                if (square.State != StateEnum.White && square.State != StateEnum.Black)
+                if (square.State == StateEnum.Empty)
 					continue;
 				int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
 

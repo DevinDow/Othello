@@ -92,17 +92,23 @@ namespace OthelloLib
         /// Constructs a BoardState
         /// </summary>
         /// <param name="whitesTurn">in Othello, Black moves first</param>
-        /// <param name="addInitialPieces">should the initial four Pieces be added?</param>
-        public BoardState(bool whitesTurn = false, bool addInitialPieces = true)
+        /// <param name="setInitialPieces">should the initial four Pieces be added?</param>
+        public BoardState(bool whitesTurn = false, bool setInitialPieces = true)
         {
             skippedTurn = endOfGame = false;
             squares = new Square[8, 8];
             WhitesTurn = whitesTurn;
 
-            foreach (Coord coord in this)
-                SetSquare(coord, new Square());
+#if FAST
+            for (int y = 0; y < 8; y++) // loop rows
+                for (int x = 0; x < 8; x++) // loop columns
+                    squares[x, y] = new Square();
+#else
+                foreach (Coord coord in this)
+                    SetSquare(coord, new Square());
+#endif
 
-            if (addInitialPieces)
+            if (setInitialPieces)
             {
                 GetSquare(new Coord(4, 4)).State = StateEnum.Black;
                 GetSquare(new Coord(5, 5)).State = StateEnum.Black;
@@ -319,13 +325,12 @@ namespace OthelloLib
         public BoardState Clone()
         {
             BoardState newBoardState = new BoardState(false);
-            newBoardState.squares = new Square[8, 8];
             newBoardState.WhitesTurn = WhitesTurn;
 
 #if FAST
             for (int y = 0; y < 8; y++) // loop rows
                 for (int x = 0; x < 8; x++) // loop columns
-                    newBoardState.squares[x, y] = new Square(squares[x, y].State);
+                    newBoardState.squares[x, y].State = squares[x, y].State;
 #else
             foreach (Coord coord in this)
             {
