@@ -170,7 +170,7 @@ namespace UnitTests
 
         /// <summary>
         /// this is a state I came across while playing against Ultimate
-        /// I think it should have taken the BR Corner, but it thinks it will win with another choice.  I manually beat it with its choice.
+        /// It should take the BR Corner to win, but it thinks it will win with another choice.  I manually beat it with its choice.
         /// is this because of ComputerPlayer.ScoreBoard()'s boardMostlyFilled?
         /// </summary>
         [TestMethod]
