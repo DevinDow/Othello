@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OthelloLib", "OthelloLib\Ot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerVsComputer", "ComputerPlayers\ComputerVsComputer.csproj", "{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiling", "Profiling\Profiling.csproj", "{226BDDBF-101F-4646-80EF-BBB8706346A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{226BDDBF-101F-4646-80EF-BBB8706346A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{226BDDBF-101F-4646-80EF-BBB8706346A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{226BDDBF-101F-4646-80EF-BBB8706346A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{226BDDBF-101F-4646-80EF-BBB8706346A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
