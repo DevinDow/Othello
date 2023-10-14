@@ -80,19 +80,23 @@ namespace OthelloLib
             for (int y = 1; y <= 8; y++) // loop rows
                 for (int x = 1; x <= 8; x++) // loop columns
                 {
+                    StateEnum state = boardState.squares[x - 1, y - 1].State;
+                    if (state == StateEnum.Empty)
+                        continue;
                     Coord coord = new Coord(x, y);
 #else
             foreach (Coord coord in boardState)
             {
-#endif
                 Square square = boardState.GetSquare(coord);
-                if (square.State == StateEnum.Empty)
+                StateEnum state = square.state;
+                if (state == StateEnum.Empty)
 					continue;
-				int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
+#endif
+                int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
 
                 if (AmIWhite) // Computer is White
 				{
-					switch (square.State)
+					switch (state)
 					{
 						case StateEnum.White:
 							score += weightedCoordValue;
@@ -104,7 +108,7 @@ namespace OthelloLib
 				}
 				else // Computer is Black
 				{
-                    switch (square.State)
+                    switch (state)
                     {
                         case StateEnum.Black:
                             score += weightedCoordValue;

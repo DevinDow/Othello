@@ -1,4 +1,5 @@
 ﻿TODO Lib
 --------
-TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
-Expert could use Advance algorithm for Opponent's choice
+Expert is losing to Advanced too much
+- TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
+- Expert could use Advance algorithm for Opponent's choice
