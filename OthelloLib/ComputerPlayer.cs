@@ -1,3 +1,5 @@
+#define FAST
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -74,10 +76,17 @@ namespace OthelloLib
             int emptyCount = boardState.EmptyCount; // cache this Property instead of repeatedly recalculating
 
             int score = 0;
+#if FAST
+            for (int y = 1; y <= 8; y++) // loop rows
+                for (int x = 1; x <= 8; x++) // loop columns
+                {
+                    Coord coord = new Coord(x, y);
+#else
             foreach (Coord coord in boardState)
-            { 
-				Square square = boardState.GetSquare(coord);
-				if (square.State != StateEnum.White && square.State != StateEnum.Black)
+            {
+#endif
+                Square square = boardState.GetSquare(coord);
+                if (square.State != StateEnum.White && square.State != StateEnum.Black)
 					continue;
 				int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
 
