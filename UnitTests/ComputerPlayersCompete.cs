@@ -98,10 +98,13 @@ namespace UnitTests
             {
                 BoardState boardState = OthelloLib.ComputerPlayers.ComputerVsComputer(black, white);
                 AddResult(wonByResults, boardState);
-                
-                // log the final boardState when a single run
-                if (runs == 1)
+
+                // log the final boardStates when only a few runs
+                if (runs <= 3)
+                {
                     Debug.Print(boardState.ToString()); // log final BoardState
+                    Debug.Print("Black={0} White={1}\n", boardState.BlackCount, boardState.WhiteCount);
+                }
 
                 if (boardState.BlackCount > boardState.WhiteCount)
                 {
