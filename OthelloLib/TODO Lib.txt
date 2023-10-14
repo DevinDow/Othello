@@ -1,0 +1,6 @@
+﻿TODO
+----
+TestLevels_Ult & ComputerPlayer.ScoreBoard() boardMostlyFilled
+Expert could use Advance algorithm for Opponent's choice
+
+Profile Ultimate vs Advanced in commandline app

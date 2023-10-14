@@ -106,7 +106,7 @@ namespace Othello
                 for (int x = 1; x <= 8; x++) // start at left column
                 {
                     Square square = boardState.GetSquare(new Coord(x, y));
-                    square.Draw(g);
+                    square.Draw(g, squareDimension);
                     g.TranslateTransform(squareDimension, 0, MatrixOrder.Append); // next column
                 }
 
@@ -165,7 +165,7 @@ namespace Othello
 			SetupGraphics(g);
             g.TranslateTransform((coord.x - 1) * squareDimension, (coord.y - 1) * squareDimension, MatrixOrder.Append);
 			Square square = boardState.GetSquare(coord);
-			square.Draw(g);
+			square.Draw(g, squareDimension);
 
 			// animate flipping affected Pieces
 			Animation.cancelFlipping = false;

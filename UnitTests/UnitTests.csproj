@@ -60,9 +60,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Othello\Othello.csproj">
-      <Project>{41a09845-b391-4385-944a-ed40714ef0a0}</Project>
-      <Name>Othello</Name>
+    <ProjectReference Include="..\OthelloLib\OthelloLib.csproj">
+      <Project>{9ff6a0d3-402f-4856-aa18-f5a604290934}</Project>
+      <Name>OthelloLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

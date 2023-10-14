@@ -21,9 +21,9 @@ namespace Othello
             this.state = state;
         }
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, int squareDimension)
 		{
-			int pieceRadius = (int)Math.Round(0.4 * Board.squareDimension);
+			int pieceRadius = (int)Math.Round(0.4 * squareDimension);
 
 			switch (state)
 			{

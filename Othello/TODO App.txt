@@ -1,0 +1,5 @@
+﻿TODO
+----
+- submenus under Level to choose Black or White
+
+- show Legal Moves can show number of pieces flipped by Move
