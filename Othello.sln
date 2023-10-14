@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OthelloLib", "OthelloLib\OthelloLib.csproj", "{9FF6A0D3-402F-4856-AA18-F5A604290934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerVsComputer", "ComputerPlayers\ComputerVsComputer.csproj", "{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9FF6A0D3-402F-4856-AA18-F5A604290934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FF6A0D3-402F-4856-AA18-F5A604290934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FF6A0D3-402F-4856-AA18-F5A604290934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

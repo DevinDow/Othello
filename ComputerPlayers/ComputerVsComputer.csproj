@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9FF6A0D3-402F-4856-AA18-F5A604290934}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OthelloLib</RootNamespace>
-    <AssemblyName>OthelloLib</AssemblyName>
+    <ProjectGuid>{C1FF20F4-B6A9-4FB2-923C-EDA0D5591D74}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ComputerPlayers</RootNamespace>
+    <AssemblyName>ComputerPlayers</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,29 +34,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoardState.cs" />
-    <Compile Include="ComputerPlayer.cs" />
-    <Compile Include="ComputerPlayers.cs" />
-    <Compile Include="ComputerPlayer_Advanced.cs" />
-    <Compile Include="ComputerPlayer_Basic.cs" />
-    <Compile Include="ComputerPlayer_Beginner.cs" />
-    <Compile Include="ComputerPlayer_Expert.cs" />
-    <Compile Include="ComputerPlayer_Intermediate.cs" />
-    <Compile Include="ComputerPlayer_Recursive.cs" />
-    <Compile Include="ComputerPlayer_Ultimate.cs" />
-    <Compile Include="Coord.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Square.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ComputerPlayer.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TODO Lib.txt" />
+    <ProjectReference Include="..\OthelloLib\OthelloLib.csproj">
+      <Project>{9FF6A0D3-402F-4856-AA18-F5A604290934}</Project>
+      <Name>OthelloLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

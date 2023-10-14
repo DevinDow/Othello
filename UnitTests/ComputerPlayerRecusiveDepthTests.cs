@@ -97,7 +97,7 @@ namespace UnitTests
         {
             Debug.Print(black.ToString() + "  vs.  " + white.ToString());
             DateTime start = DateTime.Now;
-            BoardState boardState = ComputerPlayersCompete.ComputerVsComputer(black, white);
+            BoardState boardState = OthelloLib.ComputerPlayers.ComputerVsComputer(black, white);
             TimeSpan duration = DateTime.Now - start;
             int diff = boardState.BlackCount - boardState.WhiteCount;
             Debug.Print("Black's lead = {0} in {1:N2} seconds\n", diff, duration.TotalSeconds);
