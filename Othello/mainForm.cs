@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using OthelloLib;
 
 namespace Othello
 {
@@ -81,7 +82,7 @@ namespace Othello
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 262);
+            this.statusBar.Location = new System.Drawing.Point(0, 242);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusBarTurn,
@@ -192,7 +193,7 @@ namespace Othello
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(424, 284);
+            this.ClientSize = new System.Drawing.Size(424, 264);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Othello;
+using OthelloLib;
 using System;
 using System.Diagnostics;
 

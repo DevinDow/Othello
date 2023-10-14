@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Othello
+namespace OthelloLib
 {
     public abstract class ComputerPlayer_Basic : ComputerPlayer
     {

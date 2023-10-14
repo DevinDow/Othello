@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Othello
+namespace OthelloLib
 {
     public class ComputerPlayer_Expert : ComputerPlayer_Recursive
     {

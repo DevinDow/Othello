@@ -1,5 +1,4 @@
-﻿using Othello;
-using OthelloLib;
+﻿using OthelloLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

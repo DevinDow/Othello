@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace Othello
+namespace OthelloLib
 {
 	public enum StateEnum { Empty, Black, White };
 

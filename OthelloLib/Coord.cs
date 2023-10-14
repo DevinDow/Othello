@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Othello
+namespace OthelloLib
 {
     /// <summary>
     /// Coord of Squares ( 1..8 , 1..8 )

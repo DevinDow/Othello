@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Othello
+namespace OthelloLib
 {
     public class ComputerPlayer_Beginner : ComputerPlayer_Basic
     {
