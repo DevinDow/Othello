@@ -323,8 +323,7 @@ namespace OthelloLib
         /// <returns>a Deep Copy of this</returns>
         public BoardState Clone()
         {
-            BoardState newBoardState = new BoardState(false);
-            newBoardState.WhitesTurn = WhitesTurn;
+            BoardState newBoardState = new BoardState(WhitesTurn, false); // don't set initial Pieces
 
 #if FAST
             for (int y = 0; y < 8; y++) // loop rows
@@ -334,7 +333,8 @@ namespace OthelloLib
             foreach (Coord coord in this)
             {
                 Square square = GetSquare(coord);
-                newBoardState.SetSquare(coord, new Square(square.State));
+                Square newSquare = newBoardState.GetSquare(coord);
+                newSquare.State = square.State;
             }
 #endif
 
