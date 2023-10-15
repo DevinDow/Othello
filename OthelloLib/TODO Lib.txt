@@ -1,3 +1,5 @@
 ﻿TODO Lib
 --------
+ComputerPlayerTests sometimes choose differently due to the added random variations
+
 Should ComputerPlayer be pulled out of OthelloLib to ComputerPlayerLib?

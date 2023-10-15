@@ -86,39 +86,17 @@ namespace OthelloLib
                     Coord coord = new Coord(x, y);
 #else
             foreach (Coord coord in boardState)
-            {
-                Square square = boardState.GetSquare(coord);
-                StateEnum state = square.state;
-                if (state == StateEnum.Empty)
-					continue;
+                {
+                    Square square = boardState.GetSquare(coord);
+                    StateEnum state = square.state;
+                    if (state == StateEnum.Empty)
+					    continue;
 #endif
-                int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
+                    int weightedCoordValue = WeightedCoordValue(coord, emptyCount);
 
-                if (AmIWhite) // Computer is White
-				{
-					switch (state)
-					{
-						case StateEnum.White:
-							score += weightedCoordValue;
-							break;
-						case StateEnum.Black:
-							score -= weightedCoordValue;
-							break;
-					}
-				}
-				else // Computer is Black
-				{
-                    switch (state)
-                    {
-                        case StateEnum.Black:
-                            score += weightedCoordValue;
-                            break;
-                        case StateEnum.White:
-                            score -= weightedCoordValue;
-                            break;
-                    }
+                    // if AmIWhite then add for White Pieces & subtract for Black Pieces
+                    score = score + ((AmIWhite ^ state == StateEnum.Black) ? weightedCoordValue : -weightedCoordValue);
                 }
-			}
 
 			return score * (100 + random.Next(10)) / 100; // increase by 1-10% to add a little randomness to prevent repeat games
         }
