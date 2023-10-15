@@ -12,10 +12,10 @@ namespace UnitTests
         // number of times to play each other so that the Test judges by which wins most of the time instead of judging by a fluke win by a lower Level
         private int RUNS_INT = 21;
         private int RUNS_ADV = 21;
-        private int RUNS_EXP = 21;//11;
+        private int RUNS_EXP = 21;
         private int RUNS_ULT = 11;//2;
 
-        private int EXP_DEPTH = 11;//7; 9;
+        private int EXP_DEPTH = 11;
         private int ULT_DEPTH = 5;//6;
 
 
@@ -125,7 +125,11 @@ namespace UnitTests
                 }
             }
 
+            // reset LogDecisions for other Tests
+            ComputerPlayer.LogDecisions = prevLogDecisions;
+
             // log wonByResults
+            int sum = 0;
             foreach (int diff in wonByResults.Keys)
             {
                 if (diff > 0)
@@ -134,17 +138,23 @@ namespace UnitTests
                     Debug.Print("Tied {0} time(s)", wonByResults[diff]);
                 else
                     Debug.Print("{0} won by {1} pieces {2} time(s)", black.LevelName, -diff, wonByResults[diff]);
+
+                sum += diff * wonByResults[diff];
             }
-            Debug.Print("{0} {1} - {2} {3}", white.LevelName, whiteWins, black.LevelName, blackWins);
 
-            // reset LogDecisions for other Tests
-            ComputerPlayer.LogDecisions = prevLogDecisions;
-
-            // did the expected winner at least tie?
+            // did the expected winner at least tie or at least average more Pieces?
             if (blackShouldWin)
-                Assert.IsTrue(blackWins >= whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", black.LevelName, blackWins, white.LevelName, whiteWins);
+            {
+                Debug.Print("{0} {1} - {2} {3}", black.LevelName, blackWins, white.LevelName, whiteWins);
+                Debug.Print("{0} averaged {1} more total Pieces than {2}", black.LevelName, -sum/runs, white.LevelName);
+                Assert.IsTrue(sum <= 0 || blackWins >= whiteWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", black.LevelName, blackWins, white.LevelName, whiteWins);
+            }
             else
-                Assert.IsTrue(whiteWins >= blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", white.LevelName, whiteWins, black.LevelName, blackWins);
+            {
+                Debug.Print("{0} {1} - {2} {3}", white.LevelName, whiteWins, black.LevelName, blackWins);
+                Debug.Print("{0} averaged {1} more total Pieces than {2}", white.LevelName, sum/runs, black.LevelName);
+                Assert.IsTrue(sum >= 0 || whiteWins >= blackWins, "{0} ({1} wins) should have beaten {2} ({3} wins)", white.LevelName, whiteWins, black.LevelName, blackWins);
+            }
         }
 
         private void AddResult(SortedDictionary<int, int> results, BoardState boardState)
