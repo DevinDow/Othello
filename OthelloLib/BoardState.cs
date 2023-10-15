@@ -176,14 +176,9 @@ namespace OthelloLib
 
         public bool IsLegalMove(Coord coord)
         {
-#if FAST
-            StateEnum state = squares[coord.x-1, coord.y-1].State;
-#else
             Square square = GetSquare(coord);
-            StateEnum state = square.State;
-#endif
 
-            if (state == StateEnum.Black || state == StateEnum.White)
+            if (square.State == StateEnum.Black || square.State == StateEnum.White)
                 return false;
 
             if (IsSuccessfulDirection(coord, -1, 0))
@@ -222,25 +217,21 @@ namespace OthelloLib
 
             while (x > 0 && x <= 8 && y > 0 && y <= 8)
             {
-#if FAST
-                StateEnum state = squares[x - 1, y - 1].State;
-#else
                 Square square = GetSquare(new Coord(x, y));
-                StateEnum state = square.State;
-#endif
-                if (state == StateEnum.Empty)
+     
+                if (square.State == StateEnum.Empty)
                     return false;
 
                 if (foundOpposite)
                 {
-                    if (state == StateEnum.White && WhitesTurn ||
-                        state == StateEnum.Black && !WhitesTurn)
+                    if (square.State == StateEnum.White && WhitesTurn ||
+                        square.State == StateEnum.Black && !WhitesTurn)
                         return true;
                 }
                 else
                 {
-                    if (state == StateEnum.White && !WhitesTurn ||
-                        state == StateEnum.Black && WhitesTurn)
+                    if (square.State == StateEnum.White && !WhitesTurn ||
+                        square.State == StateEnum.Black && WhitesTurn)
                         foundOpposite = true;
                     else
                         return false;
@@ -314,11 +305,9 @@ namespace OthelloLib
                 {
                     Coord coordToFlip = new Coord(x, y);
                     coordsFlipped.Add(coordToFlip);
+     
                     Square flippedSquare = GetSquare(coordToFlip);
-                    if (WhitesTurn)
-                        flippedSquare.State = StateEnum.White;
-                    else
-                        flippedSquare.State = StateEnum.Black;
+                    flippedSquare.State = WhitesTurn ? StateEnum.White : flippedSquare.State = StateEnum.Black;
 
                     x -= dx;
                     y -= dy;
