@@ -66,8 +66,6 @@ namespace OthelloLib
                             LogChoice(boardState.WhitesTurn, response, responseScore, LogEachExpertTurnBoardState ? responseBoardState : null),
                             turn);
 
-                responseScore *= (100 + random.Next(10)); // increase by 1-10% to add a little randomness to prevent repeat games
-
                 if (myTurn)
                 {
                     if (responseScore > minMaxScore) // my Turn goes for highest Score for me

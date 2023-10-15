@@ -119,8 +119,9 @@ namespace OthelloLib
                     }
                 }
 			}
-			return score;
-		}
+
+			return score * (100 + random.Next(10)) / 100; // increase by 1-10% to add a little randomness to prevent repeat games
+        }
 
         /// <summary>
         /// returns a weighted value for a Coord
