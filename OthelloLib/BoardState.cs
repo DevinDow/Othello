@@ -349,6 +349,28 @@ namespace OthelloLib
                 sb.Append(" *** END OF GAME *** \n");
             else
                 sb.AppendFormat("Turn={0}\n", WhitesTurn ? "W" : "B");
+
+#if FAST
+            for (int y = 0; y < 8; y++) // loop rows
+            {
+                for (int x = 0; x < 8; x++) // loop columns
+                {
+                    switch (squares[x, y].State)
+                    {
+                        case StateEnum.Black:
+                            sb.Append(" B");
+                            break;
+                        case StateEnum.White:
+                            sb.Append(" W");
+                            break;
+                        case StateEnum.Empty:
+                            sb.Append(" .");
+                            break;
+                    }
+                }
+                sb.Append("\n");
+            }
+#else
             foreach (Coord coord in this)
             {
                 Square square = GetSquare(coord);
@@ -367,6 +389,7 @@ namespace OthelloLib
                 if (coord.x == 8 && coord.y < 8)
                     sb.Append("\n");
             }
+#endif
             return sb.ToString();
         }
 
