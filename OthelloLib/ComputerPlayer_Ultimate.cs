@@ -14,7 +14,7 @@ namespace OthelloLib
         public static bool LogEachUltimateLegalMoveResponse = false;
         public static bool LogEachUltimateOption = false;
 
-        public ComputerPlayer_Ultimate(bool amIWhite, int depthForEveryMove = 6, int depthForOnlyBestMove = 11) : base(amIWhite)
+        public ComputerPlayer_Ultimate(bool amIWhite = true, int depthForEveryMove = 6, int depthForOnlyBestMove = 11) : base(amIWhite)
         {
             LevelName = "Ultimate";
             ULTIMATE_TURNS_DEPTH_TO_START_USING_EXPERT = depthForEveryMove;

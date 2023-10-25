@@ -12,7 +12,7 @@ namespace OthelloLib
         public static bool LogEachExpertTurnBoardState = false;
         public static bool LogEachExpertLegalMoveResponse = false;
         
-        public ComputerPlayer_Expert(bool amIWhite, int depth = 11) : base(amIWhite)
+        public ComputerPlayer_Expert(bool amIWhite = true, int depth = 11) : base(amIWhite)
         {
             LevelName = "Expert";
             EXPERT_TURNS_DEPTH = depth;
