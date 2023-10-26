@@ -1,6 +1,7 @@
 ﻿TODO App
 --------
-- async for CoputerPlayer
+- async for ComputerPlayer
+- waitCursor for ComputerPlayer thinking
 
 - submenus under Level to choose Black or White
 
