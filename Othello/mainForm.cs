@@ -302,7 +302,7 @@ namespace Othello
 
         private void ultimateItem_Click(object sender, EventArgs e)
         {
-            board.ComputerPlayer = new ComputerPlayer_Ultimate();
+            board.ComputerPlayer = new ComputerPlayer_Ultimate(true, 8, 13);
 
             humanPlayerItem.Checked = false;
             beginnerItem.Checked = false;
