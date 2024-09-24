@@ -8,11 +8,29 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Othello.Animation">
-    <Position X="3" Y="0.5" Width="2.25" />
+    <Position X="7" Y="2.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAQAAAAACAhCBAAAAAAAAAQQAAAAAAAAAAAAAQAAAIA=</HashCode>
       <FileName>Animation.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="OthelloLib.BoardState">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="OthelloLib.Square">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="OthelloLib.Coord">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Enum Name="OthelloLib.StateEnum">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
